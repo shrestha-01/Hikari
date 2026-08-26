@@ -8,12 +8,45 @@ body{
     background: #1a1a1a; 
     /* dark design looks good for glassmorphism design =) */
 }
+/* design credit in the github readme =)  */
 .posterCard{
     width: 200px;
     height: 300px;
-    background-color: gray;
-    border-radius: 5px 5px 5px 5px;
+    /* background-color: gray; */
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 -1px 1px rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: hidden;
 }
+.posterCard::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+    transparent, rgba(255, 255,255, 0.8),transparent);
+}
+.posterCard::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(180deg,
+    rgba(255,255,255,0.8), transparent,
+    rgba(255,255,255,0.3));
+}
+
 .theButtons{
     display: flex;
     justify-content: center;
@@ -26,7 +59,7 @@ body{
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
+    border-radius: 20px;
     padding: 10px 20px;
     color: white;
     cursor: pointer;
