@@ -31,3 +31,7 @@ body{
     color: white;
     cursor: pointer;
 }
+/* the japanese text  */
+.jpTitle{
+    font-size: 12px;
+}
