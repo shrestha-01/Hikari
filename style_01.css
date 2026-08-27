@@ -88,3 +88,12 @@ body{
     display: inline-block;
     transition: opacity 450ms ease;
 }
+/* names */
+.engName{
+    font-size: 27px;
+    font-weight: bold;
+}
+.jpName{
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.6);
+}

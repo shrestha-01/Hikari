@@ -2,6 +2,8 @@
 const backBtn = document.getElementById("backBtn");
 const whatsNextBtn = document.getElementById("whatsNext");
 const nextBtn = document.getElementById("nextBtn");
+const engName = document.getElementById("engName");
+const jpName = document.getElementById("jpName");
 var loading = false;
 const btnText = document.getElementById("btnText");
 // the apis 
@@ -9,7 +11,9 @@ const btnText = document.getElementById("btnText");
 var anilistUrl = "https://graphql.anilist.co";
 
 // text animation 
+var btnTime = null;
 function textChange(el, newText){
+    clearTimeout(btnTime);
     el.style.opacity = 0;
     setTimeout(function(){
         el.textContent = newText;
@@ -22,7 +26,7 @@ function hikariGets() {
     }
     loading = true;
     whatsNextBtn.disabled = true;
-    textChange(btnText, "Ummm...");
+    textChange(btnText, "Ummmmm....");
     console.log("geting a anime.......!!!!!!");
     // oh dude , jikan down rn 
     // fetch(jikanUrl)
@@ -46,6 +50,7 @@ function hikariGets() {
             media(type: ANIME, sort: POPULARITY_DESC) {
                 title {
                     romaji
+                    english
                     native
                 }
                 coverImage {
@@ -74,7 +79,8 @@ function hikariGets() {
         var anime = d.data.Page.media[0];
         posterImg.src = anime.coverImage.large;
         posterImg.style.display = "block";
-        titleText.textContent = anime.title.romaji;
+        engName.textContent = anime.title.english || anime.title.romaji;
+        jpName.textContent = anime.title.native;
     })
     .catch(function(e){
         console.log("oops", e);
