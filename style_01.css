@@ -6,6 +6,7 @@
 body{
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     background: #1a1a1a; 
+    color: #ffffff;
     /* dark design looks good for glassmorphism design =) */
 }
 /* design credit in the github readme =)  */
@@ -78,4 +79,8 @@ body{
 /* the japanese text  */
 .jpTitle{
     font-size: 12px;
+}
+.infoArea{
+    display: flex;
+    gap: 30px;
 }
