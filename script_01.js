@@ -4,6 +4,7 @@ const whatsNextBtn = document.getElementById("whatsNext");
 const nextBtn = document.getElementById("nextBtn");
 const engName = document.getElementById("engName");
 const jpName = document.getElementById("jpName");
+const genreList = document.getElementById("genreList");
 var loading = false;
 const btnText = document.getElementById("btnText");
 // the apis 
@@ -56,6 +57,7 @@ function hikariGets() {
                 coverImage {
                     large
                 }
+                genres
             }
         }
     }`;
@@ -81,6 +83,13 @@ function hikariGets() {
         posterImg.style.display = "block";
         engName.textContent = anime.title.english || anime.title.romaji;
         jpName.textContent = anime.title.native;
+        genreList.innerHTML = "";
+        for(var i =0; i<anime.genres.length; i++){
+            var bubble = document.createElement("div");
+            bubble.className = "theGenre";
+            bubble.textContent = anime.genres[i];
+            genreList.appendChild(bubble);
+        }
     })
     .catch(function(e){
         console.log("oops", e);
