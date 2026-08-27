@@ -2,12 +2,29 @@
 const backBtn = document.getElementById("backBtn");
 const whatsNextBtn = document.getElementById("whatsNext");
 const nextBtn = document.getElementById("nextBtn");
+var loading = false;
+const btnText = document.getElementById("btnText");
 // the apis 
 // var jikanUrl = "https://api.jikan.moe/v4/random/anime";
 var anilistUrl = "https://graphql.anilist.co";
 
+// text animation 
+function textChange(el, newText){
+    el.style.opacity = 0;
+    setTimeout(function(){
+        el.textContent = newText;
+        el.style.opacity = 1;
+    },450);
+}
 function hikariGets() {
+    if(loading){
+        return;
+    }
+    loading = true;
+    whatsNextBtn.disabled = true;
+    textChange(btnText, "Ummm...");
     console.log("geting a anime.......!!!!!!");
+    // oh dude , jikan down rn 
     // fetch(jikanUrl)
     //     .then(function(r){
     //         return r.json();
@@ -61,6 +78,11 @@ function hikariGets() {
     })
     .catch(function(e){
         console.log("oops", e);
+    })
+    .finally(function(){
+        loading = false;
+        whatsNextBtn.disabled = false;
+        textChange(btnText, "What's Next?");
     });
 }
 whatsNextBtn.addEventListener("click", hikariGets);

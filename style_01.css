@@ -84,3 +84,7 @@ body{
     display: flex;
     gap: 30px;
 }
+#btnText{
+    display: inline-block;
+    transition: opacity 450ms ease;
+}
