@@ -7,7 +7,7 @@ body{
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     background: #1a1a1a; 
     color: #ffffff;
-    /* dark design looks good for glassmorphism design =) */
+    /* dark design looks good for glassmorphism design =) ig*/
 }
 /* design credit in the github readme =)  */
 .posterCard{
@@ -83,6 +83,19 @@ body{
 .infoArea{
     display: flex;
     gap: 30px;
+    max-width: 900px;
+    margin: 40px auto 0 auto;
+}
+.topWrap{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 20px;
 }
 #btnText{
     display: inline-block;
