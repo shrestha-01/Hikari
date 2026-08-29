@@ -3,36 +3,40 @@
     padding: 0;
     box-sizing: border-box;
 }
-body{
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    background: #1a1a1a; 
+
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background: #1a1a1a;
     color: #ffffff;
     /* dark design looks good for glassmorphism design =) ig*/
 }
+
 /* design credit in the github readme =)  */
-.posterCard{
+.posterCard {
     width: 200px;
     height: 300px;
     /* background-color: gray; */
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 0 -1px 1px rgba(255, 255, 255, 0.6);
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 0 -1px 1px rgba(255, 255, 255, 0.6);
     position: relative;
     overflow: hidden;
 }
-.posterImg{
+
+.posterImg {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: none;
 }
-.posterCard::before{
+
+.posterCard::before {
     content: '';
     position: absolute;
     top: 0;
@@ -40,9 +44,10 @@ body{
     right: 0;
     height: 1px;
     background: linear-gradient(90deg,
-    transparent, rgba(255, 255,255, 0.8),transparent);
+            transparent, rgba(255, 255, 255, 0.8), transparent);
 }
-.posterCard::after{
+
+.posterCard::after {
     content: '';
     position: absolute;
     top: 0;
@@ -50,19 +55,20 @@ body{
     width: 1px;
     height: 100%;
     background: linear-gradient(180deg,
-    rgba(255,255,255,0.8), transparent,
-    rgba(255,255,255,0.3));
+            rgba(255, 255, 255, 0.8), transparent,
+            rgba(255, 255, 255, 0.3));
 }
 
-.theButtons{
+.theButtons {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 15px;
     margin-top: 20px;
 }
+
 .theButtons button {
-    background:  rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -72,21 +78,25 @@ body{
     cursor: pointer;
     transition: all 0.6s ease;
 }
-.theButtons button:hover{
+
+.theButtons button:hover {
     background: rgba(255, 255, 255, 0.15);
     transform: scale(1.1);
 }
+
 /* the japanese text  */
-.jpTitle{
+.jpTitle {
     font-size: 12px;
 }
-.infoArea{
+
+.infoArea {
     display: flex;
     gap: 30px;
     max-width: 900px;
     margin: 40px auto 0 auto;
 }
-.topWrap{
+
+.topWrap {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -97,48 +107,98 @@ body{
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding-bottom: 20px;
 }
-#btnText{
+
+#btnText {
     display: inline-block;
     transition: opacity 450ms ease;
 }
+
 /* names */
-.engName{
+.engName {
     font-size: 27px;
     font-weight: bold;
 }
-.jpName{
+
+.jpName {
     font-size: 15px;
     color: rgba(255, 255, 255, 0.6);
 }
+
 /* the genres */
-.genreList{
+.genreList {
     display: flex;
     gap: 10px;
     margin-top: 10px;
 }
-.theGenre{
-    background: rgba(255,255,255,0.05);
+
+.theGenre {
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255,255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 5px 15px;
     font-size: 13px;
 }
+
 /* anime filtering btn design (choose genre btn ) to be more specific */
-.filterBar{
+.filterBar {
     display: flex;
     justify-content: flex-end;
     max-width: 900px;
     margin: 20px auto 0 auto;
 }
-#whichgenre{
-    background:rgba(255,255,255,0.05);
+
+#whichgenre {
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 10px 20px;
+    /* color: rgb(44, 16, 16); */
     color: white;
     cursor: pointer;
+}
+
+.topNav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.categories {
+    display: flex;
+    /* display: flexbox; */
+    gap: 10px;
+    max-width: 0;
+    overflow: hidden;
+    transition: max-width 0.4s ease;
+}
+
+.categories.open {
+    max-width: 500px;
+}
+
+.categories button {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+    /* box-shadow: 5px #ffffff; */
+}
+.categorybtn{
+    color: white;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }

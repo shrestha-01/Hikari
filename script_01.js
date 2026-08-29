@@ -7,6 +7,8 @@ const jpName = document.getElementById("jpName");
 const genreList = document.getElementById("genreList");
 var loading = false;
 const btnText = document.getElementById("btnText");
+const categorybtn = document.getElementById("categorybtn");
+const categories = document.getElementById("categories");
 // the apis 
 // var jikanUrl = "https://api.jikan.moe/v4/random/anime";
 var anilistUrl = "https://graphql.anilist.co";
@@ -19,7 +21,7 @@ function textChange(el, newText){
     setTimeout(function(){
         el.textContent = newText;
         el.style.opacity = 1;
-    },450);
+    },250);
 }
 function hikariGets() {
     if(loading){
@@ -101,3 +103,7 @@ function hikariGets() {
     });
 }
 whatsNextBtn.addEventListener("click", hikariGets);
+//the category choosing btn opens and closes
+ categorybtn.addEventListener("click",function(){
+    categories.classList.toggle("open");
+ });
