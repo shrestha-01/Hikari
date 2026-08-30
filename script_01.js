@@ -12,6 +12,7 @@ const categories = document.getElementById("categories");
 const avgscore = document.getElementById("avgscore");
 const startDate = document.getElementById("startDate");
 const statusrn = document.getElementById("statusrn");
+const describe = document.getElementById("describe");
 // the apis 
 // var jikanUrl = "https://api.jikan.moe/v4/random/anime";
 var anilistUrl = "https://graphql.anilist.co";
@@ -70,6 +71,7 @@ function hikariGets() {
                     day
                 }
                 status
+                description
             }
         }
     }`;
@@ -103,6 +105,7 @@ function hikariGets() {
             startDate.textContent = anime.startDate.year + "-" +
                 anime.startDate.month + "-" + anime.startDate.day;
             statusrn.textContent = anime.status;
+            describe.innerHTML = anime.description;
             genreList.innerHTML = "";
             for (var i = 0; i < anime.genres.length; i++) {
                 var bubble = document.createElement("div");
