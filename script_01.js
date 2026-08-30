@@ -100,7 +100,7 @@ async function tryAnilist() {
                     native
                 }
                 coverImage {
-                    large
+                    extraLarge
                 }
                 genres
                 averageScore
@@ -130,7 +130,10 @@ async function tryAnilist() {
     if(!d.data || !d.data.Page.media.length){
         throw new Error("no anilist data");
     }
-    return d.data.Page.media[0];
+    var aresult = d.data.Page.media[0];
+    aresult.coverImage.large = aresult.coverImage.extraLarge;
+    return aresult;
+    // return d.data.Page.media[0];
 }
 async function tryJikan() {
     var res = await fetch(jikanUrl);
@@ -159,7 +162,7 @@ async function tryJikan() {
             native: a.title_japanese
         },
         coverImage:{
-            large: a.images.jpg.large_image_url
+            large: a.images.webp.large_image_url
         },
         genres:jgenres,
         averageScore: a.score ? Math.round(a.score * 10) : null,
@@ -204,7 +207,7 @@ async function tryKitsu(){
             native: a.titles.ja_jp
         },
         coverImage:{
-            large: a.posterImage.large
+            large: a.posterImage.original
         },
         genres: kgenres,
         averageScore: a.averageRating ? Math.round(a.averageRating): null,
