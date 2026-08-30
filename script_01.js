@@ -9,22 +9,25 @@ var loading = false;
 const btnText = document.getElementById("btnText");
 const categorybtn = document.getElementById("categorybtn");
 const categories = document.getElementById("categories");
+const avgscore = document.getElementById("avgscore");
+const startDate = document.getElementById("startDate");
+const statusrn = document.getElementById("statusrn");
 // the apis 
 // var jikanUrl = "https://api.jikan.moe/v4/random/anime";
 var anilistUrl = "https://graphql.anilist.co";
 
 // text animation 
 var btnTime = null;
-function textChange(el, newText){
+function textChange(el, newText) {
     clearTimeout(btnTime);
     el.style.opacity = 0;
-    setTimeout(function(){
+    setTimeout(function () {
         el.textContent = newText;
         el.style.opacity = 1;
-    },250);
+    }, 250);
 }
 function hikariGets() {
-    if(loading){
+    if (loading) {
         return;
     }
     loading = true;
@@ -60,12 +63,19 @@ function hikariGets() {
                     large
                 }
                 genres
+                averageScore
+                startDate{
+                    year
+                    month
+                    day
+                }
+                status
             }
         }
     }`;
-    fetch(anilistUrl,{
+    fetch(anilistUrl, {
         method: "POST",
-        headers:{
+        headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -75,35 +85,43 @@ function hikariGets() {
             }
         })
     })
-    .then(function(r){
-        return r.json();
-    })
-    .then(function(d){
-        console.log(d);
-        var anime = d.data.Page.media[0];
-        posterImg.src = anime.coverImage.large;
-        posterImg.style.display = "block";
-        engName.textContent = anime.title.english || anime.title.romaji;
-        jpName.textContent = anime.title.native;
-        genreList.innerHTML = "";
-        for(var i =0; i<anime.genres.length; i++){
-            var bubble = document.createElement("div");
-            bubble.className = "theGenre";
-            bubble.textContent = anime.genres[i];
-            genreList.appendChild(bubble);
-        }
-    })
-    .catch(function(e){
-        console.log("oops", e);
-    })
-    .finally(function(){
-        loading = false;
-        whatsNextBtn.disabled = false;
-        textChange(btnText, "What's Next?");
-    });
+        .then(function (r) {
+            return r.json();
+        })
+        .then(function (d) {
+            console.log(d);
+            var anime = d.data.Page.media[0];
+            posterImg.src = anime.coverImage.large;
+            posterImg.style.display = "block";
+            engName.textContent = anime.title.english || anime.title.romaji;
+            jpName.textContent = anime.title.native;
+            if (anime.averageScore) {
+                avgscore.textContent = "★ " + (anime.averageScore / 10) + "/10";
+            } else {
+                avgscore.textContent = "N/A";
+            }
+            startDate.textContent = anime.startDate.year + "-" +
+                anime.startDate.month + "-" + anime.startDate.day;
+            statusrn.textContent = anime.status;
+            genreList.innerHTML = "";
+            for (var i = 0; i < anime.genres.length; i++) {
+                var bubble = document.createElement("div");
+                bubble.className = "theGenre";
+                bubble.textContent = anime.genres[i];
+                genreList.appendChild(bubble);
+            }
+        })
+        .catch(function (e) {
+            console.log("oops", e);
+        })
+        .finally(function () {
+            loading = false;
+            whatsNextBtn.disabled = false;
+            textChange(btnText, "What's Next?");
+        });
 }
 whatsNextBtn.addEventListener("click", hikariGets);
 //the category choosing btn opens and closes
- categorybtn.addEventListener("click",function(){
+categorybtn.addEventListener("click", function () {
     categories.classList.toggle("open");
- });
+});

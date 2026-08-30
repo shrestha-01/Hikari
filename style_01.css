@@ -16,7 +16,7 @@ body {
     /* width: 200px;
     height: 300px; */
     /* width: clamp(200px, 25vw, 320px); */
-    width: clamp(220px, 55vh, 420px);
+    height: clamp(220px, 60vh, 420px);
     aspect-ratio: 2 /3;
     width: auto;
     background: rgba(255, 255, 255, 0.05);
@@ -211,4 +211,21 @@ body {
     padding: 8px 15px;
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* for infor like status , date and moreeee */
+.infocap{
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+.infocap div{
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* border-radius: 20px; */
+    padding: 5px 15px;
 }
