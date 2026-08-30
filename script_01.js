@@ -97,6 +97,8 @@ function hikariGets() {
             animelist.push(anime);
             historyPos = animelist.length - 1;
             showanime(anime);
+            backBtn.disabled = historyPos <= 0;
+            nextBtn.disabled = historyPos >= animelist.length - 1;
         })
         .catch(function (e) {
             console.log("oops", e);
@@ -139,6 +141,8 @@ backBtn.addEventListener("click",function(){
     if(historyPos>0){
         historyPos=historyPos-1;
         showanime(animelist[historyPos]);
+        backBtn.disabled = historyPos <= 0;
+        nextBtn.disabled = historyPos >= animelist.length - 1;
     }
 });
 // nextbtn 
@@ -146,6 +150,8 @@ nextBtn.addEventListener("click",function(){
     if(historyPos<animelist.length-1){
         historyPos=historyPos+1;
         showanime(animelist[historyPos]);
+        backBtn.disabled = historyPos <=0;
+        nextBtn.disabled = historyPos >= animelist.length -1;
     }
 });
 whatsNextBtn.addEventListener("click",hikariGets);

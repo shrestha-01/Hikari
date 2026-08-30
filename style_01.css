@@ -90,6 +90,10 @@ body {
     background: rgba(255, 255, 255, 0.15);
     transform: scale(1.1);
 }
+.theButtons button:disabled:hover{
+    background: rgba(255, 255, 255, 0.05);
+    transform: scale(1);
+}
 
 /* the japanese text  */
 .jpTitle {
@@ -243,4 +247,9 @@ body {
     height: 200px;
     padding-right: 10px;
     overflow-y: auto;
+}
+/* diableing the mouse when hover (when there is no anime or any content to show) */
+.theButtons button:disabled{
+    cursor: not-allowed;
+    opacity: 0.4;
 }
