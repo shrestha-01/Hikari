@@ -18,6 +18,7 @@ var historyPos = -1;
 // the apis 
 var jikanUrl = "https://api.jikan.moe/v4/random/anime";
 var anilistUrl = "https://graphql.anilist.co";
+var kitsuUrl = "https://kitsu.io/api/edge/anime";
 // text animation 
 var btnTime = null;
 function textChange(el, newText) {
@@ -28,7 +29,7 @@ function textChange(el, newText) {
         el.style.opacity = 1;
     }, 250);
 }
-function hikariGets() {
+async function hikariGets() {
     if (loading) {
         return;
     }
@@ -54,14 +55,24 @@ function hikariGets() {
     var anime = null;
     try {
         anime = await tryAnilist();
+        console.log("anime from anilist");
     } catch (e) {
         console.log("oh shoot ,, anilist down", e);
     }
     if (!anime) {
         try {
             anime = await tryJikan();
+            console.log("anime from jikan");
         } catch (e) {
-            console.log("jikan down tooo =("), e;
+            console.log("jikan down tooo =(", e);
+        }
+    }
+    if (!anime){
+        try{
+            anime = await tryKitsu();
+            console.log("anime from kitsu");
+        } catch (e){
+            console.log("Kitsu down too, bruh",e);
         }
     }
     if (anime) {
@@ -137,7 +148,7 @@ async function tryJikan() {
     var jday = "?";
     if(a.aired && a.aired.from){
         var adate = new Date(a.aired.from);
-        year = adate.getFullYear();
+        jyear = adate.getFullYear();
         jmonth = adate.getMonth() + 1;
         jday = adate.getDate();
     }
@@ -163,6 +174,49 @@ async function tryJikan() {
     return janime;
 }
 // whatsNextBtn.addEventListener("click", hikariGets);
+async function tryKitsu(){
+    var rand = Math.floor(Math.random() * 4000);
+    var res = await fetch(kitsuUrl + "?page[limit]=1&page[offset]="+rand+"&include=genres");
+    var d = await res.json(); 
+    if(!d.data || !d.data.length){
+        throw new Error("no kitsu data");
+    }
+    var a = d.data[0].attributes;
+    var kgenres = [];
+    if(d.included){
+        for(var i =0; i< d.included.length; i++){
+            kgenres.push(d.included[i].attributes.name);
+        }
+    }
+    var kyear = "?";
+    var kmonth="?";
+    var kday = "?";
+    if(a.startDate){
+        var kdate= new Date(a.startDate);
+        kyear = kdate.getFullYear();
+        kmonth = kdate.getMonth() + 1;
+        kday = kdate.getDate();
+    }
+    var kanime = {
+        title:{
+            romaji: a.titles.en_jp || a.canonicalTitle,
+            english: a.titles.en,
+            native: a.titles.ja_jp
+        },
+        coverImage:{
+            large: a.posterImage.large
+        },
+        genres: kgenres,
+        averageScore: a.averageRating ? Math.round(a.averageRating): null,
+        startDate:{
+            year: kyear,
+            month: kmonth,
+            day: kday
+        },status: a.status,
+        description: a.synopsis
+    };
+    return kanime;
+}
 
 function showanime(anime) {
     posterImg.src = anime.coverImage.large;
