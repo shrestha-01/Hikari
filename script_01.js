@@ -19,9 +19,11 @@ var historyPos = -1;
 var genresarr = [];
 // the apis 
 var jikanUrl = "https://api.jikan.moe/v4/random/anime";
+var jseUrl = "https://api.jikan.moe/v4/anime";
 var anilistUrl = "https://graphql.anilist.co";
 var kitsuUrl = "https://kitsu.io/api/edge/anime";
 var shikimoriUrl = "https://shikimori.one/api/animes";
+var jgenmap = {};
 // text animation 
 var btnTime = null;
 function textChange(el, newText) {
@@ -147,13 +149,41 @@ async function tryAnilist() {
     return aresult;
     // return d.data.Page.media[0];
 }
-async function tryJikan() {
-    var res = await fetch(jikanUrl);
-    var d = await res.json();
-    if (!d.data) {
-        throw new Error("no jikan data");
+async function ljgen() {
+    if (Object.keys(jgenmap).length) {
+        return;
     }
-    var a = d.data;
+    var res = await fetch("https://api.jikan.moe/v4/genres/anime");
+    var d = await res.json();
+    for (var i = 0; i < d.data.length; i++) {
+        jgenmap[d.data[i].name] = d.data[i].mal_id;
+    }
+}
+async function tryJikan() {
+    var a = null;
+    if (genresarr.length) {
+        await ljgen();
+        var jids = [];
+        for (var i = 0; i < genresarr.length; i++) {
+            if (jgenmap[genresarr[i]]) {
+                jids.push(jgenmap[genresarr[i]]);
+            }
+        }
+        var res = await fetch(jseUrl + "?genres="+jids.join(",")+"&order_by=popularity&limit=25");
+        var d = await res.json();
+        if (!d.data || !d.data.length) {
+            throw new Error("no jikan data for these genres TuT");
+        }
+        var randIndex = Math.floor(Math.random() * d.data.length);
+        a = d.data[randIndex];
+    } else {
+        var res = await fetch(jikanUrl);
+        var d = await res.json();
+        if (!d.data) {
+            throw new Error("no jikan data");
+        }
+        a = d.data;
+    }
     var jgenres = [];
     for (var i = 0; i < a.genres.length; i++) {
         jgenres.push(a.genres[i].name);
