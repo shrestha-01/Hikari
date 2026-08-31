@@ -13,8 +13,10 @@ const avgscore = document.getElementById("avgscore");
 const startDate = document.getElementById("startDate");
 const statusrn = document.getElementById("statusrn");
 const describe = document.getElementById("describe");
+const genresbox = document.getElementById("genresbox");
 var animelist = [];
 var historyPos = -1;
+var genresarr = [];
 // the apis 
 var jikanUrl = "https://api.jikan.moe/v4/random/anime";
 var anilistUrl = "https://graphql.anilist.co";
@@ -68,20 +70,20 @@ async function hikariGets() {
             console.log("jikan down tooo =(", e);
         }
     }
-    if (!anime){
-        try{
+    if (!anime) {
+        try {
             anime = await tryKitsu();
             console.log("anime from kitsu");
-        } catch (e){
-            console.log("Kitsu down too, bruh",e);
+        } catch (e) {
+            console.log("Kitsu down too, bruh", e);
         }
     }
-    if(!anime){
-        try{
+    if (!anime) {
+        try {
             anime = await tryShikimori();
             console.log("anime from shikimori");
-        } catch (e){
-            console.log("shikimori down too, rip -_-",e);
+        } catch (e) {
+            console.log("shikimori down too, rip -_-", e);
         }
     }
     if (anime) {
@@ -100,9 +102,9 @@ async function hikariGets() {
 async function tryAnilist() {
     var randPage = Math.floor(Math.random() * 500) + 1;
     var thegqlQuery = `
- query ($page: Int) {
+ query ($page: Int, $genres: [String]) {
         Page(page: $page, perPage: 1) {
-            media(type: ANIME, sort: POPULARITY_DESC) {
+            media(type: ANIME, sort: POPULARITY_DESC, genre_in: $genres) {
                 title {
                     romaji
                     english
@@ -123,7 +125,7 @@ async function tryAnilist() {
             }
         }
     }`;
-    var res = await fetch(anilistUrl,{
+    var res = await fetch(anilistUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -131,12 +133,13 @@ async function tryAnilist() {
         body: JSON.stringify({
             query: thegqlQuery,
             variables: {
-                page: randPage
+                page: randPage,
+                genres: genresarr
             }
         })
     });
     var d = await res.json();
-    if(!d.data || !d.data.Page.media.length){
+    if (!d.data || !d.data.Page.media.length) {
         throw new Error("no anilist data");
     }
     var aresult = d.data.Page.media[0];
@@ -147,18 +150,18 @@ async function tryAnilist() {
 async function tryJikan() {
     var res = await fetch(jikanUrl);
     var d = await res.json();
-    if(!d.data){
+    if (!d.data) {
         throw new Error("no jikan data");
     }
     var a = d.data;
     var jgenres = [];
-    for (var i =0; i<a.genres.length; i++){
+    for (var i = 0; i < a.genres.length; i++) {
         jgenres.push(a.genres[i].name);
     }
     var jyear = "?";
-    var jmonth= "?";
+    var jmonth = "?";
     var jday = "?";
-    if(a.aired && a.aired.from){
+    if (a.aired && a.aired.from) {
         var adate = new Date(a.aired.from);
         jyear = adate.getFullYear();
         jmonth = adate.getMonth() + 1;
@@ -170,12 +173,12 @@ async function tryJikan() {
             english: a.title_english,
             native: a.title_japanese
         },
-        coverImage:{
+        coverImage: {
             large: a.images.webp.large_image_url
         },
-        genres:jgenres,
+        genres: jgenres,
         averageScore: a.score ? Math.round(a.score * 10) : null,
-        startDate:{
+        startDate: {
             year: jyear,
             month: jmonth,
             day: jday
@@ -186,81 +189,81 @@ async function tryJikan() {
     return janime;
 }
 // whatsNextBtn.addEventListener("click", hikariGets);
-async function tryKitsu(){
+async function tryKitsu() {
     var rand = Math.floor(Math.random() * 4000);
-    var res = await fetch(kitsuUrl + "?page[limit]=1&page[offset]="+rand+"&include=genres");
-    var d = await res.json(); 
-    if(!d.data || !d.data.length){
+    var res = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=" + rand + "&include=genres");
+    var d = await res.json();
+    if (!d.data || !d.data.length) {
         throw new Error("no kitsu data");
     }
     var a = d.data[0].attributes;
     var kgenres = [];
-    if(d.included){
-        for(var i =0; i< d.included.length; i++){
+    if (d.included) {
+        for (var i = 0; i < d.included.length; i++) {
             kgenres.push(d.included[i].attributes.name);
         }
     }
     var kyear = "?";
-    var kmonth="?";
+    var kmonth = "?";
     var kday = "?";
-    if(a.startDate){
-        var kdate= new Date(a.startDate);
+    if (a.startDate) {
+        var kdate = new Date(a.startDate);
         kyear = kdate.getFullYear();
         kmonth = kdate.getMonth() + 1;
         kday = kdate.getDate();
     }
     var kanime = {
-        title:{
+        title: {
             romaji: a.titles.en_jp || a.canonicalTitle,
             english: a.titles.en,
             native: a.titles.ja_jp
         },
-        coverImage:{
+        coverImage: {
             large: a.posterImage.original
         },
         genres: kgenres,
-        averageScore: a.averageRating ? Math.round(a.averageRating): null,
-        startDate:{
+        averageScore: a.averageRating ? Math.round(a.averageRating) : null,
+        startDate: {
             year: kyear,
             month: kmonth,
             day: kday
-        },status: a.status,
+        }, status: a.status,
         description: a.synopsis
     };
     return kanime;
 }
-async function tryShikimori(){
+async function tryShikimori() {
     var res = await fetch(shikimoriUrl + "?limit=1&order=random");
     var d = await res.json();
-    if(!d.length){
+    if (!d.length) {
         throw new Error("no shikimori data");
     }
     var a = d[0];
     var sgenres = [];
-    for(var i=0; i<a.genres.length; i++){
+    for (var i = 0; i < a.genres.length; i++) {
         sgenres.push(a.genres[i].name);
     }
     var syear = "?";
     var smonth = "?";
-    var sday ="?";
-    if(a.aired_on){
+    var sday = "?";
+    if (a.aired_on) {
         var sdate = new Date(a.aired_on);
         syear = sdate.getFullYear();
         smonth = sdate.getMonth() + 1;
-        sday =sdate.getDate();
+        sday = sdate.getDate();
     }
-    var sanime={
-        title:{
+    var sanime = {
+        title: {
             romaji: a.name,
             english: a.name,
             native: ""
         },
-        coverImage:{
+        coverImage: {
             large: "https://shikimori.one" + a.image.original
         },
         genres: sgenres,
         averageScore: a.score ? Math.round(parseFloat(a.score) * 10) : null,
-        startDate:{
+        startDate: {
             year: syear,
             month: smonth,
             day: sday
@@ -318,3 +321,19 @@ whatsNextBtn.addEventListener("click", hikariGets);
 categorybtn.addEventListener("click", function () {
     categories.classList.toggle("open");
 });
+// open closing of the genres dabba
+document.getElementById("whichgenre").addEventListener("click", function () {
+    genresbox.classList.toggle("open");
+})
+// the genre filter 
+var allCheckboxes = document.querySelectorAll(".g input");
+for (var i = 0; i < allCheckboxes.length; i++) {
+    allCheckboxes[i].addEventListener("change", function () {
+        genresarr = [];
+        var checkedOnes = document.querySelectorAll(".g input:checked");
+        for (var j = 0; j < checkedOnes.length; j++) {
+            genresarr.push(checkedOnes[j].value);
+        }
+        console.log(genresarr);
+    });
+}
