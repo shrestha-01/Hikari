@@ -19,6 +19,7 @@ var historyPos = -1;
 var jikanUrl = "https://api.jikan.moe/v4/random/anime";
 var anilistUrl = "https://graphql.anilist.co";
 var kitsuUrl = "https://kitsu.io/api/edge/anime";
+var shikimoriUrl = "https://shikimori.one/api/animes";
 // text animation 
 var btnTime = null;
 function textChange(el, newText) {
@@ -73,6 +74,14 @@ async function hikariGets() {
             console.log("anime from kitsu");
         } catch (e){
             console.log("Kitsu down too, bruh",e);
+        }
+    }
+    if(!anime){
+        try{
+            anime = await tryShikimori();
+            console.log("anime from shikimori");
+        } catch (e){
+            console.log("shikimori down too, rip -_-",e);
         }
     }
     if (anime) {
@@ -220,7 +229,47 @@ async function tryKitsu(){
     };
     return kanime;
 }
-
+async function tryShikimori(){
+    var res = await fetch(shikimoriUrl + "?limit=1&order=random");
+    var d = await res.json();
+    if(!d.length){
+        throw new Error("no shikimori data");
+    }
+    var a = d[0];
+    var sgenres = [];
+    for(var i=0; i<a.genres.length; i++){
+        sgenres.push(a.genres[i].name);
+    }
+    var syear = "?";
+    var smonth = "?";
+    var sday ="?";
+    if(a.aired_on){
+        var sdate = new Date(a.aired_on);
+        syear = sdate.getFullYear();
+        smonth = sdate.getMonth() + 1;
+        sday =sdate.getDate();
+    }
+    var sanime={
+        title:{
+            romaji: a.name,
+            english: a.name,
+            native: ""
+        },
+        coverImage:{
+            large: "https://shikimori.one" + a.image.original
+        },
+        genres: sgenres,
+        averageScore: a.score ? Math.round(parseFloat(a.score) * 10) : null,
+        startDate:{
+            year: syear,
+            month: smonth,
+            day: sday
+        },
+        status: a.status,
+        description: a.description || "no description available"
+    };
+    return sanime;
+}
 function showanime(anime) {
     posterImg.src = anime.coverImage.large;
     posterImg.style.display = "block";

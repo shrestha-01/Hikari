@@ -186,8 +186,8 @@ body {
 }
 
 .categories {
-    display: flex;
     /* display: flexbox; */
+    display: flex;
     gap: 10px;
     max-width: 0;
     overflow: hidden;
