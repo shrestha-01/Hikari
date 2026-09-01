@@ -18,7 +18,7 @@ var animelist = [];
 var historyPos = -1;
 var genresarr = [];
 // the apis 
-var jikanUrl =  "https://api.jikan.moe/v4/random/anime?sfw=true";
+var jikanUrl = "https://api.jikan.moe/v4/random/anime?sfw=true";
 // var jikanUrl = "https://api.jikan.moe/v4/random/anime";
 var jseUrl = "https://api.jikan.moe/v4/anime";
 var anilistUrl = "https://graphql.anilist.co";
@@ -214,9 +214,54 @@ async function tryAnilist() {
             })
         });
         d = await fallbackRes.json();
-        if (!d.data || !d.data.Page.media.length) {
-            throw new Error("no anilist data at all");
-        }
+    }
+    if ((!d.data || !d.data.Page.media.length) && genresarr.length > 1) {
+        console.log("no AND matches, trying OR instead");
+        var orglqry = `
+        query ($page: Int, $genres: [String]){
+                Page(page: $page, perPage: 25){
+                     media(type: ANIME,
+                     sort: POPULARITY_DESC,
+                     genre_in: $genres,
+                     isAdult: false){
+                          title{
+                              romaji
+                              english
+                              native
+                            }
+                              coverImage{
+                              extraLarge
+                              }
+                              genres
+                              averageScore
+                              startDate{
+                                   year
+                                   month
+                                   day
+                                }
+                                status
+                                description
+                            }
+                    }
+            }`;
+
+        var orRes = await fetch(anilistUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                query: orglqry,
+                variables: {
+                    page: 1,
+                    genres: [genresarr[0]]
+                }
+            })
+        });
+        d = await orRes.json();
+    }
+    if (!d.data || !d.data.Page.media.length) {
+        throw new Error("no anilist data at all");
     }
     var randIndex = Math.floor(Math.random() * d.data.Page.media.length);
     var aresult = d.data.Page.media[randIndex];
@@ -251,14 +296,14 @@ async function tryJikan() {
         // var randIndex = Math.floor(Math.random() * d.data.length);
         // a = d.data[randIndex];
         // var firstRes = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25");
-        var firstRes = await fetch(jseUrl + "?genres=" + jids.join(",")+"&order_by=popularity&limit=25&sfw=true");
+        var firstRes = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25&sfw=true");
         var firstD = await firstRes.json();
         if (!firstD.data || !firstD.data.length) {
             throw new Error("no jikan data for these genres TuT");
         }
         var totalPages = firstD.pagination.last_visible_page;
         var randPage = Math.floor(Math.random() * totalPages) + 1;
-        var res = await fetch(jseUrl + "?genres=" + jids.join(",")+"&order_by=popularity&limit=25&page=" + randPage + "&sfw=true");
+        var res = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25&page=" + randPage + "&sfw=true");
         // var res = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25&page=" + randPage);
         var d = await res.json();
         if (!d.data || !d.data.length) {
@@ -326,11 +371,11 @@ async function tryKitsu() {
     // var kgenres = [];
     // if (d.included) {
     var a = d.data[0].attributes;
-    if(a.nsfw){
+    if (a.nsfw) {
         throw new Error("o o, Kitsu gave nsfw content, skipping");
     }
     var kgenres = [];
-    if(d.included){
+    if (d.included) {
         for (var i = 0; i < d.included.length; i++) {
             kgenres.push(d.included[i].attributes.name);
         }
