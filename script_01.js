@@ -102,8 +102,35 @@ async function hikariGets() {
     textChange(btnText, "What's Next?");
 }
 async function tryAnilist() {
+    //     var randPage = Math.floor(Math.random() * 500) + 1;
+    //     var thegqlQuery = `
+    //  query ($page: Int, $genres: [String]) {
+    //         Page(page: $page, perPage: 1) {
+    //             media(type: ANIME, sort: POPULARITY_DESC, genre_in: $genres) {
+    //                 title {
+    //                     romaji
+    //                     english
+    //                     native
+    //                 }
+    //                 coverImage {
+    //                     extraLarge
+    //                 }
+    //                 genres
+    //                 averageScore
+    //                 startDate{
+    //                     year
+    //                     month
+    //                     day
+    //                 }
+    //                 status
+    //                 description
+    //             }
+    //         }
+    //     }`;
     var randPage = Math.floor(Math.random() * 500) + 1;
-    var thegqlQuery = `
+    var thegqlQuery;
+    if (genresarr.length) {
+        thegqlQuery = `
  query ($page: Int, $genres: [String]) {
         Page(page: $page, perPage: 1) {
             media(type: ANIME, sort: POPULARITY_DESC, genre_in: $genres) {
@@ -127,6 +154,32 @@ async function tryAnilist() {
             }
         }
     }`;
+    } else {
+        thegqlQuery = `
+ query ($page: Int) {
+        Page(page: $page, perPage: 1) {
+            media(type: ANIME, sort: POPULARITY_DESC) {
+                title {
+                    romaji
+                    english
+                    native
+                }
+                coverImage {
+                    extraLarge
+                }
+                genres
+                averageScore
+                startDate{
+                    year
+                    month
+                    day
+                }
+                status
+                description
+            }
+        }
+    }`;
+    }
     var res = await fetch(anilistUrl, {
         method: "POST",
         headers: {
@@ -147,7 +200,6 @@ async function tryAnilist() {
     var aresult = d.data.Page.media[0];
     aresult.coverImage.large = aresult.coverImage.extraLarge;
     return aresult;
-    // return d.data.Page.media[0];
 }
 async function ljgen() {
     if (Object.keys(jgenmap).length) {
@@ -176,20 +228,20 @@ async function tryJikan() {
         // }
         // var randIndex = Math.floor(Math.random() * d.data.length);
         // a = d.data[randIndex];
-        var firstRes = await fetch(jseUrl + "?genres="+jids.join(",")+"&order_by=popularity&limit=25");
+        var firstRes = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25");
         var firstD = await firstRes.json();
-        if(!firstD.data || !firstD.data.length){
+        if (!firstD.data || !firstD.data.length) {
             throw new Error("no jikan data for these genres TuT");
         }
         var totalPages = firstD.pagination.last_visible_page;
         var randPage = Math.floor(Math.random() * totalPages) + 1;
-        var res = await fetch(jseUrl + "?genres="+jids.join(",")+"&order_by=popularity&limit=25&page="+randPage);
+        var res = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25&page=" + randPage);
         var d = await res.json();
-        if(!d.data || !d.data.length){
+        if (!d.data || !d.data.length) {
             throw new Error("no jikan data for this page");
         }
         var randIndex = Math.floor(Math.random() * d.data.length);
-        a=d.data[randIndex];
+        a = d.data[randIndex];
     } else {
         var res = await fetch(jikanUrl);
         var d = await res.json();
