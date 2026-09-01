@@ -132,8 +132,13 @@ async function tryAnilist() {
     if (genresarr.length) {
         thegqlQuery = `
  query ($page: Int, $genres: [String]) {
-        Page(page: $page, perPage: 1) {
-            media(type: ANIME, sort: POPULARITY_DESC, genre_in: $genres) {
+        Page(page: $page, perPage: 1){
+             pageInfo{
+                lastPage
+            }
+            media(type: ANIME,
+            sort: POPULARITY_DESC,
+            genre_in: $genres){
                 title {
                     romaji
                     english
@@ -157,8 +162,11 @@ async function tryAnilist() {
     } else {
         thegqlQuery = `
  query ($page: Int) {
-        Page(page: $page, perPage: 1) {
-            media(type: ANIME, sort: POPULARITY_DESC) {
+        Page(page: $page, perPage: 1){
+            pageInfo{
+                lastPage
+            }
+            media(type: ANIME, sort: POPULARITY_DESC){
                 title {
                     romaji
                     english
@@ -180,6 +188,25 @@ async function tryAnilist() {
         }
     }`;
     }
+    var firstRes = await fetch(anilistUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            query: thegqlQuery,
+            variables: {
+                page: 1,
+                genres: genresarr
+            }
+        })
+    });
+    var firstD = await firstRes.json();
+    if (!firstD.data || !firstD.data.Page.media.length) {
+        throw new Error("no anilist data");
+    }
+    var lastPage = firstD.data.Page.pageInfo.lastPage;
+    var realPage = Math.floor(Math.random() * lastPage) + 1;
     var res = await fetch(anilistUrl, {
         method: "POST",
         headers: {
@@ -188,14 +215,14 @@ async function tryAnilist() {
         body: JSON.stringify({
             query: thegqlQuery,
             variables: {
-                page: randPage,
+                page: realPage,
                 genres: genresarr
             }
         })
     });
     var d = await res.json();
     if (!d.data || !d.data.Page.media.length) {
-        throw new Error("no anilist data");
+        throw new Error("no anilist data on real page");
     }
     var aresult = d.data.Page.media[0];
     aresult.coverImage.large = aresult.coverImage.extraLarge;
