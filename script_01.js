@@ -312,11 +312,17 @@ async function tryJikan() {
     return janime;
 }
 // whatsNextBtn.addEventListener("click", hikariGets);
-async function tryKitsu() {
-    var rand = Math.floor(Math.random() * 4000);
-    var res = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=" + rand + "&include=genres");
+async function tryKitsu(){
+    var firstRes = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=0");
+    var firstD = await firstRes.json();
+    if(!firstD.meta || !firstD.meta.count){
+        throw new Error("couldnt get kitsu total count");
+    }
+    var totalCount = firstD.meta.count;
+    var randOffset = Math.floor(Math.random() * totalCount);
+    var res = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=" + randOffset + "&include=genres");
     var d = await res.json();
-    if (!d.data || !d.data.length) {
+    if(!d.data || !d.data.length){
         throw new Error("no kitsu data");
     }
     var a = d.data[0].attributes;
