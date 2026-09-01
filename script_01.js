@@ -132,13 +132,11 @@ async function tryAnilist() {
     if (genresarr.length) {
         thegqlQuery = `
  query ($page: Int, $genres: [String]) {
-        Page(page: $page, perPage: 1){
-             pageInfo{
-                lastPage
-            }
-            media(type: ANIME,
-            sort: POPULARITY_DESC,
-            genre_in: $genres){
+        Page(page: $page, perPage: 25){
+             media(type: ANIME,
+             sort: POPULARITY_DESC,
+             genre_in:$genres,
+             isAdult: false){
                 title {
                     romaji
                     english
@@ -162,11 +160,8 @@ async function tryAnilist() {
     } else {
         thegqlQuery = `
  query ($page: Int) {
-        Page(page: $page, perPage: 1){
-            pageInfo{
-                lastPage
-            }
-            media(type: ANIME, sort: POPULARITY_DESC){
+        Page(page: $page, perPage: 25){
+            media(type: ANIME, sort: POPULARITY_DESC, isAdult: false){
                 title {
                     romaji
                     english
@@ -188,25 +183,7 @@ async function tryAnilist() {
         }
     }`;
     }
-    var firstRes = await fetch(anilistUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            query: thegqlQuery,
-            variables: {
-                page: 1,
-                genres: genresarr
-            }
-        })
-    });
-    var firstD = await firstRes.json();
-    if (!firstD.data || !firstD.data.Page.media.length) {
-        throw new Error("no anilist data");
-    }
-    var lastPage = firstD.data.Page.pageInfo.lastPage;
-    var realPage = Math.floor(Math.random() * lastPage) + 1;
+    var randPage2 = Math.floor(Math.random() * 20) + 1;
     var res = await fetch(anilistUrl, {
         method: "POST",
         headers: {
@@ -215,16 +192,33 @@ async function tryAnilist() {
         body: JSON.stringify({
             query: thegqlQuery,
             variables: {
-                page: realPage,
+                page: randPage2,
                 genres: genresarr
             }
         })
     });
     var d = await res.json();
     if (!d.data || !d.data.Page.media.length) {
-        throw new Error("no anilist data on real page");
+        var fallbackRes = await fetch(anilistUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                query: thegqlQuery,
+                variables: {
+                    page: 1,
+                    genres: genresarr
+                }
+            })
+        });
+        d = await fallbackRes.json();
+        if (!d.data || !d.data.Page.media.length) {
+            throw new Error("no anilist data at all");
+        }
     }
-    var aresult = d.data.Page.media[0];
+    var randIndex = Math.floor(Math.random() * d.data.Page.media.length);
+    var aresult = d.data.Page.media[randIndex];
     aresult.coverImage.large = aresult.coverImage.extraLarge;
     return aresult;
 }
@@ -312,17 +306,17 @@ async function tryJikan() {
     return janime;
 }
 // whatsNextBtn.addEventListener("click", hikariGets);
-async function tryKitsu(){
+async function tryKitsu() {
     var firstRes = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=0");
     var firstD = await firstRes.json();
-    if(!firstD.meta || !firstD.meta.count){
+    if (!firstD.meta || !firstD.meta.count) {
         throw new Error("couldnt get kitsu total count");
     }
     var totalCount = firstD.meta.count;
     var randOffset = Math.floor(Math.random() * totalCount);
     var res = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=" + randOffset + "&include=genres");
     var d = await res.json();
-    if(!d.data || !d.data.length){
+    if (!d.data || !d.data.length) {
         throw new Error("no kitsu data");
     }
     var a = d.data[0].attributes;
