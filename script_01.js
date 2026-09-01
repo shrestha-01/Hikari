@@ -169,13 +169,27 @@ async function tryJikan() {
                 jids.push(jgenmap[genresarr[i]]);
             }
         }
-        var res = await fetch(jseUrl + "?genres="+jids.join(",")+"&order_by=popularity&limit=25");
-        var d = await res.json();
-        if (!d.data || !d.data.length) {
+        // var res = await fetch(jseUrl + "?genres="+jids.join(",")+"&order_by=popularity&limit=25");
+        // var d = await res.json();
+        // if (!d.data || !d.data.length) {
+        //     throw new Error("no jikan data for these genres TuT");
+        // }
+        // var randIndex = Math.floor(Math.random() * d.data.length);
+        // a = d.data[randIndex];
+        var firstRes = await fetch(jseUrl + "?genres="+jids.join(",")+"&order_by=popularity&limit=25");
+        var firstD = await firstRes.json();
+        if(!firstD.data || !firstD.data.length){
             throw new Error("no jikan data for these genres TuT");
         }
+        var totalPages = firstD.pagination.last_visible_page;
+        var randPage = Math.floor(Math.random() * totalPages) + 1;
+        var res = await fetch(jseUrl + "?genres="+jids.join(",")+"&order_by=popularity&limit=25&page="+randPage);
+        var d = await res.json();
+        if(!d.data || !d.data.length){
+            throw new Error("no jikan data for this page");
+        }
         var randIndex = Math.floor(Math.random() * d.data.length);
-        a = d.data[randIndex];
+        a=d.data[randIndex];
     } else {
         var res = await fetch(jikanUrl);
         var d = await res.json();
