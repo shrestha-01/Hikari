@@ -322,9 +322,15 @@ async function tryKitsu() {
     if (!d.data || !d.data.length) {
         throw new Error("no kitsu data");
     }
+    // var a = d.data[0].attributes;
+    // var kgenres = [];
+    // if (d.included) {
     var a = d.data[0].attributes;
+    if(a.nsfw){
+        throw new Error("o o, Kitsu gave nsfw content, skipping");
+    }
     var kgenres = [];
-    if (d.included) {
+    if(d.included){
         for (var i = 0; i < d.included.length; i++) {
             kgenres.push(d.included[i].attributes.name);
         }
