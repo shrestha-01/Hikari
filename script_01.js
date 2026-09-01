@@ -18,7 +18,8 @@ var animelist = [];
 var historyPos = -1;
 var genresarr = [];
 // the apis 
-var jikanUrl = "https://api.jikan.moe/v4/random/anime";
+var jikanUrl =  "https://api.jikan.moe/v4/random/anime?sfw=true";
+// var jikanUrl = "https://api.jikan.moe/v4/random/anime";
 var jseUrl = "https://api.jikan.moe/v4/anime";
 var anilistUrl = "https://graphql.anilist.co";
 var kitsuUrl = "https://kitsu.io/api/edge/anime";
@@ -249,14 +250,16 @@ async function tryJikan() {
         // }
         // var randIndex = Math.floor(Math.random() * d.data.length);
         // a = d.data[randIndex];
-        var firstRes = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25");
+        // var firstRes = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25");
+        var firstRes = await fetch(jseUrl + "?genres=" + jids.join(",")+"&order_by=popularity&limit=25&sfw=true");
         var firstD = await firstRes.json();
         if (!firstD.data || !firstD.data.length) {
             throw new Error("no jikan data for these genres TuT");
         }
         var totalPages = firstD.pagination.last_visible_page;
         var randPage = Math.floor(Math.random() * totalPages) + 1;
-        var res = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25&page=" + randPage);
+        var res = await fetch(jseUrl + "?genres=" + jids.join(",")+"&order_by=popularity&limit=25&page=" + randPage + "&sfw=true");
+        // var res = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25&page=" + randPage);
         var d = await res.json();
         if (!d.data || !d.data.length) {
             throw new Error("no jikan data for this page");
