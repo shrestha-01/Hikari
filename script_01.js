@@ -27,6 +27,7 @@ var kitsuUrl = "https://kitsu.io/api/edge/anime";
 var shikimoriUrl = "https://shikimori.one/api/animes";
 var jgenmap = {};
 var kgenmap = {};
+var clickSound = new Audio("Sounds/click.mp3");
 // text animation 
 var btnTime = null;
 function textChange(el, newText) {
@@ -573,7 +574,11 @@ nextBtn.addEventListener("click", function () {
         nextBtn.disabled = historyPos >= animelist.length - 1;
     }
 });
-whatsNextBtn.addEventListener("click", hikariGets);
+whatsNextBtn.addEventListener("click", function(){
+    clickSound.currentTime = 0;
+    clickSound.play();
+    hikariGets();
+});
 //the category choosing btn opens and closes
 categorybtn.addEventListener("click", function () {
     categories.classList.toggle("open");
