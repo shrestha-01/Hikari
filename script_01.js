@@ -103,17 +103,43 @@ async function hikariGets() {
     //     whatsNextBtn.disabled = false;
     //     textChange(btnText, "What's Next?");
     // }
-    if (anime && alreadyshown(anime)) {
+    if(anime && alreadyshown(anime)){
         hmt = hmt + 1;
         console.log("already shown. try:", hmt);
-        if (hmt < 15) {
+        if(hmt < 5){
             loading = false;
             whatsNextBtn.disabled = false;
             textChange(btnText, "What's Next?");
             await hikariGets();
             return;
         }
-        console.log("gave up-_-,repat");
+        console.log("5 try reachd");
+        var savedGenres = genresarr;
+        genresarr = genresarr.length ? [genresarr[0]] : [];
+        var broadAnime = null;
+        try{
+            broadAnime = await tryAnilist();
+        }catch (e){
+            console.log("broad anilist try failed too",e);
+        }
+        if(!broadAnime){
+            try{
+                broadAnime = await tryJikan();
+            } catch (e) {
+                console.log("broad jikan try failed too", e);
+            }
+        }
+        if(!broadAnime){
+            try {
+                broadAnime = await tryKitsu();
+            } catch (e){
+                console.log("broad kitsu failed too", e);
+            }
+        }
+        genresarr = savedGenres;
+        if(broadAnime){
+            anime = broadAnime;
+        }
     }
     hmt = 0;
     if (anime) {
