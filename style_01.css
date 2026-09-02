@@ -62,10 +62,12 @@ body {
             rgba(255, 255, 255, 0.8), transparent,
             rgba(255, 255, 255, 0.3));
 }
-.rightInfo{
+
+.rightInfo {
     flex: 1;
     min-width: 280px;
 }
+
 .theButtons {
     display: flex;
     justify-content: center;
@@ -90,7 +92,8 @@ body {
     background: rgba(255, 255, 255, 0.15);
     transform: scale(1.1);
 }
-.theButtons button:disabled:hover{
+
+.theButtons button:disabled:hover {
     background: rgba(255, 255, 255, 0.05);
     transform: scale(1);
 }
@@ -116,12 +119,6 @@ body {
     justify-content: space-between;
     align-items: center;
     /* max-width: 900px; */
-    max-width: clamp(300px, 90vw, 1200px);
-    margin: 0 auto;
-    width: 100%;
-    padding: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    padding-bottom: 20px;
 }
 
 #btnText {
@@ -165,6 +162,7 @@ body {
     max-width: clamp(300px, 90vw, 1200px);
     margin: 20px auto 0 auto;
 }
+
 /* the genresss */
 #whichgenre {
     background: rgba(255, 255, 255, 0.05);
@@ -177,23 +175,25 @@ body {
     color: white;
     cursor: pointer;
 }
-.filterBar{
+
+.filterBar {
     position: relative;
 }
+
 /* .genresbox{
     display: none;
     position: absolute;
     top: 45px;
     right: 0;
     /* background-color: rgba(255, 255, 255, 0.05); */
-    /* background: rgba(255, 255, 255, 0.05);
+/* background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(25px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     padding: 15px;
     flex-direction: column;
 } */
-.genresbox{
+.genresbox {
     display: none;
     position: absolute;
     top: 45px;
@@ -202,21 +202,17 @@ body {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    padding: 15px;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 500px;
-    gap: 8px 15px;
-    z-index: 5;
 }
-.genresbox.open{
+
+.genresbox.open {
     display: flex;
 }
-.g{
+
+.g {
     white-space: nowrap;
     cursor: pointer;
 }
+
 .topNav {
     display: flex;
     align-items: center;
@@ -249,7 +245,8 @@ body {
     cursor: pointer;
     white-space: nowrap;
 }
-.categorybtn{
+
+.categorybtn {
     color: white;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
@@ -261,12 +258,13 @@ body {
 }
 
 /* for infor like status , date and moreeee */
-.infocap{
+.infocap {
     display: flex;
     gap: 10px;
     margin-top: 10px;
 }
-.infocap div{
+
+.infocap div {
     font-size: 13px;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
@@ -278,7 +276,7 @@ body {
 }
 
 /* for the description */
-.describe{
+.describe {
     font-size: 14px;
     margin-top: 15px;
     line-height: 1.5;
@@ -287,8 +285,28 @@ body {
     padding-right: 10px;
     overflow-y: auto;
 }
-/* diableing the mouse when hover (when there is no anime or any content to show) */
-.theButtons button:disabled{
+
+/* diableing the mouse */
+.theButtons button:disabled {
     cursor: not-allowed;
     opacity: 0.4;
+}
+
+.genresbox {
+    border-radius: 10px;
+    padding: 15px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 500px;
+    gap: 8px 15px;
+    z-index: 5;
+}
+
+.topWrap {
+    max-width: clamp(300px, 90vw, 1200px);
+    margin: 0 auto;
+    width: 100%;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 20px;
 }

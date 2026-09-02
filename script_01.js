@@ -26,6 +26,7 @@ var anilistUrl = "https://graphql.anilist.co";
 var kitsuUrl = "https://kitsu.io/api/edge/anime";
 var shikimoriUrl = "https://shikimori.one/api/animes";
 var jgenmap = {};
+var kgenmap = {};
 // text animation 
 var btnTime = null;
 function textChange(el, newText) {
@@ -103,10 +104,10 @@ async function hikariGets() {
     //     whatsNextBtn.disabled = false;
     //     textChange(btnText, "What's Next?");
     // }
-    if(anime && alreadyshown(anime)){
+    if (anime && alreadyshown(anime)) {
         hmt = hmt + 1;
         console.log("already shown. try:", hmt);
-        if(hmt < 5){
+        if (hmt < 5) {
             loading = false;
             whatsNextBtn.disabled = false;
             textChange(btnText, "What's Next?");
@@ -117,27 +118,27 @@ async function hikariGets() {
         var savedGenres = genresarr;
         genresarr = genresarr.length ? [genresarr[0]] : [];
         var broadAnime = null;
-        try{
+        try {
             broadAnime = await tryAnilist();
-        }catch (e){
-            console.log("broad anilist try failed too",e);
+        } catch (e) {
+            console.log("broad anilist try failed too", e);
         }
-        if(!broadAnime){
-            try{
+        if (!broadAnime) {
+            try {
                 broadAnime = await tryJikan();
             } catch (e) {
                 console.log("broad jikan try failed too", e);
             }
         }
-        if(!broadAnime){
+        if (!broadAnime) {
             try {
                 broadAnime = await tryKitsu();
-            } catch (e){
+            } catch (e) {
                 console.log("broad kitsu failed too", e);
             }
         }
         genresarr = savedGenres;
-        if(broadAnime){
+        if (broadAnime) {
             anime = broadAnime;
         }
     }
@@ -409,22 +410,46 @@ async function tryJikan() {
     return janime;
 }
 // whatsNextBtn.addEventListener("click", hikariGets);
+async function lkgen(name) {
+    if (kgenmap[name]) {
+        return kgenmap[name];
+    }
+    var res = await fetch("https://kitsu.io/api/edge/categories?filter[title]="
+        + encodeURIComponent(name) + "&page[limit]=1");
+    var d = await res.json();
+    if (d.data && d.data.length) {
+        kgenmap[name] = d.data[0].attributes.slug;
+    }
+    return kgenmap[name];
+}
 async function tryKitsu() {
-    var firstRes = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=0");
+    var catFilter = "";
+    if (genresarr.length) {
+        var slugs = [];
+        for (var i = 0; i < genresarr.length; i++) {
+            var slug = await lkgen(genresarr[i]);
+            if(slug){
+                slugs.push(slug);
+            }
+        }
+        if(slugs.length){
+            catFilter = "&filter[categories]=" + slugs.join(",");
+        }
+    }
+    var firstRes = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=0"+
+        catFilter);
     var firstD = await firstRes.json();
-    if (!firstD.meta || !firstD.meta.count) {
-        throw new Error("couldnt get kitsu total count");
+    if(!firstD.meta || !firstD.meta.count){
+        throw new Error("Couldnt get kitsu count");
     }
     var totalCount = firstD.meta.count;
-    var randOffset = Math.floor(Math.random() * totalCount);
-    var res = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=" + randOffset + "&include=genres");
+    var roff = Math.floor(Math.random() * totalCount);
+    var res = await fetch(kitsuUrl + "?page[limit]=1&page[offset]="
+        + roff + "&include=genres"+catFilter);
     var d = await res.json();
-    if (!d.data || !d.data.length) {
+    if(!d.data || !d.data.length){
         throw new Error("no kitsu data");
     }
-    // var a = d.data[0].attributes;
-    // var kgenres = [];
-    // if (d.included) {
     var a = d.data[0].attributes;
     if (a.nsfw) {
         throw new Error("o o, Kitsu gave nsfw content, skipping");
@@ -569,11 +594,11 @@ for (var i = 0; i < allCheckboxes.length; i++) {
         console.log(genresarr);
     });
 }
-function alreadyshown(anime){
+function alreadyshown(anime) {
     var title = anime.title.english || anime.title.romaji;
-    for(var i=0; i< animelist.length; i++){
+    for (var i = 0; i < animelist.length; i++) {
         var pastTitle = animelist[i].title.english || animelist[i].title.romaji;
-        if(pastTitle === title){
+        if (pastTitle === title) {
             return true;
         }
     }
