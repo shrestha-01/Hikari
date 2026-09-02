@@ -17,6 +17,7 @@ const genresbox = document.getElementById("genresbox");
 var animelist = [];
 var historyPos = -1;
 var genresarr = [];
+var hmt = 0;
 // the apis 
 var jikanUrl = "https://api.jikan.moe/v4/random/anime?sfw=true";
 // var jikanUrl = "https://api.jikan.moe/v4/random/anime";
@@ -89,6 +90,32 @@ async function hikariGets() {
             console.log("shikimori down too, rip -_-", e);
         }
     }
+    //     if (anime) {
+    //         animelist.push(anime);
+    //         historyPos = animelist.length - 1;
+    //         showanime(anime);
+    //         backBtn.disabled = historyPos <= 0;
+    //         nextBtn.disabled = historyPos >= animelist.length - 1;
+    //     } else {
+    //         console.log("both apis down, rough day");
+    //     }
+    //     loading = false;
+    //     whatsNextBtn.disabled = false;
+    //     textChange(btnText, "What's Next?");
+    // }
+    if (anime && alreadyshown(anime)) {
+        hmt = hmt + 1;
+        console.log("already shown. try:", hmt);
+        if (hmt < 15) {
+            loading = false;
+            whatsNextBtn.disabled = false;
+            textChange(btnText, "What's Next?");
+            await hikariGets();
+            return;
+        }
+        console.log("gave up-_-,repat");
+    }
+    hmt = 0;
     if (anime) {
         animelist.push(anime);
         historyPos = animelist.length - 1;
@@ -96,7 +123,7 @@ async function hikariGets() {
         backBtn.disabled = historyPos <= 0;
         nextBtn.disabled = historyPos >= animelist.length - 1;
     } else {
-        console.log("both apis down, rough day");
+        console.log("both api down, rough day");
     }
     loading = false;
     whatsNextBtn.disabled = false;
@@ -259,10 +286,12 @@ async function tryAnilist() {
             })
         });
         d = await orRes.json();
+        console.log("OR fallback used genre:", genresarr[0], "| results found:", d.data ? d.data.Page.media.length : 0);
     }
     if (!d.data || !d.data.Page.media.length) {
         throw new Error("no anilist data at all");
     }
+    console.log("final match count for this combo:", d.data.Page.media.length);
     var randIndex = Math.floor(Math.random() * d.data.Page.media.length);
     var aresult = d.data.Page.media[randIndex];
     aresult.coverImage.large = aresult.coverImage.extraLarge;
@@ -513,4 +542,14 @@ for (var i = 0; i < allCheckboxes.length; i++) {
         }
         console.log(genresarr);
     });
+}
+function alreadyshown(anime){
+    var title = anime.title.english || anime.title.romaji;
+    for(var i=0; i< animelist.length; i++){
+        var pastTitle = animelist[i].title.english || animelist[i].title.romaji;
+        if(pastTitle === title){
+            return true;
+        }
+    }
+    return false;
 }
