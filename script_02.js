@@ -261,3 +261,61 @@ async function tryJikanManga(){
     };
     return jmanga;
 }
+//kitsu api
+var kitsuMangaUrl = "https://kitsu.io/api/edge/manga";
+async function tryKitsuManga(){
+    var firstRes = await fetch(kitsuMangaUrl + "?page[limit]=1&page[offset]=0");
+    var firstD = await firstRes.json();
+    if(!firstD.meta || !firstD.meta.count){
+        throw new Error("Couldnt get kitsu manga count");
+    }
+    var totalCount = firstD.meta.count;
+    var roff = Math.floor(Math.random() * totalCount);
+    var res = await fetch(kitsuMangaUrl + "?page[limit]=1&page[offset]="
+        + roff + "&include=genres");
+    var d = await res.json();
+    if(!d.data || !d.data.length){
+        throw new Error("no kitsu data");
+    }
+    var a = d.data[0].attributes;
+    if(a.nsfw){
+        throw new Error("o, kitsu gave nsfw manga, skippin");
+    }
+    var kgenres = [];
+    if(d.included){
+        for(var i = 0; i<d.included.length; i++){
+            kgenres.push(d.included[i].attributes.name);
+            }
+        }
+        var kyear = "?";
+        var kmonth = "?";
+        var kday = "?";
+        if(a.startDate){
+            var kdate = new Date(a.startDate);
+            kyear = kdate.getFullYear();
+            kmonth = kdate.getMonth() + 1;
+            kday = kdate.getDate();
+        }
+        var kmanga = {
+            title: {
+                romaji: a.titles.en_jp || a.canonicalTitle,
+                english: a.titles.en,
+                native: a.titles.ja_jp
+            },
+            coverImage:{
+                large: a.posterImage.original
+            },
+            genres: kgenres,
+            averageScore: a.averageRating ? Math.round(a.averageRating) : null,
+            startDate:{
+                year: kyear,
+                month: kmonth,
+                day: kday
+            },
+            status: a.status,
+            description: a.synopsis,
+            chapters: a.chapterCount || null,
+            volumes: a.volumeCount || null
+        };
+        return kmanga;
+}
