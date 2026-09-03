@@ -13,17 +13,17 @@ async function hikariManga() {
     console.log("getting a manga...!!");
     var manga = null;
     try{
-        manga = await tryMangadexManga();
-        console.log("manga form mangadex");
+        manga = await tryAnilistmanga();
+        console.log("manga form anilist");
     } catch (e){
-        console.log("mangadex ddown",e);
+        console.log("anilist ddown",e);
     }
     if(!manga){
         try{
-            manga = await tryAnilistmanga();
-            console.log("manga from anilist");
+            manga = await tryMangadexManga();
+            console.log("manga from mangadex");
         } catch (e) {
-            console.log("oh shoot, anilist manga down",e);
+            console.log("oh shoot, mangadex manga down",e);
         }
     }
     if(!manga){
