@@ -12,11 +12,35 @@ async function hikariManga() {
     textChange(btnText, "Ummmm...");
     console.log("getting a manga...!!");
     var manga = null;
-    try {
-        manga = await tryAnilistmanga();
-        console.log("manga from anilist");
-    } catch (e) {
-        console.log("oh shoot, anilist manga down", e);
+    try{
+        manga = await tryMangadexManga();
+        console.log("manga form mangadex");
+    } catch (e){
+        console.log("mangadex ddown",e);
+    }
+    if(!manga){
+        try{
+            manga = await tryAnilistmanga();
+            console.log("manga from anilist");
+        } catch (e) {
+            console.log("oh shoot, anilist manga down",e);
+        }
+    }
+    if(!manga){
+        try{
+            manga = await tryJikanManga();
+            console.log("manga from jikan");
+        } catch (e){
+            console.log("jikan manga down too",e);
+        }
+    }
+    if(!manga){
+        try{
+            manga = await tryKitsuManga();
+            console.log("manga from kitsu");
+        } catch (e){
+            console.log("kitsu manga down too",e);
+        }
     }
     // if(manga){
     //     mangalist.push(manga);
@@ -59,6 +83,51 @@ function showmanga(manga) {
         bubble.textContent = manga.genres[i];
         genreList.appendChild(bubble);
     }
+}
+async function tryMangadexManga(){
+    var res = await fetch("https://api.mangadex.org/manga/random?includes[]=cover_art&contentRating[]=safe");
+    var d = await res.json();
+    if(!d.data){
+        throw new Error("no mangadex data");
+    }
+    var a = d.data.attributes;
+    var mdgenres = [];
+    for(var i=0; i<a.tags.length; i++){
+        if(a.tags[i].attributes.group === "genre"){
+            mdgenres.push(a.tags[i].attributes.name.en);
+        }
+    }
+    var coverFile = "";
+    for(var i = 0; i<d.data.relationships.length; i++){
+        if(d.data.relationships[i].type === "cover_art"){
+            coverFile = d.data.relationships[i].attributes.fileName;
+        }
+    }
+    var coverUrl = coverFile ?
+    "https://uploads.mangadex.org/covers/" + d.data.id + "/" + coverFile :
+    "";
+    var mdmanga = {
+        title:{
+            romaji: a.title.en || a.title.ja || Object.values(a.title)[0],
+            english: a.title.en,
+            native: a.title.ja
+        },
+        coverImage: {
+            large: coverUrl
+        },
+        genres: mdgenres,
+        averageScore: null,
+        startDate: {
+            year: a.year || "?",
+            month: "?",
+            day: "?"
+        },
+        status: a.status,
+        description: (a.description.en || "no description available"),
+        chapters: a.lastChapter || null,
+        volumes: a.lastVolume || null
+    };
+    return mdmanga;
 }
 async function tryAnilistmanga() {
     var randPage2 = Math.floor(Math.random() * 20) + 1;
