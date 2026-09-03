@@ -217,3 +217,47 @@ async function tryAnilistmanga() {
     m.volumes = m.volumes || null;
     return m;
 }
+// jikan api 
+async function tryJikanManga(){
+    var res = await fetch("https://api.jikan.moe/v4/random/manga?sfw=true");
+    var d = await res.json();
+    if(!d.data){
+        throw new Error("no jikan manga data");
+    }
+    var a = d.data;
+    var jgenres = [];
+    for(var i =0; i<a.genres.length; i++){
+        jgenres.push(a.genres[i].name);
+    }
+    var jyear = "?";
+    var jmonth = "?";
+    var jday = "?";
+    if(a.published && a.published.from){
+        var jdate = new Date(a.published.from);
+        jyear= jdate.getFullYear();
+        jmonth = jdate.getMonth() + 1;
+        jday = jdate.getDate();
+    }
+    var jmanga = {
+        title:{
+            romaji: a.title,
+            english: a.title_english,
+            native: a.title_japanese
+        },
+        coverImage:{
+            large: a.images.webp.large_image_url
+        },
+        genres: jgenres,
+        averageScore: a.score ? Math.round(a.score * 10) : null,
+        startDate: {
+            year: jyear,
+            month: jmonth,
+            day: jday
+        },
+        status: a.status,
+        description: a.synopsis,
+        chapters: a.chapters || null,
+        volumes: a.volumes || null
+    };
+    return jmanga;
+}
