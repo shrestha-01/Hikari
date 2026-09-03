@@ -14,6 +14,7 @@ const startDate = document.getElementById("startDate");
 const statusrn = document.getElementById("statusrn");
 const describe = document.getElementById("describe");
 const genresbox = document.getElementById("genresbox");
+var catBtns = document.querySelectorAll(".categories button");
 var animelist = [];
 var historyPos = -1;
 var genresarr = [];
@@ -608,4 +609,14 @@ function alreadyshown(anime) {
         }
     }
     return false;
+}
+// modes 
+for (var i =0; i<catBtns.length; i++){
+    catBtns[i].addEventListener("click",function(){
+        for(var j = 0; j <catBtns.length; j++){
+            catBtns[j].classList.remove("selected");
+        }
+        this.classList.add("selected");
+        console.log("mode:",this.dataset.mode);
+    });
 }
