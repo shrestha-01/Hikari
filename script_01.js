@@ -558,22 +558,57 @@ function showanime(anime) {
         genreList.appendChild(bubble);
     }
 }
-// for the backbtn 
-backBtn.addEventListener("click", function () {
-    if (historyPos > 0) {
-        historyPos = historyPos - 1;
-        showanime(animelist[historyPos]);
-        backBtn.disabled = historyPos <= 0;
-        nextBtn.disabled = historyPos >= animelist.length - 1;
+// // for the backbtn 
+// backBtn.addEventListener("click", function () {
+//     if (historyPos > 0) {
+//         historyPos = historyPos - 1;
+//         showanime(animelist[historyPos]);
+//         backBtn.disabled = historyPos <= 0;
+//         nextBtn.disabled = historyPos >= animelist.length - 1;
+//     }
+// });
+// // nextbtn 
+// nextBtn.addEventListener("click", function () {
+//     if (historyPos < animelist.length - 1) {
+//         historyPos = historyPos + 1;
+//         showanime(animelist[historyPos]);
+//         backBtn.disabled = historyPos <= 0;
+//         nextBtn.disabled = historyPos >= animelist.length - 1;
+//     }
+// });
+backBtn.addEventListener("click",function(){
+    if(rnMode === "anime"){
+        if(historyPos > 0){
+            historyPos = historyPos - 1;
+            showanime(animelist[historyPos]);
+            backBtn.disabled = historyPos <= 0;
+            nextBtn.disabled = historyPos >= animelist.length - 1;
+        }
+    } else if(rnMode === "manga"){
+        if(mhistoryPos > 0){
+            mhistoryPos = mhistoryPos - 1;
+            showmanga(mangalist[mhistoryPos]);
+            backBtn.disabled = mhistoryPos <= 0;
+            nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
+        }
     }
 });
 // nextbtn 
-nextBtn.addEventListener("click", function () {
-    if (historyPos < animelist.length - 1) {
-        historyPos = historyPos + 1;
-        showanime(animelist[historyPos]);
-        backBtn.disabled = historyPos <= 0;
-        nextBtn.disabled = historyPos >= animelist.length - 1;
+nextBtn.addEventListener("click",function(){
+    if(rnMode === "anime"){
+        if(historyPos < animelist.length - 1){
+            historyPos = historyPos + 1;
+            showanime(animelist[historyPos]);
+            backBtn.disabled = historyPos <= 0;
+            nextBtn.disabled = historyPos >= animelist.length - 1;
+        }
+    } else if(rnMode === "manga"){
+        if(mhistoryPos < mangalist.length - 1){
+            mhistoryPos = mhistoryPos + 1;
+            showmanga(mangalist[mhistoryPos]);
+            backBtn.disabled = mhistoryPos <=0;
+            nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
+        }
     }
 });
 whatsNextBtn.addEventListener("click", function(){
