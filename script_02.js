@@ -2,6 +2,7 @@
 // getting elements
 var mangalist = [];
 var mhistoryPos = -1;
+var mgenmap = {};
 async function hikariManga() {
     // console.log("manga fetch not built yet, wait , ok");
     if (loading) {
@@ -12,34 +13,34 @@ async function hikariManga() {
     textChange(btnText, "Ummmm...");
     console.log("getting a manga...!!");
     var manga = null;
-    try{
+    try {
         manga = await tryAnilistmanga();
         console.log("manga form anilist");
-    } catch (e){
-        console.log("anilist ddown",e);
+    } catch (e) {
+        console.log("anilist ddown", e);
     }
-    if(!manga){
-        try{
+    if (!manga) {
+        try {
             manga = await tryMangadexManga();
             console.log("manga from mangadex");
         } catch (e) {
-            console.log("oh shoot, mangadex manga down",e);
+            console.log("oh shoot, mangadex manga down", e);
         }
     }
-    if(!manga){
-        try{
+    if (!manga) {
+        try {
             manga = await tryJikanManga();
             console.log("manga from jikan");
-        } catch (e){
-            console.log("jikan manga down too",e);
+        } catch (e) {
+            console.log("jikan manga down too", e);
         }
     }
-    if(!manga){
-        try{
+    if (!manga) {
+        try {
             manga = await tryKitsuManga();
             console.log("manga from kitsu");
-        } catch (e){
-            console.log("kitsu manga down too",e);
+        } catch (e) {
+            console.log("kitsu manga down too", e);
         }
     }
     // if(manga){
@@ -84,30 +85,30 @@ function showmanga(manga) {
         genreList.appendChild(bubble);
     }
 }
-async function tryMangadexManga(){
+async function tryMangadexManga() {
     var res = await fetch("https://api.mangadex.org/manga/random?includes[]=cover_art&contentRating[]=safe");
     var d = await res.json();
-    if(!d.data){
+    if (!d.data) {
         throw new Error("no mangadex data");
     }
     var a = d.data.attributes;
     var mdgenres = [];
-    for(var i=0; i<a.tags.length; i++){
-        if(a.tags[i].attributes.group === "genre"){
+    for (var i = 0; i < a.tags.length; i++) {
+        if (a.tags[i].attributes.group === "genre") {
             mdgenres.push(a.tags[i].attributes.name.en);
         }
     }
     var coverFile = "";
-    for(var i = 0; i<d.data.relationships.length; i++){
-        if(d.data.relationships[i].type === "cover_art"){
+    for (var i = 0; i < d.data.relationships.length; i++) {
+        if (d.data.relationships[i].type === "cover_art") {
             coverFile = d.data.relationships[i].attributes.fileName;
         }
     }
     var coverUrl = coverFile ?
-    "https://uploads.mangadex.org/covers/" + d.data.id + "/" + coverFile :
-    "";
+        "https://uploads.mangadex.org/covers/" + d.data.id + "/" + coverFile :
+        "";
     var mdmanga = {
-        title:{
+        title: {
             romaji: a.title.en || a.title.ja || Object.values(a.title)[0],
             english: a.title.en,
             native: a.title.ja
@@ -218,33 +219,33 @@ async function tryAnilistmanga() {
     return m;
 }
 // jikan api 
-async function tryJikanManga(){
+async function tryJikanManga() {
     var res = await fetch("https://api.jikan.moe/v4/random/manga?sfw=true");
     var d = await res.json();
-    if(!d.data){
+    if (!d.data) {
         throw new Error("no jikan manga data");
     }
     var a = d.data;
     var jgenres = [];
-    for(var i =0; i<a.genres.length; i++){
+    for (var i = 0; i < a.genres.length; i++) {
         jgenres.push(a.genres[i].name);
     }
     var jyear = "?";
     var jmonth = "?";
     var jday = "?";
-    if(a.published && a.published.from){
+    if (a.published && a.published.from) {
         var jdate = new Date(a.published.from);
-        jyear= jdate.getFullYear();
+        jyear = jdate.getFullYear();
         jmonth = jdate.getMonth() + 1;
         jday = jdate.getDate();
     }
     var jmanga = {
-        title:{
+        title: {
             romaji: a.title,
             english: a.title_english,
             native: a.title_japanese
         },
-        coverImage:{
+        coverImage: {
             large: a.images.webp.large_image_url
         },
         genres: jgenres,
@@ -263,10 +264,10 @@ async function tryJikanManga(){
 }
 //kitsu api
 var kitsuMangaUrl = "https://kitsu.io/api/edge/manga";
-async function tryKitsuManga(){
+async function tryKitsuManga() {
     var firstRes = await fetch(kitsuMangaUrl + "?page[limit]=1&page[offset]=0");
     var firstD = await firstRes.json();
-    if(!firstD.meta || !firstD.meta.count){
+    if (!firstD.meta || !firstD.meta.count) {
         throw new Error("Couldnt get kitsu manga count");
     }
     var totalCount = firstD.meta.count;
@@ -274,48 +275,61 @@ async function tryKitsuManga(){
     var res = await fetch(kitsuMangaUrl + "?page[limit]=1&page[offset]="
         + roff + "&include=genres");
     var d = await res.json();
-    if(!d.data || !d.data.length){
+    if (!d.data || !d.data.length) {
         throw new Error("no kitsu data");
     }
     var a = d.data[0].attributes;
-    if(a.nsfw){
+    if (a.nsfw) {
         throw new Error("o, kitsu gave nsfw manga, skippin");
     }
     var kgenres = [];
-    if(d.included){
-        for(var i = 0; i<d.included.length; i++){
+    if (d.included) {
+        for (var i = 0; i < d.included.length; i++) {
             kgenres.push(d.included[i].attributes.name);
-            }
         }
-        var kyear = "?";
-        var kmonth = "?";
-        var kday = "?";
-        if(a.startDate){
-            var kdate = new Date(a.startDate);
-            kyear = kdate.getFullYear();
-            kmonth = kdate.getMonth() + 1;
-            kday = kdate.getDate();
+    }
+    var kyear = "?";
+    var kmonth = "?";
+    var kday = "?";
+    if (a.startDate) {
+        var kdate = new Date(a.startDate);
+        kyear = kdate.getFullYear();
+        kmonth = kdate.getMonth() + 1;
+        kday = kdate.getDate();
+    }
+    var kmanga = {
+        title: {
+            romaji: a.titles.en_jp || a.canonicalTitle,
+            english: a.titles.en,
+            native: a.titles.ja_jp
+        },
+        coverImage: {
+            large: a.posterImage.original
+        },
+        genres: kgenres,
+        averageScore: a.averageRating ? Math.round(a.averageRating) : null,
+        startDate: {
+            year: kyear,
+            month: kmonth,
+            day: kday
+        },
+        status: a.status,
+        description: a.synopsis,
+        chapters: a.chapterCount || null,
+        volumes: a.volumeCount || null
+    };
+    return kmanga;
+}
+async function lmgen() {
+    if (Object.keys(mgenmap).length) {
+        return;
+    }
+    var res = await fetch("https://api.mangadex.org/manga/tag");
+    var d = await res.json();
+    for (var i = 0; i < d.data.length; i++) {
+        var tag = d.data[i];
+        if (tag.attributes.group === "genre") {
+            mgenmap[tag.attributes.name.en] = tag.id;
         }
-        var kmanga = {
-            title: {
-                romaji: a.titles.en_jp || a.canonicalTitle,
-                english: a.titles.en,
-                native: a.titles.ja_jp
-            },
-            coverImage:{
-                large: a.posterImage.original
-            },
-            genres: kgenres,
-            averageScore: a.averageRating ? Math.round(a.averageRating) : null,
-            startDate:{
-                year: kyear,
-                month: kmonth,
-                day: kday
-            },
-            status: a.status,
-            description: a.synopsis,
-            chapters: a.chapterCount || null,
-            volumes: a.volumeCount || null
-        };
-        return kmanga;
+    }
 }
