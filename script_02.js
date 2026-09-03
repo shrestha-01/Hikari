@@ -4,38 +4,56 @@ var mangalist = [];
 var mhistoryPos = -1;
 async function hikariManga() {
     // console.log("manga fetch not built yet, wait , ok");
-    console.log("getting a manga....!!");
+    if (loading) {
+        return;
+    }
+    loading = true;
+    whatsNextBtn.disabled = true;
+    textChange(btnText, "Ummmm...");
+    console.log("getting a manga...!!");
     var manga = null;
-    try{
+    try {
         manga = await tryAnilistmanga();
         console.log("manga from anilist");
-    } catch (e){
-        console.log("oh shoot, anilist manga down",e);
+    } catch (e) {
+        console.log("oh shoot, anilist manga down", e);
     }
-    if(manga){
+    // if(manga){
+    //     mangalist.push(manga);
+    //     mhistoryPos = mangalist.length - 1;
+    //     showmanga(manga);
+    // } else {
+    //     console.log("anilist manga down, rough day");
+    // }
+    if (manga) {
         mangalist.push(manga);
         mhistoryPos = mangalist.length - 1;
         showmanga(manga);
+        backBtn.disabled = mhistoryPos <= 0;
+        nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
     } else {
-        console.log("anilist manga down, rough day");
+        console.log("anilist manga down");
     }
+    loading = false;
+    whatsNextBtn.disabled = false;
+    textChange(btnText, "What's Next?");
 }
-function showmanga(manga){
+function showmanga(manga) {
     posterImg.src = manga.coverImage.large || manga.coverImage.extraLarge;
     posterImg.style.display = "block";
     engName.textContent = manga.title.english || manga.title.romaji;
     jpName.textContent = manga.title.native;
-    if(manga.averageScore){
-        avgscore.textContent = "✦ " + (manga.averageScore/10) + "/10";
+    if (manga.averageScore) {
+        avgscore.textContent = "✦ " + (manga.averageScore / 10) + "/10";
     } else {
         avgscore.textContent = "N/A";
     }
     startDate.textContent = manga.startDate.year + "-" +
-    manga.startDate.month + "-" + manga.startDate.day;
+        manga.startDate.month + "-" + manga.startDate.day;
     statusrn.textContent = manga.status;
     describe.innerHTML = manga.description;
     genreList.innerHTML = "";
-    for (var i = 0; i<manga.genres.length; i++){
+    for (var i = 0; i < manga.genres.length; i++) {
         var bubble = document.createElement("div");
         bubble.className = "theGenre";
         bubble.textContent = manga.genres[i];
@@ -106,7 +124,7 @@ async function tryAnilistmanga() {
           }
        }`;
     }
-    var res = await fetch(anilistUrl,{
+    var res = await fetch(anilistUrl, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -120,7 +138,7 @@ async function tryAnilistmanga() {
         })
     });
     var d = await res.json();
-    if(!d.data || !d.data.Page || !d.data.Page.media.length){
+    if (!d.data || !d.data.Page || !d.data.Page.media.length) {
         throw new Error("no anilist manga data");
     }
     var mediaList = d.data.Page.media;

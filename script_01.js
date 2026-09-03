@@ -431,26 +431,26 @@ async function tryKitsu() {
         var slugs = [];
         for (var i = 0; i < genresarr.length; i++) {
             var slug = await lkgen(genresarr[i]);
-            if(slug){
+            if (slug) {
                 slugs.push(slug);
             }
         }
-        if(slugs.length){
+        if (slugs.length) {
             catFilter = "&filter[categories]=" + slugs.join(",");
         }
     }
-    var firstRes = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=0"+
+    var firstRes = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=0" +
         catFilter);
     var firstD = await firstRes.json();
-    if(!firstD.meta || !firstD.meta.count){
+    if (!firstD.meta || !firstD.meta.count) {
         throw new Error("Couldnt get kitsu count");
     }
     var totalCount = firstD.meta.count;
     var roff = Math.floor(Math.random() * totalCount);
     var res = await fetch(kitsuUrl + "?page[limit]=1&page[offset]="
-        + roff + "&include=genres"+catFilter);
+        + roff + "&include=genres" + catFilter);
     var d = await res.json();
-    if(!d.data || !d.data.length){
+    if (!d.data || !d.data.length) {
         throw new Error("no kitsu data");
     }
     var a = d.data[0].attributes;
@@ -576,16 +576,16 @@ function showanime(anime) {
 //         nextBtn.disabled = historyPos >= animelist.length - 1;
 //     }
 // });
-backBtn.addEventListener("click",function(){
-    if(rnMode === "anime"){
-        if(historyPos > 0){
+backBtn.addEventListener("click", function () {
+    if (rnMode === "anime") {
+        if (historyPos > 0) {
             historyPos = historyPos - 1;
             showanime(animelist[historyPos]);
             backBtn.disabled = historyPos <= 0;
             nextBtn.disabled = historyPos >= animelist.length - 1;
         }
-    } else if(rnMode === "manga"){
-        if(mhistoryPos > 0){
+    } else if (rnMode === "manga") {
+        if (mhistoryPos > 0) {
             mhistoryPos = mhistoryPos - 1;
             showmanga(mangalist[mhistoryPos]);
             backBtn.disabled = mhistoryPos <= 0;
@@ -594,31 +594,31 @@ backBtn.addEventListener("click",function(){
     }
 });
 // nextbtn 
-nextBtn.addEventListener("click",function(){
-    if(rnMode === "anime"){
-        if(historyPos < animelist.length - 1){
+nextBtn.addEventListener("click", function () {
+    if (rnMode === "anime") {
+        if (historyPos < animelist.length - 1) {
             historyPos = historyPos + 1;
             showanime(animelist[historyPos]);
             backBtn.disabled = historyPos <= 0;
             nextBtn.disabled = historyPos >= animelist.length - 1;
         }
-    } else if(rnMode === "manga"){
-        if(mhistoryPos < mangalist.length - 1){
+    } else if (rnMode === "manga") {
+        if (mhistoryPos < mangalist.length - 1) {
             mhistoryPos = mhistoryPos + 1;
             showmanga(mangalist[mhistoryPos]);
-            backBtn.disabled = mhistoryPos <=0;
+            backBtn.disabled = mhistoryPos <= 0;
             nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
         }
     }
 });
-whatsNextBtn.addEventListener("click", function(){
+whatsNextBtn.addEventListener("click", function () {
     clickSound.currentTime = 0;
     clickSound.play();
-    if(rnMode === "anime"){
+    if (rnMode === "anime") {
         hikariGets();
-    } else if(rnMode === "manga"){
+    } else if (rnMode === "manga") {
         hikariManga();
-    } else{
+    } else {
         console.log("bro wait, havent built that thing -__-");
     }
 });
@@ -652,14 +652,63 @@ function alreadyshown(anime) {
     }
     return false;
 }
+
+// for (var i =0; i<catBtns.length; i++){
+//     catBtns[i].addEventListener("click",function(){
+//         for(var j = 0; j <catBtns.length; j++){
+//             catBtns[j].classList.remove("selected");
+//         }
+//         this.classList.add("selected");
+//         rnMode = this.dataset.mode;
+//         console.log("mode:",this.dataset.mode);
+//     });
+// }
 // modes 
-for (var i =0; i<catBtns.length; i++){
-    catBtns[i].addEventListener("click",function(){
-        for(var j = 0; j <catBtns.length; j++){
+for (var i = 0; i < catBtns.length; i++) {
+    catBtns[i].addEventListener("click", function () {
+        for (var j = 0; j < catBtns.length; j++) {
             catBtns[j].classList.remove("selected");
         }
         this.classList.add("selected");
         rnMode = this.dataset.mode;
-        console.log("mode:",this.dataset.mode);
+        console.log("mode:", this.dataset.mode);
+
+        textChange(btnText, "What's Next?");
+        if (rnMode === "anime") {
+            if (historyPos >= 0 && animelist.length) {
+                showanime(animelist[historyPos]);
+            } else {
+                posterImg.style.display = "none";
+                posterImg.src = "";
+                engName.textContent = "";
+                jpName.textContent = "";
+                avgscore.textContent = "";
+                startDate.textContent = "";
+                statusrn.textContent = "";
+                describe.innerHTML = "";
+                genreList.innerHTML = "";
+            }
+            backBtn.disabled = historyPos <= 0;
+            nextBtn.disabled = historyPos >= animelist.length - 1;
+        } else if (rnMode === "manga"){
+            if(mhistoryPos >= 0 && mangalist.length){
+                showmanga(mangalist[mhistoryPos]);
+            } else {
+                posterImg.style.display = "none";
+                posterImg.src = "";
+                engName.textContent = "";
+                jpName.textContent = "";
+                avgscore.textContent = "";
+                startDate.textContent = "";
+                statusrn.textContent = "";
+                describe.innerHTML = "";
+                genreList.innerHTML = "";
+            }
+            backBtn.disabled = mhistoryPos <= 0;
+            nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
+        } else {
+            backBtn.disabled = true;
+            nextBtn.disabled = true;
+        }
     });
 }
