@@ -3,7 +3,44 @@
 var mangalist = [];
 var mhistoryPos = -1;
 async function hikariManga() {
-    console.log("manga fetch not built yet, wait , ok");
+    // console.log("manga fetch not built yet, wait , ok");
+    console.log("getting a manga....!!");
+    var manga = null;
+    try{
+        manga = await tryAnilistmanga();
+        console.log("manga from anilist");
+    } catch (e){
+        console.log("oh shoot, anilist manga down",e);
+    }
+    if(manga){
+        mangalist.push(manga);
+        mhistoryPos = mangalist.length - 1;
+        showmanga(manga);
+    } else {
+        console.log("anilist manga down, rough day");
+    }
+}
+function showmanga(manga){
+    posterImg.src = manga.coverImage.large || manga.coverImage.extraLarge;
+    posterImg.style.display = "block";
+    engName.textContent = manga.title.english || manga.title.romaji;
+    jpName.textContent = manga.title.native;
+    if(manga.averageScore){
+        avgscore.textContent = "✦ " + (manga.averageScore/10) + "/10";
+    } else {
+        avgscore.textContent = "N/A";
+    }
+    startDate.textContent = manga.startDate.year + "-" +
+    manga.startDate.month + "-" + manga.startDate.day;
+    statusrn.textContent = manga.status;
+    describe.innerHTML = manga.description;
+    genreList.innerHTML = "";
+    for (var i = 0; i<manga.genres.length; i++){
+        var bubble = document.createElement("div");
+        bubble.className = "theGenre";
+        bubble.textContent = manga.genres[i];
+        genreList.appendChild(bubble);
+    }
 }
 async function tryAnilistmanga() {
     var randPage2 = Math.floor(Math.random() * 20) + 1;
