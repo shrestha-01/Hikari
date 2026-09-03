@@ -579,7 +579,13 @@ nextBtn.addEventListener("click", function () {
 whatsNextBtn.addEventListener("click", function(){
     clickSound.currentTime = 0;
     clickSound.play();
-    hikariGets();
+    if(rnMode === "anime"){
+        hikariGets();
+    } else if(rnMode === "manga"){
+        hikariManga();
+    } else{
+        console.log("bro wait, havent built that thing -__-");
+    }
 });
 //the category choosing btn opens and closes
 categorybtn.addEventListener("click", function () {
@@ -618,6 +624,7 @@ for (var i =0; i<catBtns.length; i++){
             catBtns[j].classList.remove("selected");
         }
         this.classList.add("selected");
+        rnMode = this.dataset.mode;
         console.log("mode:",this.dataset.mode);
     });
 }
