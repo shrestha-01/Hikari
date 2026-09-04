@@ -1,8 +1,9 @@
-//making seperate file so that my laptop wont lag
+//making seperate file so that my laptop wont lag much
 // getting elements
 var mangalist = [];
 var mhistoryPos = -1;
 var mgenmap = {};
+var jmgenmap = {};
 async function hikariManga() {
     // console.log("manga fetch not built yet, wait , ok");
     if (loading) {
@@ -235,12 +236,37 @@ async function tryAnilistmanga() {
 }
 // jikan api 
 async function tryJikanManga() {
-    var res = await fetch("https://api.jikan.moe/v4/random/manga?sfw=true");
-    var d = await res.json();
-    if (!d.data) {
-        throw new Error("no jikan manga data");
+    var a = null;
+    if (genresarr.length) {
+        await ljmgen();
+        var jmids = [];
+        for (var i = 0; i < genresarr.length; i++) {
+            if (jmgenmap[genresarr[i]]) {
+                jmids.push(jmgenmap[genresarr[i]]);
+            }
+        }
+        var firstRes = await fetch("https://api.jikan.moe/v4/manga?genres=" + jmids.join(",") + "&order_by=popularity&limit=25&sfw=true");
+        var firstD = await firstRes.json();
+        if (!firstD.data || !firstD.data.length) {
+            throw new Error("no jikan manga for these genres");
+        }
+        var totalPages = firstD.pagination.last_visible_page;
+        var randPage = Math.floor(Math.random() * totalPages) + 1;
+        var res = await fetch("https://api.jikan.moe/v4/manga?genres=" + jmids.join(",") + "&order_by=popularity&limit=25&page=" + randPage + "&sfw=true");
+        var d = await res.json();
+        if (!d.data || !d.data.length) {
+            throw new Error("no jikan manga data fot dis page");
+        }
+        var randIndex = Math.floor(Math.random() * d.data.length);
+        a = d.data[randIndex];
+    } else {
+        var res = await fetch("https://api.jikan.moe/v4/random/manga?sfw=true");
+        var d = await res.json();
+        if (!d.data) {
+            throw new Error("no jikan manga data");
+        }
+        a = d.data;
     }
-    var a = d.data;
     var jgenres = [];
     for (var i = 0; i < a.genres.length; i++) {
         jgenres.push(a.genres[i].name);
@@ -346,5 +372,16 @@ async function lmgen() {
         if (tag.attributes.group === "genre") {
             mgenmap[tag.attributes.name.en] = tag.id;
         }
+    }
+}
+
+async function ljmgen() {
+    if (Object.keys(jmgenmap).length) {
+        return;
+    }
+    var res = await fetch("https://api.jikan.moe/v4/genres/manga");
+    var d = await res.json();
+    for (var i = 0; i < d.data.length; i++) {
+        jmgenmap[d.data[i].name] = d.data[i].mal_id;
     }
 }
