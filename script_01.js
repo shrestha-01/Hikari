@@ -14,6 +14,7 @@ const startDate = document.getElementById("startDate");
 const statusrn = document.getElementById("statusrn");
 const describe = document.getElementById("describe");
 const genresbox = document.getElementById("genresbox");
+const bgPoster = document.getElementById("bgPoster");
 var catBtns = document.querySelectorAll(".categories button");
 var rnMode = "anime";
 var animelist = [];
@@ -536,6 +537,7 @@ async function tryShikimori() {
 function showanime(anime) {
     posterImg.src = anime.coverImage.large;
     posterImg.style.display = "block";
+    bgPoster.style.backgroundImage = "url('" + anime.coverImage.large + "')";
     engName.textContent = anime.title.english || anime.title.romaji;
     jpName.textContent = anime.title.native;
     // if(anime.averageScore){

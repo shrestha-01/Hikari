@@ -68,6 +68,7 @@ async function hikariManga() {
 function showmanga(manga) {
     posterImg.src = manga.coverImage.large || manga.coverImage.extraLarge;
     posterImg.style.display = "block";
+    bgPoster.style.backgroundImage = "url('" + (manga.coverImage.large || manga.coverImage.extraLarge) + "')";
     engName.textContent = manga.title.english || manga.title.romaji;
     jpName.textContent = manga.title.native;
     if (manga.averageScore) {
