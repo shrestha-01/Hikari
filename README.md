@@ -1,4 +1,3 @@
-```markdown
 # Hikari ✨
 
 Hikari is a **recommendation site** that recommends **anime and manga** for now.
@@ -120,4 +119,3 @@ That's pretty much what Hikari is about for now.
 I'm still working on it, so more features and improvements will be added in the future.
 
 Thank you for checking out **Hikari!** (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
-```
