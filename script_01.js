@@ -47,7 +47,7 @@ async function hikariGets() {
     loading = true;
     whatsNextBtn.disabled = true;
     textChange(btnText, "Ummmmm....");
-    console.log("geting a anime.......!!!!!!");
+    // console.log("geting a anime.......!!!!!!");
     // oh dude , jikan down rn 
     // fetch(jikanUrl)
     //     .then(function(r){
@@ -66,24 +66,24 @@ async function hikariGets() {
     var anime = null;
     try {
         anime = await tryAnilist();
-        console.log("anime from anilist");
+        // console.log("anime from anilist");
     } catch (e) {
-        console.log("oh shoot ,, anilist down", e);
+        // console.log("oh shoot ,, anilist down", e);
     }
     if (!anime) {
         try {
             anime = await tryJikan();
-            console.log("anime from jikan");
+            // console.log("anime from jikan");
         } catch (e) {
-            console.log("jikan down tooo =(", e);
+            // console.log("jikan down tooo =(", e);
         }
     }
     if (!anime) {
         try {
             anime = await tryKitsu();
-            console.log("anime from kitsu");
+            // console.log("anime from kitsu");
         } catch (e) {
-            console.log("Kitsu down too, bruh", e);
+            // console.log("Kitsu down too, bruh", e);
         }
     }
     if (!anime) {
@@ -109,7 +109,7 @@ async function hikariGets() {
     // }
     if (anime && alreadyshown(anime)) {
         hmt = hmt + 1;
-        console.log("already shown. try:", hmt);
+        // console.log("already shown. try:", hmt);
         if (hmt < 5) {
             loading = false;
             whatsNextBtn.disabled = false;
@@ -117,27 +117,27 @@ async function hikariGets() {
             await hikariGets();
             return;
         }
-        console.log("5 try reachd");
+        // console.log("5 try reachd");
         var savedGenres = genresarr;
         genresarr = genresarr.length ? [genresarr[0]] : [];
         var broadAnime = null;
         try {
             broadAnime = await tryAnilist();
         } catch (e) {
-            console.log("broad anilist try failed too", e);
+            // console.log("broad anilist try failed too", e);
         }
         if (!broadAnime) {
             try {
                 broadAnime = await tryJikan();
             } catch (e) {
-                console.log("broad jikan try failed too", e);
+                // console.log("broad jikan try failed too", e);
             }
         }
         if (!broadAnime) {
             try {
                 broadAnime = await tryKitsu();
             } catch (e) {
-                console.log("broad kitsu failed too", e);
+                // console.log("broad kitsu failed too", e);
             }
         }
         genresarr = savedGenres;
@@ -153,7 +153,7 @@ async function hikariGets() {
         backBtn.disabled = historyPos <= 0;
         nextBtn.disabled = historyPos >= animelist.length - 1;
     } else {
-        console.log("both api down, rough day");
+        // console.log("both api down, rough day");
     }
     loading = false;
     whatsNextBtn.disabled = false;
@@ -273,7 +273,7 @@ async function tryAnilist() {
         d = await fallbackRes.json();
     }
     if ((!d.data || !d.data.Page.media.length) && genresarr.length > 1) {
-        console.log("no AND matches, trying OR instead");
+        // console.log("no AND matches, trying OR instead");
         var orglqry = `
         query ($page: Int, $genres: [String]){
                 Page(page: $page, perPage: 25){
@@ -316,12 +316,12 @@ async function tryAnilist() {
             })
         });
         d = await orRes.json();
-        console.log("OR fallback used genre:", genresarr[0], "| results found:", d.data ? d.data.Page.media.length : 0);
+        // console.log("OR fallback used genre:", genresarr[0], "| results found:", d.data ? d.data.Page.media.length : 0);
     }
     if (!d.data || !d.data.Page.media.length) {
         throw new Error("no anilist data at all");
     }
-    console.log("final match count for this combo:", d.data.Page.media.length);
+    // console.log("final match count for this combo:", d.data.Page.media.length);
     var randIndex = Math.floor(Math.random() * d.data.Page.media.length);
     var aresult = d.data.Page.media[randIndex];
     aresult.coverImage.large = aresult.coverImage.extraLarge;
@@ -619,7 +619,7 @@ whatsNextBtn.addEventListener("click", function () {
     } else if (rnMode === "manga") {
         hikariManga();
     } else {
-        console.log("bro wait, havent built that thing -__-");
+        console.log("bro wait, havent built that thing yet-__-");
     }
 });
 //the category choosing btn opens and closes
@@ -651,7 +651,7 @@ for (var i = 0; i<allGenreBtns.length; i++){
         for(var j = 0; j<pickedOnes.length; j++){
             genresarr.push(pickedOnes[j].dataset.genre);
         }
-        console.log(genresarr);
+        // console.log(genresarr);
     });
 }
 function alreadyshown(anime) {
@@ -683,7 +683,7 @@ for (var i = 0; i < catBtns.length; i++) {
         }
         this.classList.add("selected");
         rnMode = this.dataset.mode;
-        console.log("mode:", this.dataset.mode);
+        // console.log("mode:", this.dataset.mode);
 
         textChange(btnText, "What's Next?");
         if (rnMode === "anime") {

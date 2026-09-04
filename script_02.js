@@ -13,36 +13,36 @@ async function hikariManga() {
     loading = true;
     whatsNextBtn.disabled = true;
     textChange(btnText, "Ummmm...");
-    console.log("getting a manga...!!");
+    // console.log("getting a manga...!!");
     var manga = null;
     try {
         manga = await tryAnilistmanga();
-        console.log("manga form anilist");
+        // console.log("manga form anilist");
     } catch (e) {
-        console.log("anilist ddown", e);
+        // console.log("anilist ddown", e);
     }
     if (!manga) {
         try {
             manga = await tryMangadexManga();
-            console.log("manga from mangadex");
+            // console.log("manga from mangadex");
         } catch (e) {
-            console.log("oh shoot, mangadex manga down", e);
+            // console.log("oh shoot, mangadex manga down", e);
         }
     }
     if (!manga) {
         try {
             manga = await tryJikanManga();
-            console.log("manga from jikan");
+            // console.log("manga from jikan");
         } catch (e) {
-            console.log("jikan manga down too", e);
+            // console.log("jikan manga down too", e);
         }
     }
     if (!manga) {
         try {
             manga = await tryKitsuManga();
-            console.log("manga from kitsu");
+            // console.log("manga from kitsu");
         } catch (e) {
-            console.log("kitsu manga down too", e);
+            // console.log("kitsu manga down too", e);
         }
     }
     // if(manga){
@@ -59,7 +59,7 @@ async function hikariManga() {
         backBtn.disabled = mhistoryPos <= 0;
         nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
     } else {
-        console.log("anilist manga down");
+        // console.log("anilist manga down");
     }
     loading = false;
     whatsNextBtn.disabled = false;
@@ -389,16 +389,7 @@ async function tryKitsuManga(){
 //     if (!d.data || !d.data.length) {
 //         throw new Error("no kitsu data");
 //     }
-//     var a = d.data[0].attributes;
-//     if (a.nsfw) {
-//         throw new Error("o, kitsu gave nsfw manga, skippin");
-//     }
-//     var kgenres = [];
-//     if (d.included) {
-//         for (var i = 0; i < d.included.length; i++) {
-//             kgenres.push(d.included[i].attributes.name);
-//         }
-//     }
+
 //     var kyear = "?";
 //     var kmonth = "?";
 //     var kday = "?";
@@ -408,27 +399,6 @@ async function tryKitsuManga(){
 //         kmonth = kdate.getMonth() + 1;
 //         kday = kdate.getDate();
 //     }
-//     var kmanga = {
-//         title: {
-//             romaji: a.titles.en_jp || a.canonicalTitle,
-//             english: a.titles.en,
-//             native: a.titles.ja_jp
-//         },
-//         coverImage: {
-//             large: a.posterImage.original
-//         },
-//         genres: kgenres,
-//         averageScore: a.averageRating ? Math.round(a.averageRating) : null,
-//         startDate: {
-//             year: kyear,
-//             month: kmonth,
-//             day: kday
-//         },
-//         status: a.status,
-//         description: a.synopsis,
-//         chapters: a.chapterCount || null,
-//         volumes: a.volumeCount || null
-//     };
 //     return kmanga;
 // }
 async function lmgen() {
