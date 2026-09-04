@@ -430,3 +430,23 @@ body {
     position: relative;
     top: 80px;
 }
+.siteTitle{
+    font-size: 25px;
+    font-weight: bold;
+}
+/* a shining star  */
+.star{
+    display: inline-block;
+    animation: shine 1.5s ease-in-out infinite;
+}
+@keyframes shine {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    50%{
+        opacity: 1;
+        transform: scale(1);
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    }
+}
