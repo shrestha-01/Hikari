@@ -74,6 +74,7 @@ Hikari is currently live!
 ### Design
 
 - **Glassmorphism:** https://hype4.academy/tools/glassmorphism-generator
+- **3d card:** https://freefrontend.com/javascript-cards/
 
 ### Symbols
 

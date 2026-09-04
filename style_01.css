@@ -338,6 +338,24 @@ body {
     background: rgba(255, 255, 255, 0.25);
     border: 1px solid rgba(255,255,255,0.6);
 }
+@media (min-width: 601px) and (max-width: 1024px){
+    .infoArea{
+        gap: 20px;
+    }
+    .posterCard{
+        height: clamp(200px, 40vh, 300px);
+    }
+    .engName{
+        font-size: 22px;
+    }
+    .describe{
+        height: 160px;
+        font-size: 13px;
+    }
+    .genresbox{
+        width: 400px;
+    }
+}
 /* responsiveness  */
 @media (max-width: 600px){
     .infoArea{
@@ -373,4 +391,22 @@ body {
     filter: blur(10px) brightness(0.5);
     transform: scale(1.1);
     z-index: -1;
+}
+/* source credited on github */
+.infoArea{
+    perspective: 1500px;
+}
+.posterCard{
+    transition: transform 150ms ease-out,
+    box-shadow 150ms ease-out;
+}
+.cardGlow{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-image: radial-gradient(circle at 50% -20%,
+    #ffffff22, #0000000f);
+    pointer-events: none;
 }

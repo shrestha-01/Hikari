@@ -16,11 +16,14 @@ const describe = document.getElementById("describe");
 const genresbox = document.getElementById("genresbox");
 const bgPoster = document.getElementById("bgPoster");
 var catBtns = document.querySelectorAll(".categories button");
+const posterCard = document.querySelector(".posterCard");
+const cardGlow = document.querySelector(".cardGlow");
 var rnMode = "anime";
 var animelist = [];
 var historyPos = -1;
 var genresarr = [];
 var hmt = 0;
+var cbound;
 // the apis 
 var jikanUrl = "https://api.jikan.moe/v4/random/anime?sfw=true";
 // var jikanUrl = "https://api.jikan.moe/v4/random/anime";
@@ -725,4 +728,34 @@ for (var i = 0; i < catBtns.length; i++) {
             nextBtn.disabled = true;
         }
     });
+}
+// card 
+var cbound;
+posterCard.addEventListener("mouseenter",function(){
+    cbound = posterCard.getBoundingClientRect();
+    document.addEventListener("mousemove",tiltCard);
+});
+posterCard.addEventListener("mouseleave",function(){
+    document.removeEventListener("mousemove",tiltCard);
+    posterCard.style.transform = "";
+});
+function tiltCard(e){
+    var mouseX = e.clientX;
+    var mouseY = e.clientY;
+    var leftX = mouseX - cbound.x;
+    var topY = mouseY - cbound.y;
+    var center = {
+        x: leftX -cbound.width / 2,
+        y: topY -cbound.height / 2
+    };
+    var distance = Math.sqrt(center.x ** 2 + center.y ** 2);
+    posterCard.style.transform = 
+    "scale3d(1.05, 1.05, 1.05) rotate3d(" +
+    (center.y / 100) + ", " +
+    (-center.x / 100) + ", 0, "+
+    (Math.log(distance) * 2) + "deg)";
+    cardGlow.style.backgroundImage = 
+    "radial-gradient(circle at " + 
+    (center.x * 2 + cbound.width / 2) + "px " +
+    (center.y * 2 + cbound.height / 2) + "px, #ffffff55, #0000000f)";
 }
