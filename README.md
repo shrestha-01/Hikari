@@ -1,4 +1,4 @@
-# Hikari ✨
+# Hikari 
 
 Hikari is a **recommendation site** that recommends **anime and manga** for now.
 
@@ -6,7 +6,7 @@ But I am planning to add **movies, games, and cartoons** in the future.
 
 ---
 
-## 🌟 How It Works
+## How It Works
 
 Hikari is trying to combine all the available **free APIs** and use them as a **fallback system**.
 
