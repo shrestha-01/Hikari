@@ -156,7 +156,7 @@ body {
     font-size: 13px;
 }
 
-/* anime filtering btn design (choose genre btn ) to be more specific */
+/* anime filtering btn  */
 .filterBar {
     display: flex;
     justify-content: flex-end;
@@ -337,4 +337,27 @@ body {
 .genreBtn.selected{
     background: rgba(255, 255, 255, 0.25);
     border: 1px solid rgba(255,255,255,0.6);
+}
+/* responsiveness  */
+@media (max-width: 600px){
+    .infoArea{
+        flex-direction: column;
+        align-items: center;
+    }
+    .posterCard{
+        height: clamp(220px, 45vh, 320px);
+    }
+    .rightInfo{
+        min-width: unset;
+        width: 100%;
+        text-align: center;
+    }
+    .genreList{
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .infocap{
+        justify-content: center;
+        flex-wrap: wrap;
+    }
 }
