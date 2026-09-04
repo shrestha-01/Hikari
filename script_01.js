@@ -18,6 +18,8 @@ const bgPoster = document.getElementById("bgPoster");
 var catBtns = document.querySelectorAll(".categories button");
 const posterCard = document.querySelector(".posterCard");
 const cardGlow = document.querySelector(".cardGlow");
+const instruct = document.getElementById("instruct");
+const rightInfo = document.getElementById("rightInfo");
 var rnMode = "anime";
 var animelist = [];
 var historyPos = -1;
@@ -540,6 +542,8 @@ async function tryShikimori() {
 function showanime(anime) {
     posterImg.src = anime.coverImage.large;
     posterImg.style.display = "block";
+    instruct.style.display = "none";
+    rightInfo.classList.remove("centerMode");
     bgPoster.style.backgroundImage = "url('" + anime.coverImage.large + "')";
     engName.textContent = anime.title.english || anime.title.romaji;
     jpName.textContent = anime.title.native;

@@ -68,6 +68,8 @@ async function hikariManga() {
 function showmanga(manga) {
     posterImg.src = manga.coverImage.large || manga.coverImage.extraLarge;
     posterImg.style.display = "block";
+    rightInfo.classList.remove("centerMode");
+    instruct.style.display = "none";
     bgPoster.style.backgroundImage = "url('" + (manga.coverImage.large || manga.coverImage.extraLarge) + "')";
     engName.textContent = manga.title.english || manga.title.romaji;
     jpName.textContent = manga.title.native;
@@ -431,7 +433,7 @@ async function lkmgen(name){
         return kmgenmap[name];
     }
     var res = await fetch("https://kitsu.io/api/edge/categories?filter[title]="
-    +encodedURIComponent(name) + "&page[limit]=1");
+    +encodeURIComponent(name) + "&page[limit]=1");
     var d = await res.json();
     if(d.data && d.data.length){
         kmgenmap[name] = d.data[0].attributes.slug;

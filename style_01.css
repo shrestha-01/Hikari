@@ -410,3 +410,23 @@ body {
     #ffffff22, #0000000f);
     pointer-events: none;
 }
+.instruct{
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+}
+.infocap div:empty{
+    display: none;
+}
+.rightInfo.centerMode{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: clamp(220px, 60vh, 420px);
+}
+.centerMode .instruct {
+    position: relative;
+    top: 80px;
+}
