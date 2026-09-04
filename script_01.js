@@ -631,13 +631,25 @@ document.getElementById("whichgenre").addEventListener("click", function () {
     genresbox.classList.toggle("open");
 })
 // the genre filter 
-var allCheckboxes = document.querySelectorAll(".g input");
-for (var i = 0; i < allCheckboxes.length; i++) {
-    allCheckboxes[i].addEventListener("change", function () {
+// var allCheckboxes = document.querySelectorAll(".g input");
+// for (var i = 0; i < allCheckboxes.length; i++) {
+//     allCheckboxes[i].addEventListener("change", function () {
+//         genresarr = [];
+//         var checkedOnes = document.querySelectorAll(".g input:checked");
+//         for (var j = 0; j < checkedOnes.length; j++) {
+//             genresarr.push(checkedOnes[j].value);
+//         }
+//         console.log(genresarr);
+//     });
+// }
+var allGenreBtns = document.querySelectorAll(".genreBtn");
+for (var i = 0; i<allGenreBtns.length; i++){
+    allGenreBtns[i].addEventListener("click",function(){
+        this.classList.toggle("selected");
         genresarr = [];
-        var checkedOnes = document.querySelectorAll(".g input:checked");
-        for (var j = 0; j < checkedOnes.length; j++) {
-            genresarr.push(checkedOnes[j].value);
+        var pickedOnes = document.querySelectorAll(".genreBtn.selected");
+        for(var j = 0; j<pickedOnes.length; j++){
+            genresarr.push(pickedOnes[j].dataset.genre);
         }
         console.log(genresarr);
     });
