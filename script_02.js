@@ -4,6 +4,7 @@ var mangalist = [];
 var mhistoryPos = -1;
 var mgenmap = {};
 var jmgenmap = {};
+var kmgenmap = {};
 async function hikariManga() {
     // console.log("manga fetch not built yet, wait , ok");
     if (loading) {
@@ -305,34 +306,47 @@ async function tryJikanManga() {
 }
 //kitsu api
 var kitsuMangaUrl = "https://kitsu.io/api/edge/manga";
-async function tryKitsuManga() {
-    var firstRes = await fetch(kitsuMangaUrl + "?page[limit]=1&page[offset]=0");
+async function tryKitsuManga(){
+    var catFilter = "";
+    if(genresarr.length){
+        var slugs = [];
+        for(var i = 0; i<genresarr.length; i++){
+            var slug = await lkmgen(genresarr[i]);
+            if(slug){
+                slugs.push(slug);
+            }
+        }
+        if(slugs.length){
+            catFilter = "&filter[categories]=" + slugs.join(",");
+        }
+    }
+    var firstRes = await fetch(kitsuMangaUrl + "?page[limit]=1&page[offset]=0" + catFilter);
     var firstD = await firstRes.json();
-    if (!firstD.meta || !firstD.meta.count) {
-        throw new Error("Couldnt get kitsu manga count");
+    if(!firstD.meta || !firstD.meta.count){
+        throw new Error("couldnt get kitsu manga count");
     }
     var totalCount = firstD.meta.count;
     var roff = Math.floor(Math.random() * totalCount);
     var res = await fetch(kitsuMangaUrl + "?page[limit]=1&page[offset]="
-        + roff + "&include=genres");
+        + roff + "&include=genres" + catFilter);
     var d = await res.json();
-    if (!d.data || !d.data.length) {
+    if(!d.data || !d.data.length){
         throw new Error("no kitsu data");
     }
     var a = d.data[0].attributes;
-    if (a.nsfw) {
-        throw new Error("o, kitsu gave nsfw manga, skippin");
+    if(a.nsfw){
+        throw new Error("o,kitsu gave nsfw manga, skipp");
     }
     var kgenres = [];
-    if (d.included) {
-        for (var i = 0; i < d.included.length; i++) {
+    if(d.included){
+        for (var i = 0; i<d.included.length; i++){
             kgenres.push(d.included[i].attributes.name);
         }
     }
     var kyear = "?";
     var kmonth = "?";
     var kday = "?";
-    if (a.startDate) {
+    if(a.startDate){
         var kdate = new Date(a.startDate);
         kyear = kdate.getFullYear();
         kmonth = kdate.getMonth() + 1;
@@ -361,6 +375,62 @@ async function tryKitsuManga() {
     };
     return kmanga;
 }
+// async function tryKitsuManga() {
+//     var firstRes = await fetch(kitsuMangaUrl + "?page[limit]=1&page[offset]=0");
+//     var firstD = await firstRes.json();
+//     if (!firstD.meta || !firstD.meta.count) {
+//         throw new Error("Couldnt get kitsu manga count");
+//     }
+//     var totalCount = firstD.meta.count;
+//     var roff = Math.floor(Math.random() * totalCount);
+//     var res = await fetch(kitsuMangaUrl + "?page[limit]=1&page[offset]="
+//         + roff + "&include=genres");
+//     var d = await res.json();
+//     if (!d.data || !d.data.length) {
+//         throw new Error("no kitsu data");
+//     }
+//     var a = d.data[0].attributes;
+//     if (a.nsfw) {
+//         throw new Error("o, kitsu gave nsfw manga, skippin");
+//     }
+//     var kgenres = [];
+//     if (d.included) {
+//         for (var i = 0; i < d.included.length; i++) {
+//             kgenres.push(d.included[i].attributes.name);
+//         }
+//     }
+//     var kyear = "?";
+//     var kmonth = "?";
+//     var kday = "?";
+//     if (a.startDate) {
+//         var kdate = new Date(a.startDate);
+//         kyear = kdate.getFullYear();
+//         kmonth = kdate.getMonth() + 1;
+//         kday = kdate.getDate();
+//     }
+//     var kmanga = {
+//         title: {
+//             romaji: a.titles.en_jp || a.canonicalTitle,
+//             english: a.titles.en,
+//             native: a.titles.ja_jp
+//         },
+//         coverImage: {
+//             large: a.posterImage.original
+//         },
+//         genres: kgenres,
+//         averageScore: a.averageRating ? Math.round(a.averageRating) : null,
+//         startDate: {
+//             year: kyear,
+//             month: kmonth,
+//             day: kday
+//         },
+//         status: a.status,
+//         description: a.synopsis,
+//         chapters: a.chapterCount || null,
+//         volumes: a.volumeCount || null
+//     };
+//     return kmanga;
+// }
 async function lmgen() {
     if (Object.keys(mgenmap).length) {
         return;
@@ -384,4 +454,16 @@ async function ljmgen() {
     for (var i = 0; i < d.data.length; i++) {
         jmgenmap[d.data[i].name] = d.data[i].mal_id;
     }
+}
+async function lkmgen(name){
+    if(kmgenmap[name]){
+        return kmgenmap[name];
+    }
+    var res = await fetch("https://kitsu.io/api/edge/categories?filter[title]="
+    +encodedURIComponent(name) + "&page[limit]=1");
+    var d = await res.json();
+    if(d.data && d.data.length){
+        kmgenmap[name] = d.data[0].attributes.slug;
+    }
+    return kmgenmap[name];
 }
