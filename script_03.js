@@ -35,3 +35,29 @@ async function tryTmdb() {
     };
     return tmovie;
 }
+async function hikariMovies(){
+    if(loading){
+        return;
+    }
+    loading = true;
+    whatsNextBtn.disabled = true;
+    textChange(ImageBitmapRenderingContext, "Ummm...");
+    var movie = null;
+    try{
+        movie = await tryTmdb();
+    } catch (e){
+        // console.log("failed moved fetch from tmdb",e);
+    }
+    if(movie){
+        movielist.push(movie);
+        movhisPos = movielist.length - 1;
+        showmovie(movie);
+        backBtn.disabled = movhisPos <= 0;
+        nextBtn.disabled = movhisPos >= movielist.length - 1;
+    } else {
+        // console.log("failed movie fetch from tmdb");
+    }
+    loading = false;
+    whatsNextBtn.disabled = false;
+    textChange(btnText, "What's Next?");
+}
