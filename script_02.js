@@ -86,7 +86,20 @@ function showmanga(manga) {
     }
 }
 async function tryMangadexManga() {
-    var res = await fetch("https://api.mangadex.org/manga/random?includes[]=cover_art&contentRating[]=safe");
+    await lmgen();
+    var tagUrl = "";
+    if (genresarr.length) {
+        var tagIds = [];
+        for (var i = 0; i < genresarr.length; i++) {
+            if (mgenmap[genresarr[i]]) {
+                tagIds.push(mgenmap[genresarr[i]]);
+            }
+        }
+        for (var i = 0; i < tagIds.length; i++) {
+            tagUrl += "&includedTags[]=" + tagIds[i];
+        }
+    }
+    var res = await fetch("https://api.mangadex.org/manga/random?includes[]=cover_art&contentRating[]=safe" + tagUrl);
     var d = await res.json();
     if (!d.data) {
         throw new Error("no mangadex data");
@@ -109,7 +122,8 @@ async function tryMangadexManga() {
         "";
     var mdmanga = {
         title: {
-            romaji: a.title.en || a.title.ja || Object.values(a.title)[0],
+            romaji: a.title.en || a.title.ja
+                || Object.values(a.title)[0],
             english: a.title.en,
             native: a.title.ja
         },
@@ -130,6 +144,7 @@ async function tryMangadexManga() {
     };
     return mdmanga;
 }
+
 async function tryAnilistmanga() {
     var randPage2 = Math.floor(Math.random() * 20) + 1;
     var thegqlQuery;
