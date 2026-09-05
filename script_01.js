@@ -600,6 +600,13 @@ backBtn.addEventListener("click", function () {
             backBtn.disabled = mhistoryPos <= 0;
             nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
         }
+    } else if (rnMode === "Movie"){
+        if(movhisPos > 0){
+            movhisPos = movhisPos - 1;
+            showmovie(movielist[movhisPos]);
+            backBtn.disabled = movhisPos <=0;
+            nextBtn.disabled = movhisPos >= movielist.length - 1;
+        }
     }
 });
 // nextbtn 
@@ -617,6 +624,13 @@ nextBtn.addEventListener("click", function () {
             showmanga(mangalist[mhistoryPos]);
             backBtn.disabled = mhistoryPos <= 0;
             nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
+        }
+    } else if (rnMode === "movie"){
+        if(movhisPos < movielist.length - 1){
+            movhisPos = movhisPos + 1;
+            showmovie(movielist[movhisPos]);
+            backBtn.disabled = movhisPos <= 0;
+            nextBtn.disabled = movhisPos >= movielist.length - 1;
         }
     }
 });
