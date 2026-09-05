@@ -22,6 +22,7 @@ const instruct = document.getElementById("instruct");
 const rightInfo = document.getElementById("rightInfo");
 const infoArea = document.querySelector(".infoArea");
 const loadingClip = document.getElementById("loadingClip");
+const trailerBtn = document.getElementById("trailerBtn");
 var defaultratio = 14 / 9;
 var lastratio = defaultratio;
 var rnMode = "anime";
@@ -227,6 +228,10 @@ async function tryAnilist() {
                 }
                 status
                 description
+                trailer {
+                    id
+                    site
+                }
             }
         }
     }`;
@@ -252,6 +257,10 @@ async function tryAnilist() {
                 }
                 status
                 description
+                trailer {
+                    id
+                    site
+                }
             }
         }
     }`;
@@ -313,6 +322,10 @@ async function tryAnilist() {
                                 }
                                 status
                                 description
+                                trailer{
+                                   id
+                                   site
+                                }
                             }
                     }
             }`;
@@ -340,6 +353,7 @@ async function tryAnilist() {
     var randIndex = Math.floor(Math.random() * d.data.Page.media.length);
     var aresult = d.data.Page.media[randIndex];
     aresult.coverImage.large = aresult.coverImage.extraLarge;
+    aresult.trailer = aresult.trailer || null;
     return aresult;
 }
 async function ljgen() {
@@ -551,6 +565,12 @@ async function tryShikimori() {
 function showanime(anime) {
     posterImg.src = anime.coverImage.large;
     cardresizer(defaultratio);
+    if(anime.trailer && anime.trailer.site === "youtube"){
+        trailerBtn.href = "https://www.youtube.com/watch?v=" + anime.trailer.id;
+        trailerBtn.style.display = "inline-block";
+    } else {
+        trailerBtn.style.display = "none";
+    }
     loadingClip.pause();
     loadingClip.style.display = "none";
     posterImg.style.display = "block";
