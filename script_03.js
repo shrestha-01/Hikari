@@ -1,7 +1,7 @@
 // movie stuff lives here
 var movielist = [];
 var movhisPos = -1;
-
+var resizetimer; 
 async function tryTmdb() {
     var res = await fetch("Backend/tmdb.php");
     var d = await res.json();
@@ -63,6 +63,7 @@ async function hikariMovies(){
 }
 function showmovie(movie){
     posterImg.src = movie.coverImage.large;
+    cardresizer(defaultratio);
     posterImg.style.display = "block";
     rightInfo.classList.remove("centerMode");
     instruct.style.display = "none";
@@ -117,3 +118,13 @@ function cardresizer(ratio){
     posterCard.style.height = height + "px";
 }
 cardresizer(defaultratio);
+posterImg.onload = function (){
+    var picratio = posterImg.naturalWidth / posterImg.naturalHeight;
+    cardresizer(picratio);
+}
+window.addEventListener("resize",function(){
+    clearTimeout(resizetimer);
+    resizetimer =setTimeout(function (){ 
+        cardresizer(lastratio); 
+    },200);
+});

@@ -13,6 +13,7 @@ async function hikariManga() {
     loading = true;
     whatsNextBtn.disabled = true;
     textChange(btnText, "Ummmm...");
+    cardresizer(defaultratio);
     // console.log("getting a manga...!!");
     var manga = null;
     try {
@@ -67,6 +68,7 @@ async function hikariManga() {
 }
 function showmanga(manga) {
     posterImg.src = manga.coverImage.large || manga.coverImage.extraLarge;
+    cardresizer(defaultratio);
     posterImg.style.display = "block";
     rightInfo.classList.remove("centerMode");
     instruct.style.display = "none";

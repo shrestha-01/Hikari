@@ -402,7 +402,9 @@ body {
 
 .posterCard {
     transition: transform 150ms ease-out,
-        box-shadow 150ms ease-out;
+        box-shadow 150ms ease-out,
+        width 0.4s ease,
+        height 0.4s ease;
 }
 
 .cardGlow {

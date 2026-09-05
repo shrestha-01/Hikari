@@ -56,6 +56,7 @@ async function hikariGets() {
     loading = true;
     whatsNextBtn.disabled = true;
     textChange(btnText, "Ummmmm....");
+    cardresizer(defaultratio);
     // console.log("geting a anime.......!!!!!!");
     // oh dude , jikan down rn 
     // fetch(jikanUrl)
@@ -544,6 +545,7 @@ async function tryShikimori() {
 }
 function showanime(anime) {
     posterImg.src = anime.coverImage.large;
+    cardresizer(defaultratio);
     posterImg.style.display = "block";
     instruct.style.display = "none";
     rightInfo.classList.remove("centerMode");
@@ -727,6 +729,7 @@ for (var i = 0; i < catBtns.length; i++) {
                 statusrn.textContent = "";
                 describe.innerHTML = "";
                 genreList.innerHTML = "";
+                cardresizer(defaultratio);
             }
             backBtn.disabled = historyPos <= 0;
             nextBtn.disabled = historyPos >= animelist.length - 1;
@@ -743,6 +746,7 @@ for (var i = 0; i < catBtns.length; i++) {
                 statusrn.textContent = "";
                 describe.innerHTML = "";
                 genreList.innerHTML = "";
+                cardresizer(defaultratio);
             }
             backBtn.disabled = mhistoryPos <= 0;
             nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
