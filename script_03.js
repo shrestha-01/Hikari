@@ -41,7 +41,7 @@ async function hikariMovies(){
     }
     loading = true;
     whatsNextBtn.disabled = true;
-    textChange(ImageBitmapRenderingContext, "Ummm...");
+    textChange(btnText, "Ummm...");
     var movie = null;
     try{
         movie = await tryTmdb();
@@ -60,4 +60,29 @@ async function hikariMovies(){
     loading = false;
     whatsNextBtn.disabled = false;
     textChange(btnText, "What's Next?");
+}
+function showmovie(movie){
+    posterImg.src = movie.coverImage.large;
+    posterImg.style.display = "block";
+    rightInfo.classList.remove("centerMode");
+    instruct.style.display = "none";
+    bgPoster.style.backgroundImage = "url('" + movie.coverImage.large + "')";
+    engName.textContent = movie.title.english || movie.title.romaji;
+    jpName.textContent = movie.title.native;
+    if(movie.averageScore){
+        avgscore.textContent = "✦ " + (movie.averageScore/10) + "/10";
+    } else {
+        avgscore.textContent = "N/A";
+    }
+    startDate.textContent = movie.startDate.year + "-" +
+    movie.startDate.month + "-" + movie.startDate.day;
+    statusrn.textContent = movie.status;
+    describe.innerHTML = movie.description;
+    genreList.innerHTML = "";
+    for(var i = 0; i<movie.genres.length; i++){
+        var bubble = document.createElement("div");
+        bubble.className = "theGenre";
+        bubble.textContent = movie.genres[i];
+        genreList.appendChild(bubble);
+    }
 }
