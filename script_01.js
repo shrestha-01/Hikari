@@ -600,7 +600,7 @@ backBtn.addEventListener("click", function () {
             backBtn.disabled = mhistoryPos <= 0;
             nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
         }
-    } else if (rnMode === "Movie"){
+    } else if (rnMode === "movie"){
         if(movhisPos > 0){
             movhisPos = movhisPos - 1;
             showmovie(movielist[movhisPos]);
