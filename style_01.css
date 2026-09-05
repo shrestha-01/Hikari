@@ -80,8 +80,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    border: 1px solid
-     rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 10px 20px;
     color: white;
@@ -149,8 +148,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    border: 1px solid 
-    rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 5px 15px;
     font-size: 13px;
@@ -170,8 +168,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    border: 1px solid
-     rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 10px 20px;
     /* color: rgb(44, 16, 16); */
@@ -204,8 +201,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    border: 1px solid
-     rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .genresbox.open {
@@ -241,8 +237,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    border: 1px solid
-     rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
     padding: 8px 15px;
     color: white;
@@ -259,8 +254,7 @@ body {
     border-radius: 20px;
     padding: 8px 15px;
     cursor: pointer;
-    border: 1px solid 
-    rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* for infor like status , date and moreeee */
@@ -276,8 +270,7 @@ body {
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border-radius: 20px;
-    border: 1px solid
-     rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     /* border-radius: 20px; */
     padding: 5px 15px;
 }
@@ -314,15 +307,15 @@ body {
     margin: 0 auto;
     width: 100%;
     padding: 20px;
-    border-bottom: 1px solid
-     rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding-bottom: 20px;
 }
 
-.categories button.selected{
+.categories button.selected {
     background: rgba(255, 255, 255, 0.25);
     border: 1px solid rgba(255, 255, 255, 0.6);
 }
+
 .genreBtn {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
@@ -334,53 +327,65 @@ body {
     cursor: pointer;
     white-space: nowrap;
 }
-.genreBtn.selected{
+
+.genreBtn.selected {
     background: rgba(255, 255, 255, 0.25);
-    border: 1px solid rgba(255,255,255,0.6);
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
-@media (min-width: 601px) and (max-width: 1024px){
-    .infoArea{
+
+@media (min-width: 601px) and (max-width: 1024px) {
+    .infoArea {
         gap: 20px;
     }
-    .posterCard{
+
+    .posterCard {
         height: clamp(200px, 40vh, 300px);
     }
-    .engName{
+
+    .engName {
         font-size: 22px;
     }
-    .describe{
+
+    .describe {
         height: 160px;
         font-size: 13px;
     }
-    .genresbox{
+
+    .genresbox {
         width: 400px;
     }
 }
+
 /* responsiveness  */
-@media (max-width: 600px){
-    .infoArea{
+@media (max-width: 600px) {
+    .infoArea {
         flex-direction: column;
         align-items: center;
     }
-    .posterCard{
+
+    .posterCard {
         height: clamp(220px, 45vh, 320px);
     }
-    .rightInfo{
+
+    .rightInfo {
         min-width: unset;
         width: 100%;
         text-align: center;
     }
-    .genreList{
+
+    .genreList {
         justify-content: center;
         flex-wrap: wrap;
     }
-    .infocap{
+
+    .infocap {
         justify-content: center;
         flex-wrap: wrap;
     }
 }
+
 /* bgblur */
-.bgPoster{
+.bgPoster {
     position: fixed;
     top: 0;
     left: 0;
@@ -392,33 +397,39 @@ body {
     transform: scale(1.1);
     z-index: -1;
 }
+
 /* source credited on github */
-.infoArea{
+.infoArea {
     perspective: 1500px;
 }
-.posterCard{
+
+.posterCard {
     transition: transform 150ms ease-out,
-    box-shadow 150ms ease-out;
+        box-shadow 150ms ease-out;
 }
-.cardGlow{
+
+.cardGlow {
     position: absolute;
     width: 100%;
     height: 100%;
     left: 0;
     top: 0;
     background-image: radial-gradient(circle at 50% -20%,
-    #ffffff22, #0000000f);
+            #ffffff22, #0000000f);
     pointer-events: none;
 }
-.instruct{
+
+.instruct {
     font-size: 15px;
-    color: rgba(255,255,255,0.6);
+    color: rgba(255, 255, 255, 0.6);
     font-style: italic;
 }
-.infocap div:empty{
+
+.infocap div:empty {
     display: none;
 }
-.rightInfo.centerMode{
+
+.rightInfo.centerMode {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -426,30 +437,48 @@ body {
     text-align: center;
     min-height: clamp(220px, 60vh, 420px);
 }
+
+.cardNotch {
+    width: 30%;
+    height: 14px;
+    border-left: 1px solid rgba(255, 255, 255, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0 0 5px 5px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
 .centerMode .instruct {
     position: relative;
     top: 80px;
 }
-.siteTitle{
+
+.siteTitle {
     font-size: 25px;
     font-weight: bold;
 }
+
 /* a shining star  */
-.star{
+.star {
     display: inline-block;
     animation: shine 1.5s ease-in-out infinite;
 }
+
 @keyframes shine {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 0.4;
         transform: scale(1);
     }
-    50%{
+
+    50% {
         opacity: 1;
         transform: scale(1);
         text-shadow: 0 0 px rgba(255, 255, 255, 0.8);
     }
 }
+
 .bgVideo {
     position: fixed;
     top: 0;
@@ -458,4 +487,34 @@ body {
     height: 100%;
     object-fit: cover;
     z-index: -2;
+}
+
+.cardNotch {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2),
+        0 0 20px rgba(255, 255, 255, 0.5);
+}
+.notchbleft {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: calc(50% - 15%);
+    height: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px 0 0 0;
+}
+
+.notchbright {
+    position: absolute;
+    top: -1px;
+    right: 0;
+    width: calc(50% - 15%);
+    height: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0 10px 0 0;
 }
