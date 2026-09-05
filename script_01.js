@@ -23,6 +23,8 @@ const rightInfo = document.getElementById("rightInfo");
 const infoArea = document.querySelector(".infoArea");
 const loadingClip = document.getElementById("loadingClip");
 const trailerBtn = document.getElementById("trailerBtn");
+const trailerFrame = document.getElementById("trailerFrame");
+var trailerplay = false;
 var defaultratio = 14 / 9;
 var lastratio = defaultratio;
 var rnMode = "anime";
@@ -565,8 +567,13 @@ async function tryShikimori() {
 function showanime(anime) {
     posterImg.src = anime.coverImage.large;
     cardresizer(defaultratio);
+    trailerplay = false;
+    trailerFrame.style.display = "none";
+    trailerFrame.src = "";
+    posterImg.style.display = "block";
     if(anime.trailer && anime.trailer.site === "youtube"){
-        trailerBtn.href = "https://www.youtube.com/watch?v=" + anime.trailer.id;
+        trailerBtn.dataset.trailerid = anime.trailer.id;
+        trailerBtn.textContent = "Watch Trailer";
         trailerBtn.style.display = "inline-block";
     } else {
         trailerBtn.style.display = "none";

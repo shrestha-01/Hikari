@@ -125,8 +125,10 @@ function cardresizer(ratio){
     posterCard.style.height = height + "px";
 }
 cardresizer(defaultratio);
-posterImg.onload = function (){
+var posterRatio = defaultratio;
+posterImg.onload = function ( ){
     var picratio = posterImg.naturalWidth / posterImg.naturalHeight;
+    posterRatio = picratio;
     cardresizer(picratio);
 }
 window.addEventListener("resize",function(){
@@ -134,4 +136,21 @@ window.addEventListener("resize",function(){
     resizetimer =setTimeout(function (){ 
         cardresizer(lastratio); 
     },200);
+});
+trailerBtn.addEventListener("click", function () {
+    if (trailerplay) {
+        trailerplay = false;
+        trailerFrame.style.display = "none";
+        trailerFrame.src = "";
+        posterImg.style.display = "block";
+        trailerBtn.textContent = "Watch Trailer";
+        cardresizer(posterRatio);
+    } else {
+        trailerplay = true;
+        trailerFrame.src = "https://www.youtube.com/embed/" + trailerBtn.dataset.trailerid + "?autoplay=1";
+        trailerFrame.style.display = "block";
+        posterImg.style.display = "none";
+        trailerBtn.textContent = "Close Trailer";
+        cardresizer(defaultratio);
+    }
 });
