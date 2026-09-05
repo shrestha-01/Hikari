@@ -21,6 +21,7 @@ const cardGlow = document.querySelector(".cardGlow");
 const instruct = document.getElementById("instruct");
 const rightInfo = document.getElementById("rightInfo");
 const infoArea = document.querySelector(".infoArea");
+const loadingClip = document.getElementById("loadingClip");
 var defaultratio = 14 / 9;
 var lastratio = defaultratio;
 var rnMode = "anime";
@@ -57,6 +58,10 @@ async function hikariGets() {
     whatsNextBtn.disabled = true;
     textChange(btnText, "Ummmmm....");
     cardresizer(defaultratio);
+    posterImg.style.display = "none";
+    loadingClip.style.display = "block";
+    loadingClip.currentTime = 0;
+    loadingClip.play();
     // console.log("geting a anime.......!!!!!!");
     // oh dude , jikan down rn 
     // fetch(jikanUrl)
@@ -546,6 +551,8 @@ async function tryShikimori() {
 function showanime(anime) {
     posterImg.src = anime.coverImage.large;
     cardresizer(defaultratio);
+    loadingClip.pause();
+    loadingClip.style.display = "none";
     posterImg.style.display = "block";
     instruct.style.display = "none";
     rightInfo.classList.remove("centerMode");

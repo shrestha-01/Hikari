@@ -42,6 +42,11 @@ async function hikariMovies(){
     loading = true;
     whatsNextBtn.disabled = true;
     textChange(btnText, "Ummm...");
+    cardresizer(defaultratio);
+    posterImg.style.display = "none";
+    loadingClip.style.display = "block";
+    loadingClip.currentTime = 0;
+    loadingClip.play();
     var movie = null;
     try{
         movie = await tryTmdb();
@@ -64,6 +69,8 @@ async function hikariMovies(){
 function showmovie(movie){
     posterImg.src = movie.coverImage.large;
     cardresizer(defaultratio);
+    loadingClip.pause();
+    loadingClip.style.display = "none";
     posterImg.style.display = "block";
     rightInfo.classList.remove("centerMode");
     instruct.style.display = "none";
