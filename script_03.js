@@ -86,3 +86,34 @@ function showmovie(movie){
         genreList.appendChild(bubble);
     }
 }
+function cardresizer(ratio){
+    if(!ratio || ratio <= 0){
+        ratio = defaultratio;
+    }
+    lastratio = ratio;
+    var gap = 30;
+    var infoMinWidth = 280;
+    var maxHeight = infoArea.clientHeight;
+    if(!maxHeight){
+        maxHeight = window.innerHeight * 0.6;
+    }
+    var maxWidth = infoArea.clientWidth - gap - infoMinWidth;
+    if(maxWidth < 200){
+        maxWidth = 220;
+    }
+    var width = maxHeight * ratio;
+    var height = maxHeight;
+    if(width > maxWidth){
+        width = maxWidth;
+        height = width / ratio;
+    }
+    if(width < 180){
+        width = 180;
+    }
+    if(height < 180){
+        height = 180;
+    }
+    posterCard.style.width = width + "px";
+    posterCard.style.height = height + "px";
+}
+cardresizer(defaultratio);
