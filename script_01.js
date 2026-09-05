@@ -627,6 +627,8 @@ whatsNextBtn.addEventListener("click", function () {
         hikariGets();
     } else if (rnMode === "manga") {
         hikariManga();
+    } else if (rnMode === "movie"){
+        hikariMovies();
     } else {
         console.log("bro wait, havent built that thing yet-__-");
     }
