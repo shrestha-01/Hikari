@@ -144,24 +144,76 @@ window.addEventListener("resize", function () {
         cardresizer(lastratio);
     }, 200);
 });
-trailerBtn.addEventListener("click", function () {
+// function toggleTrailer(){
+//     trailerIconBtn.classList.add("clickPulse");
+//     setTimeout(function(){
+//         trailerIconBtn.classList.remove("clickPulse");
+//     },400);
+//     if(trailerplay){
+//         trailerplay = false;
+//         trailerFrame.style.display = "none";
+//         trailerFrame.src = "";
+//         posterImg.style.display = "block";
+//         trailerBtn.textContent = "Watch Trailer";
+//         trailerIconBtn.classList.remove("playing");
+//         cardresizer(posterRatio);
+//     } else {
+//         trailerplay = true;
+//         trailerFrame.src="https://www.youtube.com/embed/"+ trailerWrap.dataset.trailerid+"?autoplay=1";
+//         trailerFrame.style.display = "block";
+//         posterImg.style.display = "none";
+//         trailerBtn.textContent="Close Trailer";
+//         trailerIconBtn.classList.add("playing");
+//         cardresizer(defaultratio);
+//         posterCard.style.transform ="";
+//     }
+// }
+// trailerBtn.addEventListener("click",toggleTrailer);
+// trailerIconBtn.addEventListener("click",toggleTrailer);
+function toggleTrailer() {
     if (trailerplay) {
         trailerplay = false;
         trailerFrame.style.display = "none";
         trailerFrame.src = "";
         posterImg.style.display = "block";
-        trailerBtn.textContent = "Watch Trailer";
+        btnLabel.textContent = "Watch Trailer";
         cardresizer(posterRatio);
     } else {
         trailerplay = true;
         trailerFrame.src = "https://www.youtube.com/embed/" + trailerBtn.dataset.trailerid + "?autoplay=1";
         trailerFrame.style.display = "block";
         posterImg.style.display = "none";
-        trailerBtn.textContent = "Close Trailer";
+        btnLabel.textContent = "Close Trailer";
         cardresizer(defaultratio);
         posterCard.style.transform = "";
     }
-});
+}
+trailerBtn.addEventListener("click", toggleTrailer);
+// trailerBtn.addEventListener("click", function () {
+//     trailerBtn.classList.add("clickPulse");
+//     setTimeout(function () {
+//         trailerBtn.classList.remove("clickPulse");
+//     }, 400);
+
+//     if (trailerplay) {
+//         trailerplay = false;
+//         trailerFrame.style.display = "none";
+//         trailerFrame.src = "";
+//         posterImg.style.display = "block";
+//         trailerBtnText.textContent = "Watch Trailer";
+//         trailerBtn.classList.remove("playing");
+//         cardresizer(posterRatio);
+//     } else {
+//         trailerplay = true;
+//         trailerFrame.src = "https://www.youtube.com/embed/" + trailerBtn.dataset.trailerid + "?autoplay=1";
+//         trailerFrame.style.display = "block";
+//         posterImg.style.display = "none";
+//         trailerBtnText.textContent = "Close Trailer";
+//         trailerBtn.classList.add("playing");
+//         cardresizer(defaultratio);
+//         posterCard.style.transform = "";
+//     }
+// });
 async function tryOmdb() {
     var res = await fetch("Backend/omdb.php");
     var d = await res.json();

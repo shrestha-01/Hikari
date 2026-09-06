@@ -22,8 +22,13 @@ const instruct = document.getElementById("instruct");
 const rightInfo = document.getElementById("rightInfo");
 const infoArea = document.querySelector(".infoArea");
 const loadingClip = document.getElementById("loadingClip");
+// const trailerBtn = document.getElementById("trailerBtn");
+// const trailerFrame = document.getElementById("trailerFrame");
+// const trailerWrap = document.getElementById("trailerWrap");
+// const trailerIconBtn = document.getElementById("trailerIconBtn");
 const trailerBtn = document.getElementById("trailerBtn");
 const trailerFrame = document.getElementById("trailerFrame");
+const btnLabel = document.getElementById("btnLabel");
 var trailerplay = false;
 var defaultratio = 14 / 9;
 var lastratio = defaultratio;
@@ -571,10 +576,18 @@ function showanime(anime) {
     trailerFrame.style.display = "none";
     trailerFrame.src = "";
     posterImg.style.display = "block";
-    if(anime.trailer && anime.trailer.site === "youtube"){
+    // if(anime.trailer && anime.trailer.site === "youtube"){
+    //     trailerWrap.dataset.trailerid = anime.trailer.id;
+    //     trailerBtn.textContent = "Watch Trailer";
+    //     trailerWrap.style.display = "inline-flex";
+    // } else {
+    //     trailerWrap.style.display = "none";
+
+    // }
+    if (anime.trailer && anime.trailer.site === "youtube") {
         trailerBtn.dataset.trailerid = anime.trailer.id;
-        trailerBtn.textContent = "Watch Trailer";
-        trailerBtn.style.display = "inline-block";
+        btnLabel.textContent = "Watch Trailer";
+        trailerBtn.style.display = "inline-flex";
     } else {
         trailerBtn.style.display = "none";
     }
@@ -639,11 +652,11 @@ backBtn.addEventListener("click", function () {
             backBtn.disabled = mhistoryPos <= 0;
             nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
         }
-    } else if (rnMode === "movie"){
-        if(movhisPos > 0){
+    } else if (rnMode === "movie") {
+        if (movhisPos > 0) {
             movhisPos = movhisPos - 1;
             showmovie(movielist[movhisPos]);
-            backBtn.disabled = movhisPos <=0;
+            backBtn.disabled = movhisPos <= 0;
             nextBtn.disabled = movhisPos >= movielist.length - 1;
         }
     }
@@ -664,8 +677,8 @@ nextBtn.addEventListener("click", function () {
             backBtn.disabled = mhistoryPos <= 0;
             nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
         }
-    } else if (rnMode === "movie"){
-        if(movhisPos < movielist.length - 1){
+    } else if (rnMode === "movie") {
+        if (movhisPos < movielist.length - 1) {
             movhisPos = movhisPos + 1;
             showmovie(movielist[movhisPos]);
             backBtn.disabled = movhisPos <= 0;
@@ -680,7 +693,7 @@ whatsNextBtn.addEventListener("click", function () {
         hikariGets();
     } else if (rnMode === "manga") {
         hikariManga();
-    } else if (rnMode === "movie"){
+    } else if (rnMode === "movie") {
         hikariMovies();
     } else {
         console.log("bro wait, havent built that thing yet-__-");
@@ -707,12 +720,12 @@ document.getElementById("whichgenre").addEventListener("click", function () {
 //     });
 // }
 var allGenreBtns = document.querySelectorAll(".genreBtn");
-for (var i = 0; i<allGenreBtns.length; i++){
-    allGenreBtns[i].addEventListener("click",function(){
+for (var i = 0; i < allGenreBtns.length; i++) {
+    allGenreBtns[i].addEventListener("click", function () {
         this.classList.toggle("selected");
         genresarr = [];
         var pickedOnes = document.querySelectorAll(".genreBtn.selected");
-        for(var j = 0; j<pickedOnes.length; j++){
+        for (var j = 0; j < pickedOnes.length; j++) {
             genresarr.push(pickedOnes[j].dataset.genre);
         }
         // console.log(genresarr);
@@ -767,8 +780,8 @@ for (var i = 0; i < catBtns.length; i++) {
             }
             backBtn.disabled = historyPos <= 0;
             nextBtn.disabled = historyPos >= animelist.length - 1;
-        } else if (rnMode === "manga"){
-            if(mhistoryPos >= 0 && mangalist.length){
+        } else if (rnMode === "manga") {
+            if (mhistoryPos >= 0 && mangalist.length) {
                 showmanga(mangalist[mhistoryPos]);
             } else {
                 posterImg.style.display = "none";
@@ -792,16 +805,16 @@ for (var i = 0; i < catBtns.length; i++) {
 }
 // card 
 var cbound;
-posterCard.addEventListener("mouseenter",function(){
+posterCard.addEventListener("mouseenter", function () {
     cbound = posterCard.getBoundingClientRect();
-    document.addEventListener("mousemove",tiltCard);
+    document.addEventListener("mousemove", tiltCard);
 });
-posterCard.addEventListener("mouseleave",function(){
-    document.removeEventListener("mousemove",tiltCard);
+posterCard.addEventListener("mouseleave", function () {
+    document.removeEventListener("mousemove", tiltCard);
     posterCard.style.transform = "";
 });
-function tiltCard(e){
-    if(trailerplay){
+function tiltCard(e) {
+    if (trailerplay) {
         return;
     }
     var mouseX = e.clientX;
@@ -809,17 +822,17 @@ function tiltCard(e){
     var leftX = mouseX - cbound.x;
     var topY = mouseY - cbound.y;
     var center = {
-        x: leftX -cbound.width / 2,
-        y: topY -cbound.height / 2
+        x: leftX - cbound.width / 2,
+        y: topY - cbound.height / 2
     };
     var distance = Math.sqrt(center.x ** 2 + center.y ** 2);
-    posterCard.style.transform = 
-    "scale3d(1.05, 1.05, 1.05) rotate3d(" +
-    (center.y / 100) + ", " +
-    (-center.x / 100) + ", 0, "+
-    (Math.log(distance) * 2) + "deg)";
-    cardGlow.style.backgroundImage = 
-    "radial-gradient(circle at " + 
-    (center.x * 2 + cbound.width / 2) + "px " +
-    (center.y * 2 + cbound.height / 2) + "px, #ffffff55, #0000000f)";
+    posterCard.style.transform =
+        "scale3d(1.05, 1.05, 1.05) rotate3d(" +
+        (center.y / 100) + ", " +
+        (-center.x / 100) + ", 0, " +
+        (Math.log(distance) * 2) + "deg)";
+    cardGlow.style.backgroundImage =
+        "radial-gradient(circle at " +
+        (center.x * 2 + cbound.width / 2) + "px " +
+        (center.y * 2 + cbound.height / 2) + "px, #ffffff55, #0000000f)";
 }

@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hikari</title>
-    <link rel="stylesheet" href="style_01.css?v=1.4">
-    <link rel="icon" type="image/jpeg" href="Logo/Logo.jpeg?v=1.4">
+    <link rel="stylesheet" href="style_01.css?v=1.5">
+    <link rel="icon" type="image/jpeg" href="Logo/Logo.jpeg?v=1.5">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0QS00603GF"></script>
     <script>
@@ -70,7 +70,8 @@
             <div class="cardNotch"></div>
             <div class="notchbright"></div>
             <img class="posterImg" id="posterImg" alt="">
-            <video class="loadingClip" id="loadingClip" src="Logo/loading.webm" muted loop style="display: none;"></video>
+            <video class="loadingClip" id="loadingClip" src="Logo/loading.webm" muted loop
+                style="display: none;"></video>
             <iframe class="trailerFrame" id="trailerFrame" allow="autoplay" style="display: none;"></iframe>
             <div class="cardGlow"></div>
         </div>
@@ -80,7 +81,8 @@
             <div class="genreList" id="genreList"></div>
         </div> -->
         <div class="rightInfo centerMode" id="rightInfo">
-            <div class="instruct" id="instruct">Yo buddy, hit that ✦ What's Next? ✦ button and let's find you something good (∩˃o˂∩) </div>
+            <div class="instruct" id="instruct">Yo buddy, hit that ✦ What's Next? ✦ button and let's find you something
+                good (∩˃o˂∩) </div>
             <div class="engName" id="engName"></div>
             <div class="jpName" id="jpName"></div>
             <div class="infocap" id="inofcap">
@@ -90,7 +92,35 @@
             </div>
             <div class="genreList" id="genreList"></div>
             <div class="describe" id="describe"></div>
-            <button class="trailerBtn" id="trailerBtn" style="display: none;">Watch Trailer</button>
+            <!-- <button class="trailerBtn" id="trailerBtn" style="display: none;">Watch Trailer</button> -->
+             <!-- <div class="trailerWrap" id="trailerWrap" style="display: none;">
+                <button class="trailerIconBtn" id="trailerIconBtn">
+                    <img class="ytIcon" id="ytIcon" src="Icons/youtube.svg" alt="">
+                    <span class="closeX" id="closeX"></span>
+                </button>
+                <button class="trailerBtn" id="trailerBtn">Watch Trailer</button>
+             </div> -->
+            <button class="trailerBtn" id="trailerBtn" style="display: none;">
+                <svg class="btnLogo" viewBox="0 0 24 24" width="16" height="16">
+                    <rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0000"></rect>
+                    <path d="M10 8.5 L17 12 L10 15.5 Z" fill="#FFFFFF"></path>
+                </svg>
+                <span class="btnLabel" id="btnLabel">Watch Trailer</span>
+            </button>
+            <!-- <button class="trailerBtn" id="trailerBtn" style="display: none;">
+                <span class="trailerIcon" id="trailerIcon">
+                    <svg class="iconSvg playSvg" viewBox="0 0 24 24">
+                        <rect x="1" y="4" width="22" height="16" rx="5"></rect>
+                        <polygon points="10,9 10,15 16,12" class="iconGlyph"></polygon>
+                    </svg>
+                    <svg class="iconSvg closeSvg" viewBox="0 0 24 24">
+                        <rect x="1" y="4" width="22" height="16" rx="5"></rect>
+                        <line x1="8" y1="8" x2="16" y2="16" class="iconGlyph"></line>
+                        <line x1="16" y1="8" x2="8" y2="16" class="iconGlyph"></line>
+                    </svg>
+                </span>
+                <span class="trailerBtnText" id="trailerBtnText">Watch Trailer</span>
+            </button> -->
         </div>
     </div>
     <div class="theButtons">
@@ -100,8 +130,9 @@
         </button>
         <button class="forward" id="nextBtn" disabled>Forward►</button>
     </div>
-    <script src="script_01.js?v=1.4"></script>
-    <script src="script_02.js?v=1.4"></script>
-    <script src="script_03.js?v=1.4"></script>
+    <script src="script_01.js?v=1.5"></script>
+    <script src="script_02.js?v=1.5"></script>
+    <script src="script_03.js?v=1.5"></script>
 </body>
+
 </html>

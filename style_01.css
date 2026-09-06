@@ -21,7 +21,7 @@ body {
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
-    outline: 2px solid rgba(255,255,255,0.4);
+    outline: 2px solid rgba(255, 255, 255, 0.4);
     outline-offset: 3px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.5),
@@ -75,17 +75,17 @@ body {
     gap: 15px;
     margin-top: 20px;
 } */
- .theButtons{
+.theButtons {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px; 
+    gap: 15px;
     position: fixed;
     bottom: 20px;
     left: 0;
     width: 100%;
     z-index: 10;
- }
+}
 
 .theButtons button {
     background: rgba(255, 255, 255, 0.05);
@@ -118,7 +118,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 30px;
-    max-width: clamp(300px,90vw,1200px);
+    max-width: clamp(300px, 90vw, 1200px);
     margin: 15px auto 0 auto;
     padding-bottom: 90px;
     max-height: calc(100vh - 220px);
@@ -168,10 +168,10 @@ body {
 }
 
 /* anime filtering btn  */
-.filterBar{
+.filterBar {
     display: flex;
     justify-content: flex-end;
-    max-width: clamp(300px,90vw,1200px);
+    max-width: clamp(300px, 90vw, 1200px);
     margin: 10px auto 0 auto;
     position: sticky;
     top: 10px;
@@ -516,6 +516,7 @@ body {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2),
         0 0 20px rgba(255, 255, 255, 0.5);
 }
+
 .notchbleft {
     position: absolute;
     top: -1px;
@@ -535,7 +536,8 @@ body {
     border-top: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 0 10px 0 0;
 }
-.loadingClip{
+
+.loadingClip {
     position: absolute;
     bottom: 0px;
     right: 10px;
@@ -545,9 +547,249 @@ body {
     /* background: transparent; */
     /* mix-blend-mode: multiply; */
 }
+
 .trailerFrame {
     width: 100%;
     height: 100%;
     border: none;
     display: none;
+}
+
+/* trailer button redesign
+.trailerBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 59, 59, 0.08);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 59, 59, 0.4);
+    border-radius: 20px;
+    padding: 8px 18px 8px 10px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s ease, border-color 0.3s ease,
+        transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.3s ease;
+}
+
+.trailerBtn:hover {
+    background: rgba(255, 59, 59, 0.18);
+    border-color: rgba(255, 59, 59, 0.7);
+    transform: translateY(-2px);
+    box-shadow: 0 0 16px rgba(255, 59, 59, 0.35);
+}
+
+.trailerBtn.playing {
+    background: rgba(120, 150, 255, 0.1);
+    border-color: rgba(120, 150, 255, 0.45);
+}
+
+.trailerBtn.playing:hover {
+    background: rgba(120, 150, 255, 0.2);
+    border-color: rgba(120, 150, 255, 0.75);
+    box-shadow: 0 0 16px rgba(120, 150, 255, 0.35);
+}
+
+.trailerBtn.clickPulse {
+    animation: trailerPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes trailerPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(0.88); }
+    100% { transform: scale(1); }
+}
+
+.trailerIcon {
+    position: relative;
+    width: 22px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.iconSvg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.iconSvg rect {
+    fill: #ff3b3b;
+    transition: fill 0.35s ease;
+}
+
+.iconGlyph {
+    fill: white;
+    stroke: white;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.playSvg {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.closeSvg {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.5);
+}
+
+.trailerBtn.playing .playSvg {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+}
+
+.trailerBtn.playing .closeSvg {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.trailerBtn.playing .closeSvg rect {
+    fill: #7896ff;
+}
+
+.trailerBtnText {
+    transition: opacity 0.2s ease;
+} */
+ /* trailer icon + text design  */
+ /* .trailerBtn {
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 8px 16px 8px 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.trailerBtn:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+ .trailerWrap{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 5px 5px 5px 5px;
+ }
+ .trailerIconBtn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64,1);
+ }
+ .trailerIconBtn:hover{
+    transform: scale(1.15);
+ }
+ .trailerIconBtn.clickPulse{
+    animation: trailerPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+ }
+ @keyframes trailerPop{
+    0% {
+        transform: scale(1);
+    }
+    40%{
+        transform: scale(0.85);
+    }
+    100%{
+        transform: scale(1);
+    }
+ }
+ .ytIcon{
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    transition: opacity 0.25s ease,
+    transform 0.25s ease;
+ }
+ .closeX{
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.5);
+    transition: opacity 0.25s ease,
+    transform 0.25s ease;
+ }
+ .closeX::before,
+ .closeX::after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+ }
+ .closeX::before{
+    transform: rotate(45deg);
+ }
+ .closeX::after{
+    transform: rotate(-45deg);
+ }
+ .trailerIconBtn.playing .ytIcon{
+    opacity: 0;
+    transform: rotate(45deg) scale(0.5);
+ }
+ .trailerIconBtn.playing .closeX{
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+ } */
+  /* single-button trailer design, referencing script.js pattern */
+.trailerBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 8px 18px 8px 12px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.trailerBtn:hover {
+    background: rgba(255, 0, 0, 0.35);
+    border-color: rgb(255, 0, 0);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+}
+
+.trailerBtn:hover .btnLogo {
+    animation: trailerPop 0.5s ease;
+}
+
+@keyframes trailerPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
