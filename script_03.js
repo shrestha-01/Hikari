@@ -1,7 +1,7 @@
 // movie stuff lives here
 var movielist = [];
 var movhisPos = -1;
-var resizetimer; 
+var resizetimer;
 async function tryTmdb() {
     var res = await fetch("Backend/tmdb.php");
     var d = await res.json();
@@ -35,8 +35,8 @@ async function tryTmdb() {
     };
     return tmovie;
 }
-async function hikariMovies(){
-    if(loading){
+async function hikariMovies() {
+    if (loading) {
         return;
     }
     loading = true;
@@ -48,12 +48,19 @@ async function hikariMovies(){
     loadingClip.currentTime = 0;
     loadingClip.play();
     var movie = null;
-    try{
+    try {
         movie = await tryTmdb();
-    } catch (e){
-        // console.log("failed moved fetch from tmdb",e);
+    } catch (e) {
+        // console.log("failed moved fatch from tmdb",e);
     }
-    if(movie){
+    if (!movie) {
+        try {
+            movie = await tryOmdb();
+        } catch (e) {
+            // console.log("failed movie fetch from omdb",e);
+        }
+    }
+    if (movie) {
         movielist.push(movie);
         movhisPos = movielist.length - 1;
         showmovie(movie);
@@ -66,7 +73,7 @@ async function hikariMovies(){
     whatsNextBtn.disabled = false;
     textChange(btnText, "What's Next?");
 }
-function showmovie(movie){
+function showmovie(movie) {
     posterImg.src = movie.coverImage.large;
     cardresizer(defaultratio);
     loadingClip.pause();
@@ -77,48 +84,48 @@ function showmovie(movie){
     bgPoster.style.backgroundImage = "url('" + movie.coverImage.large + "')";
     engName.textContent = movie.title.english || movie.title.romaji;
     jpName.textContent = movie.title.native;
-    if(movie.averageScore){
-        avgscore.textContent = "✦ " + (movie.averageScore/10) + "/10";
+    if (movie.averageScore) {
+        avgscore.textContent = "✦ " + (movie.averageScore / 10) + "/10";
     } else {
         avgscore.textContent = "N/A";
     }
     startDate.textContent = movie.startDate.year + "-" +
-    movie.startDate.month + "-" + movie.startDate.day;
+        movie.startDate.month + "-" + movie.startDate.day;
     statusrn.textContent = movie.status;
     describe.innerHTML = movie.description;
     genreList.innerHTML = "";
-    for(var i = 0; i<movie.genres.length; i++){
+    for (var i = 0; i < movie.genres.length; i++) {
         var bubble = document.createElement("div");
         bubble.className = "theGenre";
         bubble.textContent = movie.genres[i];
         genreList.appendChild(bubble);
     }
 }
-function cardresizer(ratio){
-    if(!ratio || ratio <= 0){
+function cardresizer(ratio) {
+    if (!ratio || ratio <= 0) {
         ratio = defaultratio;
     }
     lastratio = ratio;
     var gap = 30;
     var infoMinWidth = 280;
     var maxHeight = infoArea.clientHeight;
-    if(!maxHeight){
+    if (!maxHeight) {
         maxHeight = window.innerHeight * 0.6;
     }
     var maxWidth = infoArea.clientWidth - gap - infoMinWidth;
-    if(maxWidth < 200){
+    if (maxWidth < 200) {
         maxWidth = 220;
     }
     var width = maxHeight * ratio;
     var height = maxHeight;
-    if(width > maxWidth){
+    if (width > maxWidth) {
         width = maxWidth;
         height = width / ratio;
     }
-    if(width < 180){
+    if (width < 180) {
         width = 180;
     }
-    if(height < 180){
+    if (height < 180) {
         height = 180;
     }
     posterCard.style.width = width + "px";
@@ -126,16 +133,16 @@ function cardresizer(ratio){
 }
 cardresizer(defaultratio);
 var posterRatio = defaultratio;
-posterImg.onload = function ( ){
+posterImg.onload = function () {
     var picratio = posterImg.naturalWidth / posterImg.naturalHeight;
     posterRatio = picratio;
     cardresizer(picratio);
 }
-window.addEventListener("resize",function(){
+window.addEventListener("resize", function () {
     clearTimeout(resizetimer);
-    resizetimer =setTimeout(function (){ 
-        cardresizer(lastratio); 
-    },200);
+    resizetimer = setTimeout(function () {
+        cardresizer(lastratio);
+    }, 200);
 });
 trailerBtn.addEventListener("click", function () {
     if (trailerplay) {
@@ -152,6 +159,50 @@ trailerBtn.addEventListener("click", function () {
         posterImg.style.display = "none";
         trailerBtn.textContent = "Close Trailer";
         cardresizer(defaultratio);
-        posterCard.style.transform="";
+        posterCard.style.transform = "";
     }
 });
+async function tryOmdb() {
+    var res = await fetch("Backend/omdb.php");
+    var d = await res.json();
+    if (!d || d.Response === "False") {
+        throw new Error("no omdb data");
+    }
+    var ogenres = [];
+    if (d.Genre && d.Genre !== "N/A") {
+        ogenres = d.Genre.split(",").map(function (g) {
+            return g.trim();
+        });
+    }
+    var oyear = "?";
+    var omonth = "?";
+    var oday = "?";
+    if (d.Released && d.Released !== "N/A") {
+        var odate = new Date(d.Released);
+        if (!isNaN(odate)) {
+            oyear = odate.getFullYear();
+            omonth = odate.getMonth() + 1;
+            oday = odate.getDate();
+        }
+    }
+    var omovie = {
+        title: {
+            romaji: d.Title,
+            english: d.Title,
+            native: ""
+        },
+        coverImage: {
+            large: (d.Poster && d.Poster !== "N/A") ? d.Poster : ""
+        },
+        genres: ogenres,
+        averageScore: (d.imdbRating && d.imdbRating !== "N/A") ? Math.round(parseFloat(d.imdbRating) * 10) : null,
+        startDate: {
+            year: oyear,
+            month: omonth,
+            day: oday
+        },
+        status: "Released",
+        description: (d.Plot && d.Plot !== "N/A") ? d.Plot : "no description available"
+    };
+    return omovie;
+}
