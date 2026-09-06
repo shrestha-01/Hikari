@@ -801,6 +801,9 @@ posterCard.addEventListener("mouseleave",function(){
     posterCard.style.transform = "";
 });
 function tiltCard(e){
+    if(trailerplay){
+        return;
+    }
     var mouseX = e.clientX;
     var mouseY = e.clientY;
     var leftX = mouseX - cbound.x;

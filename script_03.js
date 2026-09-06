@@ -152,5 +152,6 @@ trailerBtn.addEventListener("click", function () {
         posterImg.style.display = "none";
         trailerBtn.textContent = "Close Trailer";
         cardresizer(defaultratio);
+        posterCard.style.transform="";
     }
 });

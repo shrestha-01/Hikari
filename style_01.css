@@ -68,13 +68,24 @@ body {
     min-width: 280px;
 }
 
-.theButtons {
+/* .theButtons {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 15px;
     margin-top: 20px;
-}
+} */
+ .theButtons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; 
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+ }
 
 .theButtons button {
     background: rgba(255, 255, 255, 0.05);
@@ -107,9 +118,11 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 30px;
-    /* max-width: 1200px; */
-    max-width: clamp(300px, 90vw, 1200px);
-    margin: 40px auto 0 auto;
+    max-width: clamp(300px,90vw,1200px);
+    margin: 15px auto 0 auto;
+    padding-bottom: 90px;
+    max-height: calc(100vh - 220px);
+    overflow: visible;
 }
 
 .topWrap {
@@ -155,12 +168,14 @@ body {
 }
 
 /* anime filtering btn  */
-.filterBar {
+.filterBar{
     display: flex;
     justify-content: flex-end;
-    /* max-width: 900px; */
-    max-width: clamp(300px, 90vw, 1200px);
-    margin: 20px auto 0 auto;
+    max-width: clamp(300px,90vw,1200px);
+    margin: 10px auto 0 auto;
+    position: sticky;
+    top: 10px;
+    z-index: 10;
 }
 
 /* the genresss */
