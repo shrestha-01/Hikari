@@ -780,6 +780,8 @@ for (var i = 0; i < catBtns.length; i++) {
         trailerFrame.src = "";
         trailerBtn.style.display = "none";
         posterImg.style.display = "block";
+        genresbox.classList.remove("open");
+        movgenresbox.classList.remove("open");
 
         textChange(btnText, "What's Next?");
         if (rnMode === "anime") {
