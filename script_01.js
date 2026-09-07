@@ -22,6 +22,7 @@ const instruct = document.getElementById("instruct");
 const rightInfo = document.getElementById("rightInfo");
 const infoArea = document.querySelector(".infoArea");
 const loadingClip = document.getElementById("loadingClip");
+const movgenresbox = document.getElementById("movgenresbox");
 // const trailerBtn = document.getElementById("trailerBtn");
 // const trailerFrame = document.getElementById("trailerFrame");
 // const trailerWrap = document.getElementById("trailerWrap");
@@ -704,8 +705,12 @@ categorybtn.addEventListener("click", function () {
     categories.classList.toggle("open");
 });
 // open closing of the genres dabba
-document.getElementById("whichgenre").addEventListener("click", function () {
-    genresbox.classList.toggle("open");
+document.getElementById("whichgenre").addEventListener("click", function(){
+    if(rnMode === "movie"){
+        movgenresbox.classList.toggle("open");
+    } else {
+        genresbox.classList.toggle("open");
+    }
 })
 // the genre filter 
 // var allCheckboxes = document.querySelectorAll(".g input");
@@ -720,15 +725,23 @@ document.getElementById("whichgenre").addEventListener("click", function () {
 //     });
 // }
 var allGenreBtns = document.querySelectorAll(".genreBtn");
-for (var i = 0; i < allGenreBtns.length; i++) {
-    allGenreBtns[i].addEventListener("click", function () {
+for(var i = 0; i<allGenreBtns.length; i++){
+    allGenreBtns[i].addEventListener("click",function(){
         this.classList.toggle("selected");
-        genresarr = [];
-        var pickedOnes = document.querySelectorAll(".genreBtn.selected");
-        for (var j = 0; j < pickedOnes.length; j++) {
-            genresarr.push(pickedOnes[j].dataset.genre);
+        var parentBox = this.closest(".genresbox");
+        if(parentBox.id === "movgenresbox"){
+            movgenresarr = [];
+            var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
+            for(var j = 0; j < pickedOnes.length; j++){
+                movgenresarr.push(pickedOnes[j].dataset.genre);
+            }
+        } else {
+            genresarr = [];
+            var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
+            for(var j = 0; j<pickedOnes.length; j++){
+                genresarr.push(pickedOnes[j].dataset.genre);
+            }
         }
-        // console.log(genresarr);
     });
 }
 function alreadyshown(anime) {
