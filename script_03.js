@@ -3,7 +3,11 @@ var movielist = [];
 var movhisPos = -1;
 var resizetimer;
 async function tryTmdb() {
-    var res = await fetch("Backend/tmdb.php");
+    var genreq = "";
+    if (movgenresarr.length) {
+        genreq ="?genres=" + encodeURIComponent(movgenresarr.join(","));
+    }
+    var res = await fetch("Backend/tmdb.php" + genreq);
     var d = await res.json();
     if (!d || d.success === false) {
         throw new Error("no tmdb data / invalid movie id");

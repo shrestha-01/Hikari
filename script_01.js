@@ -37,6 +37,7 @@ var rnMode = "anime";
 var animelist = [];
 var historyPos = -1;
 var genresarr = [];
+var movgenresarr = [];
 var hmt = 0;
 var cbound;
 // the apis 
