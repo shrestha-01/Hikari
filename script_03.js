@@ -230,6 +230,17 @@ async function tryOmdb() {
             return g.trim();
         });
     }
+    if(movgenresarr.length){
+        var genreMatch = false;
+        for (var i = 0; i< ogenres.length; i++){
+            if(movgenresarr.indexOf(ogenres[i]) !== -1){
+                genreMatch = true;
+            }
+        }
+        if(!genreMatch){
+            throw new Error("omdb movie doesnt match picked genres");
+        }
+    }
     var oyear = "?";
     var omonth = "?";
     var oday = "?";
