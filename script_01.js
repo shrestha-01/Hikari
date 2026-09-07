@@ -775,6 +775,11 @@ for (var i = 0; i < catBtns.length; i++) {
         this.classList.add("selected");
         rnMode = this.dataset.mode;
         // console.log("mode:", this.dataset.mode);
+        trailerplay = false;
+        trailerFrame.style.display = "none";
+        trailerFrame.src = "";
+        trailerBtn.style.display = "none";
+        posterImg.style.display = "block";
 
         textChange(btnText, "What's Next?");
         if (rnMode === "anime") {
