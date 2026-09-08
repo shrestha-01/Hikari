@@ -38,7 +38,8 @@ async function tryTmdb() {
             day: d.release_date ? d.release_date.split("-")[2] : "?"
         },
         status: d.status,
-        description: d.overview
+        description: d.overview,
+        trailer: d.trailer || null
     };
     return tmovie;
 }
@@ -86,9 +87,22 @@ function showmovie(movie) {
     loadingClip.pause();
     loadingClip.style.display = "none";
     posterImg.style.display = "block";
+
     rightInfo.classList.remove("centerMode");
     instruct.style.display = "none";
+    trailerplay = false;
+    trailerFrame.style.display = "none";
+    trailerFrame.src = "";
+    posterImg.style.display = "block";
+    if(movie.trailer && movie.trailer.site === "youtube"){
+        trailerBtn.dataset.trailerid = movie.trailer.id;
+        btnLabel.textContent = "Watch Trailer";
+        trailerBtn.style.display = "inline-flex";
+    } else {
+        trailerBtn.style.display = "none";
+    }
     bgPoster.style.backgroundImage = "url('" + movie.coverImage.large + "')";
+
     engName.textContent = movie.title.english || movie.title.romaji;
     jpName.textContent = movie.title.native;
     if (movie.averageScore) {

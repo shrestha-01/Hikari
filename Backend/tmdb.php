@@ -52,6 +52,22 @@ $movieId = $data['results'][$randomIndex]['id'];
 
 $detailUrl = "https://api.themoviedb.org/3/movie/" . $movieId . "?api_key=" . TMDB_KEY;
 $detailResponse = file_get_contents($detailUrl);
+$mdata = json_decode($detailResponse, true);
 
+$videoUrl = "https://api.themoviedb.org/3/movie/" . $movieId . "/videos?api_key=" . TMDB_KEY;
+$videoResponse = file_get_contents($videoUrl);
+$videoData = json_decode($videoResponse, true);
+$mdata['trailer'] = null;
+if($videoData && !empty($videoData['results'])){
+    foreach ($videoData['results'] as $vid){
+        if($vid['site']==="YouTube" && $vid['type'] === "Trailer"){
+            $mdata['trailer'] = array(
+                "id" => $vid['key'],
+                "site" => "youtube"
+            );
+            break;
+        }
+    }
+}
 header('Content-Type: application/json');
-echo $detailResponse;
+echo json_encode($mdata);
