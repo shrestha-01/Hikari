@@ -119,11 +119,12 @@ async function tryMangadexManga() {
                 tagIds.push(mgenmap[genresarr[i]]);
             }
         }
-        for (var i = 0; i < tagIds.length; i++) {
-            tagUrl += "&includedTags[]=" + tagIds[i];
+        if(tagIds.length){
+            tagUrl = "?tags=" + tagIds.join(",");
         }
     }
-    var res = await fetch("https://api.mangadex.org/manga/random?includes[]=cover_art&contentRating[]=safe" + tagUrl);
+    var res = await fetch("Backend/mdRandom.php" + tagUrl);
+
     var d = await res.json();
     if (!d.data) {
         throw new Error("no mangadex data");
@@ -436,7 +437,7 @@ async function lmgen() {
     if (Object.keys(mgenmap).length) {
         return;
     }
-    var res = await fetch("https://api.mangadex.org/manga/tag");
+    var res = await fetch("Backend/mangadexTags.php");
     var d = await res.json();
     for (var i = 0; i < d.data.length; i++) {
         var tag = d.data[i];
