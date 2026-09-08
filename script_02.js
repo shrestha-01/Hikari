@@ -78,6 +78,17 @@ function showmanga(manga) {
     posterImg.style.display = "block";
     rightInfo.classList.remove("centerMode");
     instruct.style.display = "none";
+    trailerplay = false;
+    trailerFrame.style.display = "none";
+    trailerFrame.src = "";
+    posterImg.style.display = "block";
+    if(manga.trailer && manga.trailer.site === "youtube"){
+        trailerBtn.dataset.trailerid = manga.trailer.id;
+        btnLabel.textContent = "Watch Trailer";
+        trailerBtn.style.display = "inline-flex";
+    } else {
+        trailerBtn.style.display = "none";
+    }
     bgPoster.style.backgroundImage = "url('" + (manga.coverImage.large || manga.coverImage.extraLarge) + "')";
     engName.textContent = manga.title.english || manga.title.romaji;
     jpName.textContent = manga.title.native;
@@ -188,6 +199,10 @@ async function tryAnilistmanga() {
                             description
                             chapters
                             volumes
+                            trailer{
+                                id
+                                site
+                            }
                         }
                 }
         }`;
@@ -218,6 +233,10 @@ async function tryAnilistmanga() {
                 description
                 chapters
                 volumes
+                trailer{
+                    id
+                    site    
+                }
             }
           }
        }`;
@@ -244,6 +263,7 @@ async function tryAnilistmanga() {
     var m = mediaList[randIndex];
     m.chapters = m.chapters || null;
     m.volumes = m.volumes || null;
+    m.trailer = m.trailer || null;
     return m;
 }
 // jikan api 
