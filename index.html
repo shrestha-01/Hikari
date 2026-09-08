@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hikari</title>
     <link rel="stylesheet" href="style_01.css?v=1.5">
+    <link rel="stylesheet" href="style_02.css?v=1.5">
     <link rel="icon" type="image/jpeg" href="Logo/Logo.jpeg?v=1.5">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0QS00603GF"></script>
@@ -120,23 +121,28 @@
                 </button>
                 <button class="trailerBtn" id="trailerBtn">Watch Trailer</button>
              </div> -->
-            <button class="trailerBtn" id="trailerBtn" style="display: none;">
-                <svg class="btnLogo" viewBox="0 0 24 24" width="16" height="16">
-                    <rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0000"></rect>
-                    <path d="M10 8.5 L17 12 L10 15.5 Z" fill="#FFFFFF"></path>
-                </svg>
-                <span class="btnLabel" id="btnLabel">Watch Trailer</span>
-            </button>
-            <div class="streamBtns" id="streamBtns">
-                <a class="streamBtn" id="streamCrunchyroll" target="_blank" rel="noopener">
-                    <img class="streamIcon" src="Icons/crunchyroll.svg" alt="Crunchyroll">
-                </a>
-                <a class="streamBtn" id="streamNetflix" target="_blank" rel="noopener">
-                    <img class="streamIcon" src="Icons/netflix.svg" alt="Netflix">
-                </a>
-                <a class="streamBtn" id="streamHulu" target="_blank" rel="noopener">
-                    <img class="streamIcon" src="Icons/hulu.svg" alt="Hulu">
-                </a>
+            <div class="btnRow" id="btnRow">
+                <button class="trailerBtn" id="trailerBtn" style="display: none;">
+                    <svg class="btnLogo" viewBox="0 0 24 24" width="16" height="16">
+                        <rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0000"></rect>
+                        <path d="M10 8.5 L17 12 L10 15.5 Z" fill="#FFFFFF"></path>
+                    </svg>
+                    <span class="btnLabel" id="btnLabel">Watch Trailer</span>
+                </button>
+                <div class="streamBtns" id="streamBtns">
+                    <a class="streamBtn" id="streamCrunchyroll" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/crunchyroll.svg" alt="Crunchyroll">
+                        <span class="streamLabel">Crunchyroll</span>
+                    </a>
+                    <a class="streamBtn" id="streamNetflix" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/netflix.svg" alt="Netflix">
+                        <span class="streamLabel">Netflix</span>
+                    </a>
+                    <a class="streamBtn" id="streamHulu" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/hulu.svg" alt="Hulu">
+                        <span class="streamLabel">Hulu</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -154,7 +160,7 @@
                 </span>
                 <span class="trailerBtnText" id="trailerBtnText">Watch Trailer</span>
             </button> -->
-        </div>
+    </div>
     </div>
     <div class="theButtons">
         <button class="back" id="backBtn" disabled>◄Back</button>
