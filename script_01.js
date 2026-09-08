@@ -647,6 +647,7 @@ function showanime(anime) {
     statusrn.textContent = anime.status;
     describe.innerHTML = anime.description;
     streamBtns(anime);
+    document.getElementById("streamBtns").style.display = "flex";
     genreList.innerHTML = "";
     for (var i = 0; i < anime.genres.length; i++) {
         var bubble = document.createElement("div");
@@ -813,6 +814,7 @@ for (var i = 0; i < catBtns.length; i++) {
         trailerFrame.style.display = "none";
         trailerFrame.src = "";
         trailerBtn.style.display = "none";
+        document.getElementById("streamBtns").style.display = "none";
         posterImg.style.display = "block";
         genresbox.classList.remove("open");
         movgenresbox.classList.remove("open");
