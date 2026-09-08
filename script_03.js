@@ -2,10 +2,13 @@
 var movielist = [];
 var movhisPos = -1;
 var resizetimer;
+var genreAlias = {
+    "Sci-Fi": "Science Fiction"
+};
 async function tryTmdb() {
     var genreq = "";
     if (movgenresarr.length) {
-        genreq ="?genres=" + encodeURIComponent(movgenresarr.join(","));
+        genreq = "?genres=" + encodeURIComponent(movgenresarr.join(","));
     }
     var res = await fetch("Backend/tmdb.php" + genreq);
     var d = await res.json();
@@ -230,14 +233,19 @@ async function tryOmdb() {
             return g.trim();
         });
     }
-    if(movgenresarr.length){
+    for (var i = 0; i < ogenres.length; i++) {
+        if (genreAlias[ogenres[i]]) {
+            ogenres[i] = genreAlias[ogenres[i]];
+        }
+    }
+    if (movgenresarr.length) {
         var genreMatch = false;
-        for (var i = 0; i< ogenres.length; i++){
-            if(movgenresarr.indexOf(ogenres[i]) !== -1){
+        for (var i = 0; i < ogenres.length; i++) {
+            if (movgenresarr.indexOf(ogenres[i]) !== -1) {
                 genreMatch = true;
             }
         }
-        if(!genreMatch){
+        if (!genreMatch) {
             throw new Error("omdb movie doesnt match picked genres");
         }
     }
