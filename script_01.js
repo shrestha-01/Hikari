@@ -53,8 +53,8 @@ var streamingSites = [
     },
     {
         label: "Hulu",
-        elId: "streamHulu",
-        searchUrl: "https://www.hulu.com/search?q="
+        elId: "streamAnimeSuge",
+        searchUrl: "https://animesuge.cz/filter?keyword="
     }
 ];
 // the apis 

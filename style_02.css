@@ -59,10 +59,10 @@
     box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
 }
 
-#streamHulu:hover {
-    background: rgba(28, 231, 131, 0.35);
-    border-color: rgb(28, 231, 131);
-    box-shadow: 0 0 15px rgba(28, 231, 131, 0.5);
+#streamAnimeSuge:hover {
+    background: rgba(231, 28, 28, 0.35);
+    border-color: rgb(231, 28, 28);
+    box-shadow: 0 0 15px rgba(231, 28, 28, 0.5);
 }
 .btnRow{
     display: flex;
