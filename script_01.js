@@ -40,6 +40,23 @@ var genresarr = [];
 var movgenresarr = [];
 var hmt = 0;
 var cbound;
+var streamingSites = [
+    {
+        label: "Crunchyroll",
+        elId: "streamCrunchyroll",
+        searchUrl: "https://www.crunchyroll.com/search?q="
+    },
+    {
+        label: "Netflix",
+        elId: "streamNetflix",
+        searchUrl: "https://www.netflix.com/search?q="
+    },
+    {
+        label: "Hulu",
+        elId: "streamHulu",
+        searchUrl: "https://www.hulu.com/search?q="
+    }
+];
 // the apis 
 var jikanUrl = "https://api.jikan.moe/v4/random/anime?sfw=true";
 // var jikanUrl = "https://api.jikan.moe/v4/random/anime";
@@ -629,6 +646,7 @@ function showanime(anime) {
         anime.startDate.month + "-" + anime.startDate.day;
     statusrn.textContent = anime.status;
     describe.innerHTML = anime.description;
+    streamBtns(anime);
     genreList.innerHTML = "";
     for (var i = 0; i < anime.genres.length; i++) {
         var bubble = document.createElement("div");
@@ -722,8 +740,8 @@ categorybtn.addEventListener("click", function () {
     categories.classList.toggle("open");
 });
 // open closing of the genres dabba
-document.getElementById("whichgenre").addEventListener("click", function(){
-    if(rnMode === "movie"){
+document.getElementById("whichgenre").addEventListener("click", function () {
+    if (rnMode === "movie") {
         movgenresbox.classList.toggle("open");
     } else {
         genresbox.classList.toggle("open");
@@ -742,20 +760,20 @@ document.getElementById("whichgenre").addEventListener("click", function(){
 //     });
 // }
 var allGenreBtns = document.querySelectorAll(".genreBtn");
-for(var i = 0; i<allGenreBtns.length; i++){
-    allGenreBtns[i].addEventListener("click",function(){
+for (var i = 0; i < allGenreBtns.length; i++) {
+    allGenreBtns[i].addEventListener("click", function () {
         this.classList.toggle("selected");
         var parentBox = this.closest(".genresbox");
-        if(parentBox.id === "movgenresbox"){
+        if (parentBox.id === "movgenresbox") {
             movgenresarr = [];
             var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
-            for(var j = 0; j < pickedOnes.length; j++){
+            for (var j = 0; j < pickedOnes.length; j++) {
                 movgenresarr.push(pickedOnes[j].dataset.genre);
             }
         } else {
             genresarr = [];
             var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
-            for(var j = 0; j<pickedOnes.length; j++){
+            for (var j = 0; j < pickedOnes.length; j++) {
                 genresarr.push(pickedOnes[j].dataset.genre);
             }
         }
@@ -872,4 +890,25 @@ function tiltCard(e) {
         "radial-gradient(circle at " +
         (center.x * 2 + cbound.width / 2) + "px " +
         (center.y * 2 + cbound.height / 2) + "px, #ffffff55, #0000000f)";
+}
+function streamBtns(anime){
+    var title = anime.title.english || anime.title.romaji;
+    for (var i = 0; i<streamingSites.length; i++){
+        var site = streamingSites[i];
+        var btnEl = document.getElementById(site.elId);
+        var foundUrl = null;
+        if(anime.externalLinks){
+            for (var j = 0; j<anime.externalLinks.length; j++){
+                var link = anime.externalLinks[j];
+                if(link.type === "STREAMING"  && link.site === site.label){
+                    foundUrl = link.url;
+                }
+            }
+        }
+        if(foundUrl){
+            btnEl.href = foundUrl;
+        } else {
+            btnEl.href = site.searchUrl  + encodeURIComponent(title);
+        }
+    }
 }
