@@ -241,6 +241,11 @@ async function tryAnilist() {
                     id
                     site
                 }
+                externalLinks{
+                    site
+                    url
+                    type
+                }
             }
         }
     }`;
@@ -269,6 +274,11 @@ async function tryAnilist() {
                 trailer {
                     id
                     site
+                }
+                externalLinks{
+                    site
+                    url
+                    type
                 }
             }
         }
@@ -335,6 +345,11 @@ async function tryAnilist() {
                                    id
                                    site
                                 }
+                                externalLinks{
+                                    site
+                                    url
+                                    type
+                                }
                             }
                     }
             }`;
@@ -363,6 +378,7 @@ async function tryAnilist() {
     var aresult = d.data.Page.media[randIndex];
     aresult.coverImage.large = aresult.coverImage.extraLarge;
     aresult.trailer = aresult.trailer || null;
+    aresult.externalLinks = aresult.externalLinks || null;
     return aresult;
 }
 async function ljgen() {
