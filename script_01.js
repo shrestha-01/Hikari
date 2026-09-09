@@ -34,6 +34,7 @@ var trailerplay = false;
 var defaultratio = 14 / 9;
 var lastratio = defaultratio;
 var rnMode = "anime";
+var linesBuilt = false;
 var animelist = [];
 var historyPos = -1;
 var genresarr = [];
@@ -52,7 +53,7 @@ var streamingSites = [
         searchUrl: "https://www.netflix.com/search?q="
     },
     {
-        label: "Hulu",
+        label: "AnimeSuge",
         elId: "streamAnimeSuge",
         searchUrl: "https://animesuge.cz/filter?keyword="
     }
@@ -648,6 +649,10 @@ function showanime(anime) {
     describe.innerHTML = anime.description;
     streamBtns(anime);
     document.getElementById("streamBtns").style.display = "flex";
+    if (!linesBuilt){
+        makeNetflixLines();
+        linesBuilt = true;
+    }
     genreList.innerHTML = "";
     for (var i = 0; i < anime.genres.length; i++) {
         var bubble = document.createElement("div");

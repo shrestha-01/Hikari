@@ -58,11 +58,59 @@
     border-color: rgb(229, 9, 20);
     box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
 }
-
+/* design created on readme  */
+#streamNetflix {
+    position: relative;
+    /* overflow: hidden; */
+}
+.lineWrap{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 25px;
+    pointer-events: none;
+    z-index: -1;
+}
+.lineWrap span.netflixLine{
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #b0060d;
+    pointer-events: none;
+    transition: transform 0.2s ease-in-out;
+    transform: scaleY(0);
+    transform-origin: bottom;
+}
+/* #streamNetflix span.netflixLine{
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: #b0060d;
+    pointer-events: none;
+    transition: transform 0.2s ease-in-out;
+    z-index: -1;
+    transform: scaleY(0);
+    transform-origin: bottom;
+} */
+#streamNetflix:hover .lineWrap span.netflixLine{
+    transform: scaleY(1);
+    transform-origin: top;
+}
+#streamNetflix span.netflixLine:nth-child(even){
+    transform-origin: top;
+}
+#streamNetflix:hover span.netflixLine:nth-child(even){
+    transform-origin: bottom;
+}
 #streamAnimeSuge:hover {
-    background: rgba(231, 28, 28, 0.35);
-    border-color: rgb(231, 28, 28);
-    box-shadow: 0 0 15px rgba(231, 28, 28, 0.5);
+    background: rgba(231, 238, 240, 0.35);
+    border-color: rgb(210, 221, 228);
+    box-shadow: 0 0 15px rgba(203, 226, 231, 0.5);
 }
 .btnRow{
     display: flex;
@@ -71,3 +119,11 @@
     gap: 10px;
     margin-top: 10px;
 }
+/* #streamNetflix:hover .streamIcon{
+    filter: brightness(0) invert(1);
+    transition: filter 0.2s ease;
+} */
+ #streamNetflix:hover .streamIcon{
+    filter: drop-shadow(0 0 7px #fff);
+    transition: filter 0.2s ease;
+ }

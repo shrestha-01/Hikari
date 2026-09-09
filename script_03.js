@@ -295,3 +295,19 @@ async function tryOmdb() {
     };
     return omovie;
 }
+function makeNetflixLines(){
+    var btn = document.getElementById("streamNetflix");
+    var wrap = document.createElement("div");
+    wrap.className = "lineWrap";
+    btn.appendChild(wrap);
+    var totalLines = Math.ceil(btn.clientWidth / 2);
+    for(var i = 0; i<totalLines; i++){
+        var span = document.createElement("span");
+        span.className = "netflixLine";
+        span.style.left = (i * 2) + "px";
+        wrap.appendChild(span);
+        var randomDelay = Math.random() * 1 + 0;
+        span.style.transitionDelay = randomDelay + "s";
+    }
+}
+// makeNetflixLines();
