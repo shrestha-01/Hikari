@@ -5,6 +5,18 @@ var mhistoryPos = -1;
 var mgenmap = {};
 var jmgenmap = {};
 var kmgenmap = {};
+var readingSites = [
+    {
+        label: "MangaDex",
+        elId: "streamMangadex",
+        searchUrl: "https://mangadex.org/search?q="
+    },
+    {
+        label: "Viz",
+        elId: "streamViz",
+        searchUrl: "https://www.google.com/search?q=site:viz.com+"
+    }
+];
 async function hikariManga() {
     // console.log("manga fetch not built yet, wait , ok");
     if (loading) {
@@ -102,6 +114,8 @@ function showmanga(manga) {
     statusrn.textContent = manga.status;
     describe.innerHTML = manga.description;
     genreList.innerHTML = "";
+    mangabtns(manga);
+    document.getElementById("mangaBtns").style.display = "flex";
     for (var i = 0; i < manga.genres.length; i++) {
         var bubble = document.createElement("div");
         bubble.className = "theGenre";
@@ -468,4 +482,12 @@ async function lkmgen(name){
         kmgenmap[name] = d.data[0].attributes.slug;
     }
     return kmgenmap[name];
+}
+function mangabtns(manga){
+    var title = manga.title.english || manga.title.romaji;
+    for(var i =0; i<readingSites.length; i++){
+        var site = readingSites[i];
+        var btnEl = document.getElementById(site.elId);
+        btnEl.href = site.searchUrl + encodeURIComponent(title);
+    }
 }
