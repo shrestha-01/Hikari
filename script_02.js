@@ -12,9 +12,14 @@ var readingSites = [
         searchUrl: "https://mangadex.org/search?q="
     },
     {
-        label: "Viz",
-        elId: "streamViz",
-        searchUrl: "https://www.google.com/search?q=site:viz.com+"
+        label: "MyAnimeList",
+        elId: "streamMAL",
+        searchUrl: "https://myanimelist.net/manga.php?q="
+    },
+    {
+        label: "Anime-Planet",
+        elId: "streamAP",
+        searchUrl: "https://www.anime-planet.com/manga/all?name="
     }
 ];
 async function hikariManga() {
