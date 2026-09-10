@@ -112,6 +112,21 @@
     border-color: rgb(210, 221, 228);
     box-shadow: 0 0 15px rgba(203, 226, 231, 0.5);
 }
+#streamMangadex:hover{
+    background: rgba(255, 103, 64, 0.35);
+    border-color: rgb(255,103,64);
+    box-shadow: 0 0 15px rgba(255, 103, 64, 0.5);
+}
+#streamMAL:hover{
+    background: rgba(46, 81, 162, 0.35);
+    border-color: rgb(46, 81, 162);
+    box-shadow: 0 0 15px rgba(46, 81, 162, 0.5);
+}
+#streamAP:hover{
+    background: rgba(232, 163, 61, 0.35);
+    border-color: rgb(232, 163, 61);
+    box-shadow: 0 0 15px rgba(232, 163, 61, 0.5);
+}
 .btnRow{
     display: flex;
     align-items: center;
