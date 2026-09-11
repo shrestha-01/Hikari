@@ -69,5 +69,22 @@ if($videoData && !empty($videoData['results'])){
         }
     }
 }
+$provUrl = "https://api.themoviedb.org/3/movie/" . $movieId . "/watch/providers?api_key=" . TMDB_KEY;
+$provResponse = file_get_contents($provUrl);
+$provData = json_decode($provResponse, true);
+$mdata['watchProviders'] = null;
+if($provData && !empty($provData['results']['US'])){
+    $usData = $provData['results']['US'];
+    $provNames = array();
+    if (!empty($usData['flatrate'])){
+        foreach ($usData['flatrate'] as $p){
+            $provNames[] = $p['provider_name'];
+        }
+    }
+    $mdata['watchProviders'] = array(
+        "link" => $usData['link'],
+        "names" => $provNames
+    );
+}
 header('Content-Type: application/json');
 echo json_encode($mdata);
