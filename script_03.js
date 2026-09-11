@@ -39,7 +39,8 @@ async function tryTmdb() {
         },
         status: d.status,
         description: d.overview,
-        trailer: d.trailer || null
+        trailer: d.trailer || null,
+        watchProviders: d.watchProviders || null
     };
     return tmovie;
 }
@@ -94,7 +95,7 @@ function showmovie(movie) {
     trailerFrame.style.display = "none";
     trailerFrame.src = "";
     posterImg.style.display = "block";
-    if(movie.trailer && movie.trailer.site === "youtube"){
+    if (movie.trailer && movie.trailer.site === "youtube") {
         trailerBtn.dataset.trailerid = movie.trailer.id;
         btnLabel.textContent = "Watch Trailer";
         trailerBtn.style.display = "inline-flex";
@@ -295,13 +296,13 @@ async function tryOmdb() {
     };
     return omovie;
 }
-function makeNetflixLines(){
+function makeNetflixLines() {
     var btn = document.getElementById("streamNetflix");
     var wrap = document.createElement("div");
     wrap.className = "lineWrap";
     btn.appendChild(wrap);
     var totalLines = Math.ceil(btn.clientWidth / 2);
-    for(var i = 0; i<totalLines; i++){
+    for (var i = 0; i < totalLines; i++) {
         var span = document.createElement("span");
         span.className = "netflixLine";
         span.style.left = (i * 2) + "px";
