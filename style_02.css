@@ -118,15 +118,15 @@
     border-color: rgb(0,168,225);
     box-shadow: 0 0 15px rgba(0, 168, 225, 0.5);
 }
-#streamMovieAppleTv:hover{
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgb(255, 255, 255);
-    box-shadow: 0 0 15px rgba(255, 255, 255,0.4);
+#streamMovieWMovies:hover{
+    background: rgba(216, 240, 6, 0.15);
+    border-color: rgb(240, 225, 14);
+    box-shadow: 0 0 15px rgba(222, 238, 4, 0.4);
 }
-#streamMovieMax:hover{
-    background: rgba(155, 79, 255, 0.35);
-    border-color: rgb(155, 79, 255);
-    box-shadow: 0 0 15px rgba(155, 79, 255, 0.5);
+#streamMovieHydraHD:hover{
+    background: rgba(231, 4, 4, 0.35);
+    border-color: rgb(236, 7, 7);
+    box-shadow: 0 0 15px rgba(255, 79, 79, 0.5);
 }
 .btnRow{
     display: flex;

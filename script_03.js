@@ -19,16 +19,16 @@ var movieSites = [
         searchUrl: "https://www.primevideo.com/search/?phrase="
     },
     {
-        label: "Apple TV+",
-        elId: "streamMovieAppleTv",
-        matchWords: ["Apple TV"],
-        searchUrl: "https://www.google.com/search?q=site:tv.apple.com+"
+        label: "WMovies",
+        elId: "streamMovieWMovies",
+        matchWords: ["WMovies"],
+        searchUrl: "https://wmovies.org/?s="
     },
     {
-        label: "HBO Max",
-        elId: "streamMovieMax",
-        matchWords: ["HBO", "Max"],
-        searchUrl: "https://www.google.com/search?q=site:max.com+"
+        label: "HydraHD",
+        elId: "streamMovieHydraHD",
+        matchWords: ["HydraHD"],
+        searchUrl: "https://hydrahd.ws/index.php?menu=search&query="
     }
 ];
 function showMovieLinks(movie) {
@@ -36,24 +36,20 @@ function showMovieLinks(movie) {
     for (var i = 0; i < movieSites.length; i++) {
         var site = movieSites[i];
         var btnEl = document.getElementById(site.elId);
-        var foundName = null;
-        if(movie.watchProviders && movie.watchProviders.names){
-            for(var j=0; j<movie.watchProviders.names.length; j++){
-                var pname = movie.watchProviders.names[j];
-                for (var k = 0; k < site.matchWords.length; k++) {
-                    if (pname.indexOf(site.matchWords[k]) !== -1) {
-                        foundName = pname;
-                    }
+        // var foundName = null;
+        // if(movie.watchProviders && movie.watchProviders.names){
+        //     for(var j=0; j<movie.watchProviders.names.length; j++){
+        //         var pname = movie.watchProviders.names[j];
+        //         for (var k = 0; k < site.matchWords.length; k++) {
+        //             if (pname.indexOf(site.matchWords[k]) !== -1) {
+        //                 foundName = pname;
+        //             }
 
-                }
-            }
+        //         }
+        //     }
 
-        }
-        if (foundName) {
-            btnEl.href = movie.watchProviders.link;
-        } else {
-            btnEl.href = site.searchUrl + encodeURIComponent(title);
-        }
+        // }
+        btnEl.href = site.searchUrl + encodeURIComponent(title);
     }
 }
 async function tryTmdb() {

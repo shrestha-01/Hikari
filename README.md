@@ -95,6 +95,9 @@ Hikari is currently live!
 - **Jikan:** https://api.jikan.moe/v4/random/manga
 - **Kitsu:** https://kitsu.io/api/edge/manga
 
+### Logo
+
+- **H Logo:** https://www.pinterest.com/pin/945544884287790889/
 ---
 
 ##  Future Plans
