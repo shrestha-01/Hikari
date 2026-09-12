@@ -5,6 +5,57 @@ var resizetimer;
 var genreAlias = {
     "Sci-Fi": "Science Fiction"
 };
+var movieSites = [
+    {
+        label: "Netflix",
+        elId: "streamMovieNetflix",
+        matchWords: ["Netflix"],
+        searchUrl: "https://www.netflix.com/search?q="
+    },
+    {
+        label: "Prime Video",
+        elId: "streamMoviePrime",
+        matchWords: ["Amazon Prime"],
+        searchUrl: "https://www.primevideo.com/search/?phrase="
+    },
+    {
+        label: "Apple TV+",
+        elId: "streamMovieAppleTv",
+        matchWords: ["Apple TV"],
+        searchUrl: "https://www.google.com/search?q=site:tv.apple.com+"
+    },
+    {
+        label: "HBO Max",
+        elId: "streamMovieMax",
+        matchWords: ["HBO", "Max"],
+        searchUrl: "https://www.google.com/search?q=site:max.com+"
+    }
+];
+function showMovieLinks(movie) {
+    var title = movie.title.english || movie.title.romaji;
+    for (var i = 0; i < movieSites.length; i++) {
+        var site = movieSites[i];
+        var btnEl = document.getElementById(site.elId);
+        var foundName = null;
+        if(movie.watchProviders && movie.watchProviders.names){
+            for(var j=0; j<movie.watchProviders.names.length; j++){
+                var pname = movie.watchProviders.names[j];
+                for (var k = 0; k < site.matchWords.length; k++) {
+                    if (pname.indexOf(site.matchWords[k]) !== -1) {
+                        foundName = pname;
+                    }
+
+                }
+            }
+
+        }
+        if (foundName) {
+            btnEl.href = movie.watchProviders.link;
+        } else {
+            btnEl.href = site.searchUrl + encodeURIComponent(title);
+        }
+    }
+}
 async function tryTmdb() {
     var genreq = "";
     if (movgenresarr.length) {
@@ -114,7 +165,13 @@ function showmovie(movie) {
     startDate.textContent = movie.startDate.year + "-" +
         movie.startDate.month + "-" + movie.startDate.day;
     statusrn.textContent = movie.status;
-    describe.innerHTML = movie.description;
+    describe.innerHTML = movie.description; 
+    showMovieLinks(movie); 
+    document.getElementById("movieBtns").style.display = "flex";
+    if (!movieLinesBuilt) {
+        makeNetflixLines("streamMovieNetflix");
+        movieLinesBuilt = true;
+    }
     genreList.innerHTML = "";
     for (var i = 0; i < movie.genres.length; i++) {
         var bubble = document.createElement("div");
@@ -296,8 +353,8 @@ async function tryOmdb() {
     };
     return omovie;
 }
-function makeNetflixLines() {
-    var btn = document.getElementById("streamNetflix");
+function makeNetflixLines(btnId) {
+    var btn = document.getElementById(btnId);
     var wrap = document.createElement("div");
     wrap.className = "lineWrap";
     btn.appendChild(wrap);

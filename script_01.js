@@ -35,6 +35,7 @@ var defaultratio = 14 / 9;
 var lastratio = defaultratio;
 var rnMode = "anime";
 var linesBuilt = false;
+var movieLinesBuilt = false;
 var animelist = [];
 var historyPos = -1;
 var genresarr = [];
@@ -650,7 +651,7 @@ function showanime(anime) {
     streamBtns(anime);
     document.getElementById("streamBtns").style.display = "flex";
     if (!linesBuilt){
-        makeNetflixLines();
+        makeNetflixLines("streamNetflix");
         linesBuilt = true;
     }
     genreList.innerHTML = "";
@@ -821,6 +822,7 @@ for (var i = 0; i < catBtns.length; i++) {
         trailerBtn.style.display = "none";
         document.getElementById("streamBtns").style.display = "none";
         document.getElementById("mangaBtns").style.display = "none";
+        document.getElementById("movieBtns").style.display = "none";
         posterImg.style.display = "block";
         genresbox.classList.remove("open");
         movgenresbox.classList.remove("open");
