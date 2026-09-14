@@ -650,7 +650,7 @@ function showanime(anime) {
     describe.innerHTML = anime.description;
     streamBtns(anime);
     document.getElementById("streamBtns").style.display = "flex";
-    if (!linesBuilt){
+    if (!linesBuilt) {
         makeNetflixLines("streamNetflix");
         linesBuilt = true;
     }
@@ -702,6 +702,13 @@ backBtn.addEventListener("click", function () {
             backBtn.disabled = movhisPos <= 0;
             nextBtn.disabled = movhisPos >= movielist.length - 1;
         }
+    } else if (rnMode === "games") {
+        if (ghistoryPos > 0) {
+            ghistoryPos = ghistoryPos - 1;
+            showgame(gameslist[ghistoryPos]);
+            backBtn.disabled = ghistoryPos <= 0;
+            nextBtn.disabled = ghistoryPos >= gameslist.length - 1;
+        }
     }
 });
 // nextbtn 
@@ -727,6 +734,13 @@ nextBtn.addEventListener("click", function () {
             backBtn.disabled = movhisPos <= 0;
             nextBtn.disabled = movhisPos >= movielist.length - 1;
         }
+    } else if (rnMode === "games") {
+        if (ghistoryPos < gameslist.length - 1) {
+            ghistoryPos = ghistoryPos + 1;
+            showgame(gameslist[ghistoryPos]);
+            backBtn.disabled = ghistoryPos <= 0;
+            nextBtn.disabled = ghistoryPos >= gameslist.length - 1;
+        }
     }
 });
 whatsNextBtn.addEventListener("click", function () {
@@ -738,6 +752,8 @@ whatsNextBtn.addEventListener("click", function () {
         hikariManga();
     } else if (rnMode === "movie") {
         hikariMovies();
+    } else if (rnMode === "games") {
+        hikariGames();
     } else {
         console.log("bro wait, havent built that thing yet-__-");
     }
@@ -901,24 +917,24 @@ function tiltCard(e) {
         (center.x * 2 + cbound.width / 2) + "px " +
         (center.y * 2 + cbound.height / 2) + "px, #ffffff55, #0000000f)";
 }
-function streamBtns(anime){
+function streamBtns(anime) {
     var title = anime.title.english || anime.title.romaji;
-    for (var i = 0; i<streamingSites.length; i++){
+    for (var i = 0; i < streamingSites.length; i++) {
         var site = streamingSites[i];
         var btnEl = document.getElementById(site.elId);
         var foundUrl = null;
-        if(anime.externalLinks){
-            for (var j = 0; j<anime.externalLinks.length; j++){
+        if (anime.externalLinks) {
+            for (var j = 0; j < anime.externalLinks.length; j++) {
                 var link = anime.externalLinks[j];
-                if(link.type === "STREAMING"  && link.site === site.label){
+                if (link.type === "STREAMING" && link.site === site.label) {
                     foundUrl = link.url;
                 }
             }
         }
-        if(foundUrl){
+        if (foundUrl) {
             btnEl.href = foundUrl;
         } else {
-            btnEl.href = site.searchUrl  + encodeURIComponent(title);
+            btnEl.href = site.searchUrl + encodeURIComponent(title);
         }
     }
 }

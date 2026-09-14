@@ -98,6 +98,7 @@ Hikari is currently live!
 ### Logo
 
 - **H Logo:** https://www.pinterest.com/pin/945544884287790889/
+
 ---
 
 ##  Future Plans
