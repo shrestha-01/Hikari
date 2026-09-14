@@ -14,21 +14,27 @@ async function hikariGames() {
     loadingClip.currentTime = 0;
     loadingClip.play();
     var game = null;
-    try {
+    try{
         game = await tryRawg();
-    } catch (e) {
+    } catch(e){
         //console.log("rawg down",e);
     }
-    // giant bomb's api is down (they're rebuilding their whole backend),
-    // keeping this here commented in case they bring it back later
-    // if (!game){
+    // giant bomb's api is down
+    // if(!game){
     //     try{
     //         game = await tryGB();
-    //     } catch (e) {
-    //         //console.log("giant bomb down too", e);
+    //     } catch (e){
+    //         console.log("giant bomb donw too", e);
     //     }
     // }
-    if (game) {
+    if(!game){
+        try{
+            game = await tryF2G();
+        } catch (e){
+            // console.log("freetogame down too",e);
+        }
+    }
+    if (game){
         gameslist.push(game);
         ghistoryPos = gameslist.length - 1;
         showgame(game);
@@ -153,7 +159,7 @@ async function tryF2G() {
     var gyear = "?";
     var gmonth = "?";
     var gday = "?";
-    if (d.released_date){
+    if (d.release_date){
         var gdate = new Date(d.release_date);
         gyear = gdate.getFullYear();
         gmonth = gdate.getMonth() + 1;
