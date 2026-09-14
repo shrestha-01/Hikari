@@ -14,9 +14,9 @@ async function hikariGames() {
     loadingClip.currentTime = 0;
     loadingClip.play();
     var game = null;
-    try{
+    try {
         game = await tryRawg();
-    } catch(e){
+    } catch (e) {
         //console.log("rawg down",e);
     }
     // giant bomb's api is down (they're rebuilding their whole backend),
@@ -28,7 +28,7 @@ async function hikariGames() {
     //         //console.log("giant bomb down too", e);
     //     }
     // }
-    if(game){
+    if (game) {
         gameslist.push(game);
         ghistoryPos = gameslist.length - 1;
         showgame(game);
@@ -137,7 +137,51 @@ async function tryRawg() {
 //     };
 //     return ggame;
 // }
-function showgame(game) {
+async function tryF2G() {
+    var listRes = await fetch("https://www.freetogame.com/api/games");
+    var listData = await listRes.json();
+    if (!listData || !listData.length) {
+        throw new Error("no freetogame list data");
+    }
+    var randomIndex = Math.floor(Math.random() * listData.length);
+    var pickedId = listData[randomIndex].id;
+    var res = await fetch("https://www.freetogame.com/api/game?id=" + pickedId)
+    var d = await res.json();
+    if (!d || !d.title) {
+        throw new Error("no freetogame detail data");
+    }
+    var gyear = "?";
+    var gmonth = "?";
+    var gday = "?";
+    if (d.released_date){
+        var gdate = new Date(d.release_date);
+        gyear = gdate.getFullYear();
+        gmonth = gdate.getMonth() + 1;
+        gday = gdate.getDate();
+    }
+    var ggame = {
+        title: {
+            romaji: d.title,
+            english: d.title,
+            native: ""
+        },
+        coverImage: {
+            large: d.thumbnail || ""
+        },
+        genres: d.genre ? [d.genre] : [],
+        averageScore: null,
+        startDate: {
+            year: gyear,
+            month: gmonth,
+            day: gday
+        },
+        status: "Released",
+        description: d.description || d.short_description || "no description available"
+    };
+    return ggame;
+}
+
+function showgame(game){
     posterImg.src = game.coverImage.large;
     cardresizer(defaultratio);
     loadingClip.pause();
