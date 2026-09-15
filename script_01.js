@@ -23,6 +23,7 @@ const rightInfo = document.getElementById("rightInfo");
 const infoArea = document.querySelector(".infoArea");
 const loadingClip = document.getElementById("loadingClip");
 const movgenresbox = document.getElementById("movgenresbox");
+const gamegenresbox = document.getElementById("gamegenresbox");
 // const trailerBtn = document.getElementById("trailerBtn");
 // const trailerFrame = document.getElementById("trailerFrame");
 // const trailerWrap = document.getElementById("trailerWrap");
@@ -40,6 +41,7 @@ var animelist = [];
 var historyPos = -1;
 var genresarr = [];
 var movgenresarr = [];
+var gamegenresarr = [];
 var hmt = 0;
 var cbound;
 var streamingSites = [
@@ -763,9 +765,11 @@ categorybtn.addEventListener("click", function () {
     categories.classList.toggle("open");
 });
 // open closing of the genres dabba
-document.getElementById("whichgenre").addEventListener("click", function () {
-    if (rnMode === "movie") {
+document.getElementById("whichgenre").addEventListener("click", function(){
+    if(rnMode === "Movies"){
         movgenresbox.classList.toggle("open");
+    } else if (rnMode === "games"){
+        gamegenresbox.classList.toggle("open");
     } else {
         genresbox.classList.toggle("open");
     }
@@ -787,11 +791,17 @@ for (var i = 0; i < allGenreBtns.length; i++) {
     allGenreBtns[i].addEventListener("click", function () {
         this.classList.toggle("selected");
         var parentBox = this.closest(".genresbox");
-        if (parentBox.id === "movgenresbox") {
+        if (parentBox.id === "movgenresbox"){
             movgenresarr = [];
             var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
-            for (var j = 0; j < pickedOnes.length; j++) {
+            for(var j=0; j<pickedOnes.length; j++){
                 movgenresarr.push(pickedOnes[j].dataset.genre);
+            }
+        } else if(parentBox.id === "gamegenresbox"){
+            gamegenresarr = [];
+            var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
+            for(var j=0; j<pickedOnes.length; j++){
+                gamegenresarr.push(pickedOnes[j].dataset.genre);
             }
         } else {
             genresarr = [];
@@ -842,6 +852,7 @@ for (var i = 0; i < catBtns.length; i++) {
         posterImg.style.display = "block";
         genresbox.classList.remove("open");
         movgenresbox.classList.remove("open");
+        gamegenresbox.classList.remove("open");
 
         textChange(btnText, "What's Next?");
         if (rnMode === "anime") {
