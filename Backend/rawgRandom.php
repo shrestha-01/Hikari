@@ -1,7 +1,39 @@
 <?php
 require 'x.php';
-$page_size = 40; 
-$countUrl = "https://api.rawg.io/api/games?key="  . RAWG_KEY . "&page_size=1&ordering=-added";
+$page_size = 40;
+$gmap = array(
+    "Action" => "action",
+    "Indie" => "indie",
+    "Adventure" => "adventure",
+    "RPG" => "role-playing-games-rpg",
+    "Strategy" => "strategy",
+    "Shooter" => "shooter",
+    "Casual" => "casual",
+    "Simulation" => "simulation",
+    "Puzzle" => "puzzle",
+    "Arcade" => "arcade",
+    "Platformer" => "platformer",
+    "Massively Multiplayer" => "massively-multiplayer",
+    "Racing" => "racing",
+    "Sports" => "sports",
+    "Fighting" => "fighting",
+    "Family" => "family"
+);
+$genreUrl = "";
+if (isset($_GET['genres']) && $_GET['genres'] !== ""){
+    $pickedGenres = explode(",", $_GET['genres']);
+    $genreSlugs = array();
+    foreach ($pickedGenres as $g){
+        if (isset($gmap[$g])){
+            $genreSlugs[] = $gmap[$g];
+        }
+    }
+    if (count($genreSlugs)){
+        $genreUrl = "&genres=" . implode(",", $genreSlugs);
+    }
+}
+// $countUrl = "https://api.rawg.io/api/games?key="  . RAWG_KEY . "&page_size=1&ordering=-added";
+$countUrl = "https://api.rawg.io/api/games?key=" . RAWG_KEY . "&page_size=1&ordering=-added" . $genreUrl;
 $countResponse = file_get_contents($countUrl);
 $countData= json_decode($countResponse, true);
 if (!$countData || empty($countData['count'])){
@@ -17,7 +49,8 @@ if($totalPages < 1){
     $totalPages = 1;
 }
 $randomPage = rand(1, $totalPages);
-$url = "https://api.rawg.io/api/games?key=" . RAWG_KEY . "&page_size=" . $page_size . "&page=" . $randomPage . "&ordering=-added";
+// $url = "https://api.rawg.io/api/games?key=" . RAWG_KEY . "&page_size=" . $page_size . "&page=" . $randomPage . "&ordering=-added";
+$url = "https://api.rawg.io/api/games?key=" . RAWG_KEY . "&page_size=" . $page_size . "&page=" . $randomPage . "&ordering=-added" . $genreUrl;
 $response = file_get_contents($url);
 $data = json_decode($response, true);
 if(!$data || empty($data['results'])){
