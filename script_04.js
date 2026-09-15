@@ -14,9 +14,9 @@ async function hikariGames() {
     loadingClip.currentTime = 0;
     loadingClip.play();
     var game = null;
-    try{
+    try {
         game = await tryRawg();
-    } catch(e){
+    } catch (e) {
         //console.log("rawg down",e);
     }
     // giant bomb's api is down
@@ -27,14 +27,14 @@ async function hikariGames() {
     //         console.log("giant bomb donw too", e);
     //     }
     // }
-    if(!game){
-        try{
+    if (!game) {
+        try {
             game = await tryF2G();
-        } catch (e){
+        } catch (e) {
             // console.log("freetogame down too",e);
         }
     }
-    if (game){
+    if (game) {
         gameslist.push(game);
         ghistoryPos = gameslist.length - 1;
         showgame(game);
@@ -51,7 +51,7 @@ async function hikariGames() {
 //     var res = await fetch("Backend/rawgRandom.php");
 //     var d = await res.json();
 async function tryRawg() {
-    var genreq = ""; 
+    var genreq = "";
     if (gamegenresarr.length) {
         genreq = "?genres=" + encodeURIComponent(gamegenresarr.join(","));
     }
@@ -77,7 +77,15 @@ async function tryRawg() {
         gmonth = gdate.getMonth() + 1;
         gday = gdate.getDate();
     }
+    // var gstatus = d.tba ? "TBA" : "Released";
+    // var gscore = null;
     var gstatus = d.tba ? "TBA" : "Released";
+    var gtrailer = null;
+    if (d.trailer_url) {
+        gtrailer = {
+            url: d.trailer_url
+        };
+    }
     var gscore = null;
     if (d.metacritic) {
         gscore = d.metacritic;
@@ -100,8 +108,14 @@ async function tryRawg() {
             month: gmonth,
             day: gday
         },
+        //         status: gstatus,
+        //         description: d.description_raw || "no description"
+        //     };
+        //     return ggame;
+        // }
         status: gstatus,
-        description: d.description_raw || "no description"
+        description: d.description_raw || "no description",
+        trailer: gtrailer
     };
     return ggame;
 }
@@ -185,7 +199,7 @@ async function tryF2G() {
     var gyear = "?";
     var gmonth = "?";
     var gday = "?";
-    if (d.release_date){
+    if (d.release_date) {
         var gdate = new Date(d.release_date);
         gyear = gdate.getFullYear();
         gmonth = gdate.getMonth() + 1;
@@ -213,7 +227,7 @@ async function tryF2G() {
     return ggame;
 }
 
-function showgame(game){
+function showgame(game) {
     posterImg.src = game.coverImage.large;
     cardresizer(defaultratio);
     loadingClip.pause();
@@ -222,9 +236,22 @@ function showgame(game){
     rightInfo.classList.remove("centerMode");
     instruct.style.display = "none";
     trailerplay = false;
+    // trailerFrame.style.display = "none";
+    // trailerFrame.src = "";
+    // trailerBtn.style.display = "none";
     trailerFrame.style.display = "none";
-    trailerFrame.src = "";
-    trailerBtn.style.display = "none";
+    trailerFrame.src ="";
+    trailerVideo.style.display = "none";
+    trailerVideo.pause();
+    trailerVideo.src = "";
+    if (game.trailer && game.trailer.url){
+        trailerBtn.dataset.trailertype = "video";
+        trailerBtn.dataset.trailerurl = game.trailer.url;
+        btnLabel.textContent = "Watch Trailer";
+        trailerBtn.style.display = "inline-flex";
+    } else {
+        trailerBtn.style.display = "none";
+    }
     bgPoster.style.backgroundImage = "url('" + game.coverImage.large + "')";
     engName.textContent = game.title.english || game.title.romaji;
     jpName.textContent = game.title.native;
