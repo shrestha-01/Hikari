@@ -14,24 +14,24 @@ async function hikariGames() {
     loadingClip.currentTime = 0;
     loadingClip.play();
     var game = null;
-    try {
-        game = await tryRawg();
-    } catch (e) {
-        //console.log("rawg down",e);
+    try{
+        game = await tryF2G();
+    } catch (e){
+        //console.log("freetogame down",e);
     }
-    // giant bomb's api is down
+    //giant bomb's api is down
     // if(!game){
     //     try{
     //         game = await tryGB();
     //     } catch (e){
-    //         console.log("giant bomb donw too", e);
+    //         console.log("giant bomb down too",e);
     //     }
     // }
-    if (!game) {
-        try {
-            game = await tryF2G();
-        } catch (e) {
-            // console.log("freetogame down too",e);
+    if (!game){
+        try{
+            game = await tryRawg();
+        } catch (e){
+            //console.log("rawg down too",e);
         }
     }
     if (game) {
