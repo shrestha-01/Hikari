@@ -152,8 +152,25 @@ async function tryRawg() {
 //     };
 //     return ggame;
 // }
+// async function tryF2G() {
+//     var listRes = await fetch("https://www.freetogame.com/api/games");
+var f2gGenreMap = {
+    "Action": "action",
+    "Strategy": "strategy",
+    "Shooter": "shooter",
+    "Racing": "racing",
+    "Sports": "sports",
+    "Massively Multiplayer": "mmorpg"
+};
 async function tryF2G() {
-    var listRes = await fetch("https://www.freetogame.com/api/games");
+    var catUrl = "";
+    for (var i = 0; i < gamegenresarr.length; i++) {
+        if (f2gGenreMap[gamegenresarr[i]]) {
+            catUrl = "?category=" + f2gGenreMap[gamegenresarr[i]];
+            break;
+        }
+    }
+    var listRes = await fetch("https://www.freetogame.com/api/games" + catUrl);
     var listData = await listRes.json();
     if (!listData || !listData.length) {
         throw new Error("no freetogame list data");
