@@ -47,9 +47,18 @@ async function hikariGames() {
     whatsNextBtn.disabled = false;
     textChange(btnText, "What's Next?");
 }
+// async function tryRawg() {
+//     var res = await fetch("Backend/rawgRandom.php");
+//     var d = await res.json();
 async function tryRawg() {
-    var res = await fetch("Backend/rawgRandom.php");
+    var genreq = ""; 
+    if (gamegenresarr.length) {
+        genreq = "?genres=" + encodeURIComponent(gamegenresarr.join(","));
+    }
+    var res = await fetch("Backend/rawgRandom.php" + genreq);
     var d = await res.json();
+
+
     if (!d || d.success === false || !d.name) {
         throw new Error("no rawg data");
     }
