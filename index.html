@@ -1,951 +1,209 @@
-// getting elements 
-const backBtn = document.getElementById("backBtn");
-const whatsNextBtn = document.getElementById("whatsNext");
-const nextBtn = document.getElementById("nextBtn");
-const engName = document.getElementById("engName");
-const jpName = document.getElementById("jpName");
-const genreList = document.getElementById("genreList");
-var loading = false;
-const btnText = document.getElementById("btnText");
-const categorybtn = document.getElementById("categorybtn");
-const categories = document.getElementById("categories");
-const avgscore = document.getElementById("avgscore");
-const startDate = document.getElementById("startDate");
-const statusrn = document.getElementById("statusrn");
-const describe = document.getElementById("describe");
-const genresbox = document.getElementById("genresbox");
-const bgPoster = document.getElementById("bgPoster");
-var catBtns = document.querySelectorAll(".categories button");
-const posterCard = document.querySelector(".posterCard");
-const cardGlow = document.querySelector(".cardGlow");
-const instruct = document.getElementById("instruct");
-const rightInfo = document.getElementById("rightInfo");
-const infoArea = document.querySelector(".infoArea");
-const loadingClip = document.getElementById("loadingClip");
-const movgenresbox = document.getElementById("movgenresbox");
-const gamegenresbox = document.getElementById("gamegenresbox");
-// const trailerBtn = document.getElementById("trailerBtn");
-// const trailerFrame = document.getElementById("trailerFrame");
-// const trailerWrap = document.getElementById("trailerWrap");
-// const trailerIconBtn = document.getElementById("trailerIconBtn");
-const trailerBtn = document.getElementById("trailerBtn");
-const trailerFrame = document.getElementById("trailerFrame");
-const btnLabel = document.getElementById("btnLabel");
-var trailerplay = false;
-var defaultratio = 14 / 9;
-var lastratio = defaultratio;
-var rnMode = "anime";
-var linesBuilt = false;
-var movieLinesBuilt = false;
-var animelist = [];
-var historyPos = -1;
-var genresarr = [];
-var movgenresarr = [];
-var gamegenresarr = [];
-var hmt = 0;
-var cbound;
-var streamingSites = [
-    {
-        label: "Crunchyroll",
-        elId: "streamCrunchyroll",
-        searchUrl: "https://www.crunchyroll.com/search?q="
-    },
-    {
-        label: "Netflix",
-        elId: "streamNetflix",
-        searchUrl: "https://www.netflix.com/search?q="
-    },
-    {
-        label: "AnimeSuge",
-        elId: "streamAnimeSuge",
-        searchUrl: "https://animesuge.cz/filter?keyword="
-    }
-];
-// the apis 
-var jikanUrl = "https://api.jikan.moe/v4/random/anime?sfw=true";
-// var jikanUrl = "https://api.jikan.moe/v4/random/anime";
-var jseUrl = "https://api.jikan.moe/v4/anime";
-var anilistUrl = "https://graphql.anilist.co";
-var kitsuUrl = "https://kitsu.io/api/edge/anime";
-var shikimoriUrl = "https://shikimori.one/api/animes";
-var jgenmap = {};
-var kgenmap = {};
-var clickSound = new Audio("Sounds/click.mp3");
-// text animation 
-var btnTime = null;
-function textChange(el, newText) {
-    clearTimeout(btnTime);
-    el.style.opacity = 0;
-    setTimeout(function () {
-        el.textContent = newText;
-        el.style.opacity = 1;
-    }, 250);
-}
-async function hikariGets() {
-    if (loading) {
-        return;
-    }
-    loading = true;
-    whatsNextBtn.disabled = true;
-    textChange(btnText, "Ummmmm....");
-    cardresizer(defaultratio);
-    posterImg.style.display = "none";
-    loadingClip.style.display = "block";
-    loadingClip.currentTime = 0;
-    loadingClip.play();
-    // console.log("geting a anime.......!!!!!!");
-    // oh dude , jikan down rn 
-    // fetch(jikanUrl)
-    //     .then(function(r){
-    //         return r.json();
-    //     })
-    //     .then(function(d){
-    //         console.log(d);
-    //         var anime = d.data;
-    //         posterImg.src = anime.images.jpg.large_image_url;
-    //         titleText.textContent = anime.title;
-    //         posterImg.style.display = "block";
-    //     })
-    //     .catch(function(e){
-    //         console.log("oops",e);
-    //     });
-    var anime = null;
-    try {
-        anime = await tryAnilist();
-        // console.log("anime from anilist");
-    } catch (e) {
-        // console.log("oh shoot ,, anilist down", e);
-    }
-    if (!anime) {
-        try {
-            anime = await tryJikan();
-            // console.log("anime from jikan");
-        } catch (e) {
-            // console.log("jikan down tooo =(", e);
-        }
-    }
-    if (!anime) {
-        try {
-            anime = await tryKitsu();
-            // console.log("anime from kitsu");
-        } catch (e) {
-            // console.log("Kitsu down too, bruh", e);
-        }
-    }
-    if (!anime) {
-        try {
-            anime = await tryShikimori();
-            console.log("anime from shikimori");
-        } catch (e) {
-            console.log("shikimori down too, rip -_-", e);
-        }
-    }
-    //     if (anime) {
-    //         animelist.push(anime);
-    //         historyPos = animelist.length - 1;
-    //         showanime(anime);
-    //         backBtn.disabled = historyPos <= 0;
-    //         nextBtn.disabled = historyPos >= animelist.length - 1;
-    //     } else {
-    //         console.log("both apis down, rough day");
-    //     }
-    //     loading = false;
-    //     whatsNextBtn.disabled = false;
-    //     textChange(btnText, "What's Next?");
-    // }
-    if (anime && alreadyshown(anime)) {
-        hmt = hmt + 1;
-        // console.log("already shown. try:", hmt);
-        if (hmt < 5) {
-            loading = false;
-            whatsNextBtn.disabled = false;
-            textChange(btnText, "What's Next?");
-            await hikariGets();
-            return;
-        }
-        // console.log("5 try reachd");
-        var savedGenres = genresarr;
-        genresarr = genresarr.length ? [genresarr[0]] : [];
-        var broadAnime = null;
-        try {
-            broadAnime = await tryAnilist();
-        } catch (e) {
-            // console.log("broad anilist try failed too", e);
-        }
-        if (!broadAnime) {
-            try {
-                broadAnime = await tryJikan();
-            } catch (e) {
-                // console.log("broad jikan try failed too", e);
-            }
-        }
-        if (!broadAnime) {
-            try {
-                broadAnime = await tryKitsu();
-            } catch (e) {
-                // console.log("broad kitsu failed too", e);
-            }
-        }
-        genresarr = savedGenres;
-        if (broadAnime) {
-            anime = broadAnime;
-        }
-    }
-    hmt = 0;
-    if (anime) {
-        animelist.push(anime);
-        historyPos = animelist.length - 1;
-        showanime(anime);
-        backBtn.disabled = historyPos <= 0;
-        nextBtn.disabled = historyPos >= animelist.length - 1;
-    } else {
-        // console.log("both api down, rough day");
-    }
-    loading = false;
-    whatsNextBtn.disabled = false;
-    textChange(btnText, "What's Next?");
-}
-async function tryAnilist() {
-    //     var randPage = Math.floor(Math.random() * 500) + 1;
-    //     var thegqlQuery = `
-    //  query ($page: Int, $genres: [String]) {
-    //         Page(page: $page, perPage: 1) {
-    //             media(type: ANIME, sort: POPULARITY_DESC, genre_in: $genres) {
-    //                 title {
-    //                     romaji
-    //                     english
-    //                     native
-    //                 }
-    //                 coverImage {
-    //                     extraLarge
-    //                 }
-    //                 genres
-    //                 averageScore
-    //                 startDate{
-    //                     year
-    //                     month
-    //                     day
-    //                 }
-    //                 status
-    //                 description
-    //             }
-    //         }
-    //     }`;
-    var randPage = Math.floor(Math.random() * 500) + 1;
-    var thegqlQuery;
-    if (genresarr.length) {
-        thegqlQuery = `
- query ($page: Int, $genres: [String]) {
-        Page(page: $page, perPage: 25){
-             media(type: ANIME,
-             sort: POPULARITY_DESC,
-             genre_in:$genres,
-             isAdult: false){
-                title {
-                    romaji
-                    english
-                    native
-                }
-                coverImage {
-                    extraLarge
-                }
-                genres
-                averageScore
-                startDate{
-                    year
-                    month
-                    day
-                }
-                status
-                description
-                trailer {
-                    id
-                    site
-                }
-                externalLinks{
-                    site
-                    url
-                    type
-                }
-            }
-        }
-    }`;
-    } else {
-        thegqlQuery = `
- query ($page: Int) {
-        Page(page: $page, perPage: 25){
-            media(type: ANIME, sort: POPULARITY_DESC, isAdult: false){
-                title {
-                    romaji
-                    english
-                    native
-                }
-                coverImage {
-                    extraLarge
-                }
-                genres
-                averageScore
-                startDate{
-                    year
-                    month
-                    day
-                }
-                status
-                description
-                trailer {
-                    id
-                    site
-                }
-                externalLinks{
-                    site
-                    url
-                    type
-                }
-            }
-        }
-    }`;
-    }
-    var randPage2 = Math.floor(Math.random() * 20) + 1;
-    var res = await fetch(anilistUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            query: thegqlQuery,
-            variables: {
-                page: randPage2,
-                genres: genresarr
-            }
-        })
-    });
-    var d = await res.json();
-    if (!d.data || !d.data.Page.media.length) {
-        var fallbackRes = await fetch(anilistUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                query: thegqlQuery,
-                variables: {
-                    page: 1,
-                    genres: genresarr
-                }
-            })
-        });
-        d = await fallbackRes.json();
-    }
-    if ((!d.data || !d.data.Page.media.length) && genresarr.length > 1) {
-        // console.log("no AND matches, trying OR instead");
-        var orglqry = `
-        query ($page: Int, $genres: [String]){
-                Page(page: $page, perPage: 25){
-                     media(type: ANIME,
-                     sort: POPULARITY_DESC,
-                     genre_in: $genres,
-                     isAdult: false){
-                          title{
-                              romaji
-                              english
-                              native
-                            }
-                              coverImage{
-                              extraLarge
-                              }
-                              genres
-                              averageScore
-                              startDate{
-                                   year
-                                   month
-                                   day
-                                }
-                                status
-                                description
-                                trailer{
-                                   id
-                                   site
-                                }
-                                externalLinks{
-                                    site
-                                    url
-                                    type
-                                }
-                            }
-                    }
-            }`;
+<!DOCTYPE html>
+<html lang="en">
 
-        var orRes = await fetch(anilistUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                query: orglqry,
-                variables: {
-                    page: 1,
-                    genres: [genresarr[0]]
-                }
-            })
-        });
-        d = await orRes.json();
-        // console.log("OR fallback used genre:", genresarr[0], "| results found:", d.data ? d.data.Page.media.length : 0);
-    }
-    if (!d.data || !d.data.Page.media.length) {
-        throw new Error("no anilist data at all");
-    }
-    // console.log("final match count for this combo:", d.data.Page.media.length);
-    var randIndex = Math.floor(Math.random() * d.data.Page.media.length);
-    var aresult = d.data.Page.media[randIndex];
-    aresult.coverImage.large = aresult.coverImage.extraLarge;
-    aresult.trailer = aresult.trailer || null;
-    aresult.externalLinks = aresult.externalLinks || null;
-    return aresult;
-}
-async function ljgen() {
-    if (Object.keys(jgenmap).length) {
-        return;
-    }
-    var res = await fetch("https://api.jikan.moe/v4/genres/anime");
-    var d = await res.json();
-    for (var i = 0; i < d.data.length; i++) {
-        jgenmap[d.data[i].name] = d.data[i].mal_id;
-    }
-}
-async function tryJikan() {
-    var a = null;
-    if (genresarr.length) {
-        await ljgen();
-        var jids = [];
-        for (var i = 0; i < genresarr.length; i++) {
-            if (jgenmap[genresarr[i]]) {
-                jids.push(jgenmap[genresarr[i]]);
-            }
-        }
-        // var res = await fetch(jseUrl + "?genres="+jids.join(",")+"&order_by=popularity&limit=25");
-        // var d = await res.json();
-        // if (!d.data || !d.data.length) {
-        //     throw new Error("no jikan data for these genres TuT");
-        // }
-        // var randIndex = Math.floor(Math.random() * d.data.length);
-        // a = d.data[randIndex];
-        // var firstRes = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25");
-        var firstRes = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25&sfw=true");
-        var firstD = await firstRes.json();
-        if (!firstD.data || !firstD.data.length) {
-            throw new Error("no jikan data for these genres TuT");
-        }
-        var totalPages = firstD.pagination.last_visible_page;
-        var randPage = Math.floor(Math.random() * totalPages) + 1;
-        var res = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25&page=" + randPage + "&sfw=true");
-        // var res = await fetch(jseUrl + "?genres=" + jids.join(",") + "&order_by=popularity&limit=25&page=" + randPage);
-        var d = await res.json();
-        if (!d.data || !d.data.length) {
-            throw new Error("no jikan data for this page");
-        }
-        var randIndex = Math.floor(Math.random() * d.data.length);
-        a = d.data[randIndex];
-    } else {
-        var res = await fetch(jikanUrl);
-        var d = await res.json();
-        if (!d.data) {
-            throw new Error("no jikan data");
-        }
-        a = d.data;
-    }
-    var jgenres = [];
-    for (var i = 0; i < a.genres.length; i++) {
-        jgenres.push(a.genres[i].name);
-    }
-    var jyear = "?";
-    var jmonth = "?";
-    var jday = "?";
-    if (a.aired && a.aired.from) {
-        var adate = new Date(a.aired.from);
-        jyear = adate.getFullYear();
-        jmonth = adate.getMonth() + 1;
-        jday = adate.getDate();
-    }
-    var janime = {
-        title: {
-            romaji: a.title,
-            english: a.title_english,
-            native: a.title_japanese
-        },
-        coverImage: {
-            large: a.images.webp.large_image_url
-        },
-        genres: jgenres,
-        averageScore: a.score ? Math.round(a.score * 10) : null,
-        startDate: {
-            year: jyear,
-            month: jmonth,
-            day: jday
-        },
-        status: a.status,
-        description: a.synopsis
-    };
-    return janime;
-}
-// whatsNextBtn.addEventListener("click", hikariGets);
-async function lkgen(name) {
-    if (kgenmap[name]) {
-        return kgenmap[name];
-    }
-    var res = await fetch("https://kitsu.io/api/edge/categories?filter[title]="
-        + encodeURIComponent(name) + "&page[limit]=1");
-    var d = await res.json();
-    if (d.data && d.data.length) {
-        kgenmap[name] = d.data[0].attributes.slug;
-    }
-    return kgenmap[name];
-}
-async function tryKitsu() {
-    var catFilter = "";
-    if (genresarr.length) {
-        var slugs = [];
-        for (var i = 0; i < genresarr.length; i++) {
-            var slug = await lkgen(genresarr[i]);
-            if (slug) {
-                slugs.push(slug);
-            }
-        }
-        if (slugs.length) {
-            catFilter = "&filter[categories]=" + slugs.join(",");
-        }
-    }
-    var firstRes = await fetch(kitsuUrl + "?page[limit]=1&page[offset]=0" +
-        catFilter);
-    var firstD = await firstRes.json();
-    if (!firstD.meta || !firstD.meta.count) {
-        throw new Error("Couldnt get kitsu count");
-    }
-    var totalCount = firstD.meta.count;
-    var roff = Math.floor(Math.random() * totalCount);
-    var res = await fetch(kitsuUrl + "?page[limit]=1&page[offset]="
-        + roff + "&include=genres" + catFilter);
-    var d = await res.json();
-    if (!d.data || !d.data.length) {
-        throw new Error("no kitsu data");
-    }
-    var a = d.data[0].attributes;
-    if (a.nsfw) {
-        throw new Error("o o, Kitsu gave nsfw content, skipping");
-    }
-    var kgenres = [];
-    if (d.included) {
-        for (var i = 0; i < d.included.length; i++) {
-            kgenres.push(d.included[i].attributes.name);
-        }
-    }
-    var kyear = "?";
-    var kmonth = "?";
-    var kday = "?";
-    if (a.startDate) {
-        var kdate = new Date(a.startDate);
-        kyear = kdate.getFullYear();
-        kmonth = kdate.getMonth() + 1;
-        kday = kdate.getDate();
-    }
-    var kanime = {
-        title: {
-            romaji: a.titles.en_jp || a.canonicalTitle,
-            english: a.titles.en,
-            native: a.titles.ja_jp
-        },
-        coverImage: {
-            large: a.posterImage.original
-        },
-        genres: kgenres,
-        averageScore: a.averageRating ? Math.round(a.averageRating) : null,
-        startDate: {
-            year: kyear,
-            month: kmonth,
-            day: kday
-        }, status: a.status,
-        description: a.synopsis
-    };
-    return kanime;
-}
-async function tryShikimori() {
-    var res = await fetch(shikimoriUrl + "?limit=1&order=random");
-    var d = await res.json();
-    if (!d.length) {
-        throw new Error("no shikimori data");
-    }
-    var a = d[0];
-    var sgenres = [];
-    for (var i = 0; i < a.genres.length; i++) {
-        sgenres.push(a.genres[i].name);
-    }
-    var syear = "?";
-    var smonth = "?";
-    var sday = "?";
-    if (a.aired_on) {
-        var sdate = new Date(a.aired_on);
-        syear = sdate.getFullYear();
-        smonth = sdate.getMonth() + 1;
-        sday = sdate.getDate();
-    }
-    var sanime = {
-        title: {
-            romaji: a.name,
-            english: a.name,
-            native: ""
-        },
-        coverImage: {
-            large: "https://shikimori.one" + a.image.original
-        },
-        genres: sgenres,
-        averageScore: a.score ? Math.round(parseFloat(a.score) * 10) : null,
-        startDate: {
-            year: syear,
-            month: smonth,
-            day: sday
-        },
-        status: a.status,
-        description: a.description || "no description available"
-    };
-    return sanime;
-}
-function showanime(anime) {
-    posterImg.src = anime.coverImage.large;
-    cardresizer(defaultratio);
-    trailerplay = false;
-    trailerFrame.style.display = "none";
-    trailerFrame.src = "";
-    posterImg.style.display = "block";
-    // if(anime.trailer && anime.trailer.site === "youtube"){
-    //     trailerWrap.dataset.trailerid = anime.trailer.id;
-    //     trailerBtn.textContent = "Watch Trailer";
-    //     trailerWrap.style.display = "inline-flex";
-    // } else {
-    //     trailerWrap.style.display = "none";
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hikari</title>
+    <link rel="stylesheet" href="style_01.css?v=1.5">
+    <link rel="stylesheet" href="style_02.css?v=1.5">
+    <link rel="icon" type="image/jpeg" href="Logo/Logo.jpeg?v=1.5">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0QS00603GF"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-0QS00603GF');
+    </script>
+</head>
 
-    // }
-    if (anime.trailer && anime.trailer.site === "youtube") {
-        trailerBtn.dataset.trailerid = anime.trailer.id;
-        btnLabel.textContent = "Watch Trailer";
-        trailerBtn.style.display = "inline-flex";
-    } else {
-        trailerBtn.style.display = "none";
-    }
-    loadingClip.pause();
-    loadingClip.style.display = "none";
-    posterImg.style.display = "block";
-    instruct.style.display = "none";
-    rightInfo.classList.remove("centerMode");
-    bgPoster.style.backgroundImage = "url('" + anime.coverImage.large + "')";
-    engName.textContent = anime.title.english || anime.title.romaji;
-    jpName.textContent = anime.title.native;
-    // if(anime.averageScore){
-    //     avgscore.textContent = "N/a"
-    // }
-    if (anime.averageScore) {
-        avgscore.textContent = "✦ " + (anime.averageScore / 10) + "/10";
-    } else {
-        avgscore.textContent = "N/A";
-    }
-    startDate.textContent = anime.startDate.year + "-" +
-        anime.startDate.month + "-" + anime.startDate.day;
-    statusrn.textContent = anime.status;
-    describe.innerHTML = anime.description;
-    streamBtns(anime);
-    document.getElementById("streamBtns").style.display = "flex";
-    if (!linesBuilt) {
-        makeNetflixLines("streamNetflix");
-        linesBuilt = true;
-    }
-    genreList.innerHTML = "";
-    for (var i = 0; i < anime.genres.length; i++) {
-        var bubble = document.createElement("div");
-        bubble.className = "theGenre";
-        bubble.textContent = anime.genres[i];
-        genreList.appendChild(bubble);
-    }
-}
-// // for the backbtn 
-// backBtn.addEventListener("click", function () {
-//     if (historyPos > 0) {
-//         historyPos = historyPos - 1;
-//         showanime(animelist[historyPos]);
-//         backBtn.disabled = historyPos <= 0;
-//         nextBtn.disabled = historyPos >= animelist.length - 1;
-//     }
-// });
-// // nextbtn 
-// nextBtn.addEventListener("click", function () {
-//     if (historyPos < animelist.length - 1) {
-//         historyPos = historyPos + 1;
-//         showanime(animelist[historyPos]);
-//         backBtn.disabled = historyPos <= 0;
-//         nextBtn.disabled = historyPos >= animelist.length - 1;
-//     }
-// });
-backBtn.addEventListener("click", function () {
-    if (rnMode === "anime") {
-        if (historyPos > 0) {
-            historyPos = historyPos - 1;
-            showanime(animelist[historyPos]);
-            backBtn.disabled = historyPos <= 0;
-            nextBtn.disabled = historyPos >= animelist.length - 1;
-        }
-    } else if (rnMode === "manga") {
-        if (mhistoryPos > 0) {
-            mhistoryPos = mhistoryPos - 1;
-            showmanga(mangalist[mhistoryPos]);
-            backBtn.disabled = mhistoryPos <= 0;
-            nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
-        }
-    } else if (rnMode === "movie") {
-        if (movhisPos > 0) {
-            movhisPos = movhisPos - 1;
-            showmovie(movielist[movhisPos]);
-            backBtn.disabled = movhisPos <= 0;
-            nextBtn.disabled = movhisPos >= movielist.length - 1;
-        }
-    } else if (rnMode === "games") {
-        if (ghistoryPos > 0) {
-            ghistoryPos = ghistoryPos - 1;
-            showgame(gameslist[ghistoryPos]);
-            backBtn.disabled = ghistoryPos <= 0;
-            nextBtn.disabled = ghistoryPos >= gameslist.length - 1;
-        }
-    }
-});
-// nextbtn 
-nextBtn.addEventListener("click", function () {
-    if (rnMode === "anime") {
-        if (historyPos < animelist.length - 1) {
-            historyPos = historyPos + 1;
-            showanime(animelist[historyPos]);
-            backBtn.disabled = historyPos <= 0;
-            nextBtn.disabled = historyPos >= animelist.length - 1;
-        }
-    } else if (rnMode === "manga") {
-        if (mhistoryPos < mangalist.length - 1) {
-            mhistoryPos = mhistoryPos + 1;
-            showmanga(mangalist[mhistoryPos]);
-            backBtn.disabled = mhistoryPos <= 0;
-            nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
-        }
-    } else if (rnMode === "movie") {
-        if (movhisPos < movielist.length - 1) {
-            movhisPos = movhisPos + 1;
-            showmovie(movielist[movhisPos]);
-            backBtn.disabled = movhisPos <= 0;
-            nextBtn.disabled = movhisPos >= movielist.length - 1;
-        }
-    } else if (rnMode === "games") {
-        if (ghistoryPos < gameslist.length - 1) {
-            ghistoryPos = ghistoryPos + 1;
-            showgame(gameslist[ghistoryPos]);
-            backBtn.disabled = ghistoryPos <= 0;
-            nextBtn.disabled = ghistoryPos >= gameslist.length - 1;
-        }
-    }
-});
-whatsNextBtn.addEventListener("click", function () {
-    clickSound.currentTime = 0;
-    clickSound.play();
-    if (rnMode === "anime") {
-        hikariGets();
-    } else if (rnMode === "manga") {
-        hikariManga();
-    } else if (rnMode === "movie") {
-        hikariMovies();
-    } else if (rnMode === "games") {
-        hikariGames();
-    } else {
-        console.log("bro wait, havent built that thing yet-__-");
-    }
-});
-//the category choosing btn opens and closes
-categorybtn.addEventListener("click", function () {
-    categories.classList.toggle("open");
-});
-// open closing of the genres 
-document.getElementById("whichgenre").addEventListener("click", function(){
-    if(rnMode === "movie"){
-        movgenresbox.classList.toggle("open");
-    } else if (rnMode === "games"){
-        gamegenresbox.classList.toggle("open");
-    } else {
-        genresbox.classList.toggle("open");
-    }
-})
-// the genre filter 
-// var allCheckboxes = document.querySelectorAll(".g input");
-// for (var i = 0; i < allCheckboxes.length; i++) {
-//     allCheckboxes[i].addEventListener("change", function () {
-//         genresarr = [];
-//         var checkedOnes = document.querySelectorAll(".g input:checked");
-//         for (var j = 0; j < checkedOnes.length; j++) {
-//             genresarr.push(checkedOnes[j].value);
-//         }
-//         console.log(genresarr);
-//     });
-// }
-var allGenreBtns = document.querySelectorAll(".genreBtn");
-for (var i = 0; i < allGenreBtns.length; i++) {
-    allGenreBtns[i].addEventListener("click", function () {
-        this.classList.toggle("selected");
-        var parentBox = this.closest(".genresbox");
-        if (parentBox.id === "movgenresbox"){
-            movgenresarr = [];
-            var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
-            for(var j=0; j<pickedOnes.length; j++){
-                movgenresarr.push(pickedOnes[j].dataset.genre);
-            }
-        } else if(parentBox.id === "gamegenresbox"){
-            gamegenresarr = [];
-            var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
-            for(var j=0; j<pickedOnes.length; j++){
-                gamegenresarr.push(pickedOnes[j].dataset.genre);
-            }
-        } else {
-            genresarr = [];
-            var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
-            for (var j = 0; j < pickedOnes.length; j++) {
-                genresarr.push(pickedOnes[j].dataset.genre);
-            }
-        }
-    });
-}
-function alreadyshown(anime) {
-    var title = anime.title.english || anime.title.romaji;
-    for (var i = 0; i < animelist.length; i++) {
-        var pastTitle = animelist[i].title.english || animelist[i].title.romaji;
-        if (pastTitle === title) {
-            return true;
-        }
-    }
-    return false;
-}
+<body>
+    <!-- <video class="bgVideo" id="bgVideo" autoplay loop muted playsinline>
+        <source src="Clips/bg.mp4" type="video/mp4">
+    </video> -->
+    <div class="bgPoster" id="bgPoster"></div>
+    <div class="topWrap">
+        <div class="logoBlock">
+            <div class="siteTitle">Hikari <span class="star">✦</span></div>
+            <div class="jpTitle">ヒカリ</div>
+        </div>
+        <div class="topNav">
+            <div class="categories" id="categories">
+                <button data-mode="anime" class="selected">Anime</button>
+                <button data-mode="manga">Manga</button>
+                <button data-mode="movie">Movie</button>
+                <!-- <button data-mode="cartoon">Cartoon</button> -->
+                <button data-mode="games">Games</button>
+            </div>
+            <button class="categorybtn" id="categorybtn">Category</button>
+        </div>
+    </div>
+    <div class="filterBar">
+        <button id="whichgenre">Choose Genres</button>
+        <div class="genresbox" id="genresbox">
+            <button class="genreBtn" data-genre="Action">Action</button>
+            <button class="genreBtn" data-genre="Adventure">Adventure</button>
+            <button class="genreBtn" data-genre="Comedy">Comedy</button>
+            <button class="genreBtn" data-genre="Drama">Drama</button>
+            <button class="genreBtn" data-genre="Ecchi">Ecchi</button>
+            <button class="genreBtn" data-genre="Fantasy">Fantasy</button>
+            <button class="genreBtn" data-genre="Horror">Horror</button>
+            <button class="genreBtn" data-genre="Mahou Shoujo">Mahou Shoujo</button>
+            <button class="genreBtn" data-genre="Mecha">Mecha</button>
+            <button class="genreBtn" data-genre="Music">Music</button>
+            <button class="genreBtn" data-genre="Mystery">Mystery</button>
+            <button class="genreBtn" data-genre="Psychological">Psychological</button>
+            <button class="genreBtn" data-genre="Romance">Romance</button>
+            <button class="genreBtn" data-genre="Sci-Fi">Sci-Fi</button>
+            <button class="genreBtn" data-genre="Slice of Life">Slice of Life</button>
+            <button class="genreBtn" data-genre="Sports">Sports</button>
+            <!-- <button class="genreBtn" data-genre="Kids">Kids</button> -->
+            <button class="genreBtn" data-genre="Supernatural">Supernatural</button>
+            <button class="genreBtn" data-genre="Thriller">Thriller</button>
+        </div>
+        <div class="genresbox" id="movgenresbox">
+            <button class="genreBtn" data-genre="Action">Action</button>
+            <button class="genreBtn" data-genre="Adventure">Adventure</button>
+            <button class="genreBtn" data-genre="Animation">Animation</button>
+            <button class="genreBtn" data-genre="Comedy">Comedy</button>
+            <button class="genreBtn" data-genre="Crime">Crime</button>
+            <button class="genreBtn" data-genre="Documentary">Documentary</button>
+            <button class="genreBtn" data-genre="Drama">Drama</button>
+            <button class="genreBtn" data-genre="Family">Family</button>
+            <button class="genreBtn" data-genre="Fantasy">Fantasy</button>
+            <button class="genreBtn" data-genre="History">History</button>
+            <button class="genreBtn" data-genre="Horror">Horror</button>
+            <button class="genreBtn" data-genre="Music">Music</button>
+            <button class="genreBtn" data-genre="Mystery">Mystery</button>
+            <button class="genreBtn" data-genre="Romance">Romance</button>
+            <button class="genreBtn" data-genre="Science Fiction">Sci-Fi</button>
+            <button class="genreBtn" data-genre="Thriller">Thriller</button>
+            <button class="genreBtn" data-genre="War">War</button>
+            <button class="genreBtn" data-genre="Western">Western</button>
+        </div>
+    </div>
+    <div class="infoArea">
+        <div class="posterCard">
+            <div class="notchbleft"></div>
+            <div class="cardNotch"></div>
+            <div class="notchbright"></div>
+            <img class="posterImg" id="posterImg" alt="">
+            <video class="loadingClip" id="loadingClip" src="Logo/loading.webm" muted loop
+                style="display: none;"></video>
+            <iframe class="trailerFrame" id="trailerFrame" allow="autoplay" style="display: none;"></iframe>
+            <video class="trailerFrame" id="trailerVideo" controls style="display: none;"></video>
+            <div class="cardGlow"></div>
+        </div>
+        <!-- <div class="rightInfo">
+            <div class="engName" id="engName"></div>
+            <div class="jpName" id="jpName"></div>
+            <div class="genreList" id="genreList"></div>
+        </div> -->
+        <div class="rightInfo centerMode" id="rightInfo">
+            <div class="instruct" id="instruct">Yo buddy, hit that ✦ What's Next? ✦ button and let's find you something
+                good (∩˃o˂∩) </div>
+            <div class="engName" id="engName"></div>
+            <div class="jpName" id="jpName"></div>
+            <div class="infocap" id="inofcap">
+                <div id="avgscore"></div>
+                <div id="startDate"></div>
+                <div id="statusrn"></div>
+            </div>
+            <div class="genreList" id="genreList"></div>
+            <div class="describe" id="describe"></div>
+            <!-- <button class="trailerBtn" id="trailerBtn" style="display: none;">Watch Trailer</button> -->
+            <!-- <div class="trailerWrap" id="trailerWrap" style="display: none;">
+                <button class="trailerIconBtn" id="trailerIconBtn">
+                    <img class="ytIcon" id="ytIcon" src="Icons/youtube.svg" alt="">
+                    <span class="closeX" id="closeX"></span>
+                </button>
+                <button class="trailerBtn" id="trailerBtn">Watch Trailer</button>
+             </div> -->
+            <div class="btnRow" id="btnRow">
+                <button class="trailerBtn" id="trailerBtn" style="display: none;">
+                    <svg class="btnLogo" viewBox="0 0 24 24" width="16" height="16">
+                        <rect x="1" y="4" width="22" height="16" rx="5" fill="#FF0000"></rect>
+                        <path d="M10 8.5 L17 12 L10 15.5 Z" fill="#FFFFFF"></path>
+                    </svg>
+                    <span class="btnLabel" id="btnLabel">Watch Trailer</span>
+                </button>
+                <div class="streamBtns" id="streamBtns" style="display: none;">
+                    <a class="streamBtn" id="streamCrunchyroll" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/crunchyroll.svg" alt="Crunchyroll">
+                        <span class="streamLabel">Crunchyroll</span>
+                    </a>
+                    <a class="streamBtn" id="streamNetflix" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/netflix.svg" alt="Netflix">
+                        <span class="streamLabel">Netflix</span>
+                    </a>
+                    <a class="streamBtn" id="streamAnimeSuge" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/animesuge.svg" alt="AnimeSuge">
+                        <span class="streamLabel"><span style="color: red;">A</span>nimeSuge</span>
+                    </a>
+                </div>
+                <div class="streamBtns" id="mangaBtns" style="display: none;">
+                    <a class="streamBtn" id="streamMangadex" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/mangadex.svg" alt="MangaDex">
+                        <span class="streamLabel">MangaDex</span>
+                    </a>
+                    <a class="streamBtn" id="streamMAL" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/mal.svg" alt="MyAnimeList">
+                        <span class="streamLabel">MyAnimeList</span>
+                    </a>
+                    <a class="streamBtn" id="streamAP" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/animeplanet.png" alt="Anime-Planet">
+                        <span class="streamLabel">Anime Planet</span>
+                    </a>
+                </div>
+                <div class="streamBtns" id="movieBtns" style="display: none;">
+                    <a class="streamBtn netflixBtn" id="streamMovieNetflix" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/netflix.svg" alt="Netflix">
+                        <span class="streamLabel">Netflix</span>
+                    </a>
+                    <a class="streamBtn" id="streamMoviePrime" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/primevideo.png" alt="Prime Video">
+                        <span class="streamLabel">Prime Video</span>
+                    </a>
+                    <a class="streamBtn" id="streamMovieWMovies" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/wmovies.svg" alt="Apple TV+">
+                        <span class="streamLabel">WMovies</span>
+                    </a>
+                    <a class="streamBtn" id="streamMovieHydraHD" target="_blank" rel="noopener">
+                        <img class="streamIcon" src="Icons/hydrahd.jpeg" alt="HBO Max">
+                        <span class="streamLabel">HydraHD</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <button class="trailerBtn" id="trailerBtn" style="display: none;">
+                <span class="trailerIcon" id="trailerIcon">
+                    <svg class="iconSvg playSvg" viewBox="0 0 24 24">
+                        <rect x="1" y="4" width="22" height="16" rx="5"></rect>
+                        <polygon points="10,9 10,15 16,12" class="iconGlyph"></polygon>
+                    </svg>
+                    <svg class="iconSvg closeSvg" viewBox="0 0 24 24">
+                        <rect x="1" y="4" width="22" height="16" rx="5"></rect>
+                        <line x1="8" y1="8" x2="16" y2="16" class="iconGlyph"></line>
+                        <line x1="16" y1="8" x2="8" y2="16" class="iconGlyph"></line>
+                    </svg>
+                </span>
+                <span class="trailerBtnText" id="trailerBtnText">Watch Trailer</span>
+            </button> -->
+    </div>
+    </div>
+    <div class="theButtons">
+        <button class="back" id="backBtn" disabled>◄Back</button>
+        <button class="whatsnext" id="whatsNext">
+            <span id="btnText">What's Next?</span>
+        </button>
+        <button class="forward" id="nextBtn" disabled>Forward►</button>
+    </div>
+    <script src="script_01.js?v=1.5"></script>
+    <script src="script_02.js?v=1.5"></script>
+    <script src="script_03.js?v=1.5"></script>
+    <script src="script_04.js?v=1.5"></script>
+</body>
 
-// for (var i =0; i<catBtns.length; i++){
-//     catBtns[i].addEventListener("click",function(){
-//         for(var j = 0; j <catBtns.length; j++){
-//             catBtns[j].classList.remove("selected");
-//         }
-//         this.classList.add("selected");
-//         rnMode = this.dataset.mode;
-//         console.log("mode:",this.dataset.mode);
-//     });
-// }
-// modes 
-for (var i = 0; i < catBtns.length; i++) {
-    catBtns[i].addEventListener("click", function () {
-        for (var j = 0; j < catBtns.length; j++) {
-            catBtns[j].classList.remove("selected");
-        }
-        this.classList.add("selected");
-        rnMode = this.dataset.mode;
-        // console.log("mode:", this.dataset.mode);
-        trailerplay = false;
-        trailerFrame.style.display = "none";
-        trailerFrame.src = "";
-        trailerBtn.style.display = "none";
-        document.getElementById("streamBtns").style.display = "none";
-        document.getElementById("mangaBtns").style.display = "none";
-        document.getElementById("movieBtns").style.display = "none";
-        posterImg.style.display = "block";
-        genresbox.classList.remove("open");
-        movgenresbox.classList.remove("open");
-        gamegenresbox.classList.remove("open");
-
-        textChange(btnText, "What's Next?");
-        if (rnMode === "anime") {
-            if (historyPos >= 0 && animelist.length) {
-                showanime(animelist[historyPos]);
-            } else {
-                posterImg.style.display = "none";
-                posterImg.src = "";
-                engName.textContent = "";
-                jpName.textContent = "";
-                avgscore.textContent = "";
-                startDate.textContent = "";
-                statusrn.textContent = "";
-                describe.innerHTML = "";
-                genreList.innerHTML = "";
-                cardresizer(defaultratio);
-            }
-            backBtn.disabled = historyPos <= 0;
-            nextBtn.disabled = historyPos >= animelist.length - 1;
-        } else if (rnMode === "manga") {
-            if (mhistoryPos >= 0 && mangalist.length) {
-                showmanga(mangalist[mhistoryPos]);
-            } else {
-                posterImg.style.display = "none";
-                posterImg.src = "";
-                engName.textContent = "";
-                jpName.textContent = "";
-                avgscore.textContent = "";
-                startDate.textContent = "";
-                statusrn.textContent = "";
-                describe.innerHTML = "";
-                genreList.innerHTML = "";
-                cardresizer(defaultratio);
-            }
-            backBtn.disabled = mhistoryPos <= 0;
-            nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
-        } else {
-            backBtn.disabled = true;
-            nextBtn.disabled = true;
-        }
-    });
-}
-// card 
-var cbound;
-posterCard.addEventListener("mouseenter", function () {
-    cbound = posterCard.getBoundingClientRect();
-    document.addEventListener("mousemove", tiltCard);
-});
-posterCard.addEventListener("mouseleave", function () {
-    document.removeEventListener("mousemove", tiltCard);
-    posterCard.style.transform = "";
-});
-function tiltCard(e) {
-    if (trailerplay) {
-        return;
-    }
-    var mouseX = e.clientX;
-    var mouseY = e.clientY;
-    var leftX = mouseX - cbound.x;
-    var topY = mouseY - cbound.y;
-    var center = {
-        x: leftX - cbound.width / 2,
-        y: topY - cbound.height / 2
-    };
-    var distance = Math.sqrt(center.x ** 2 + center.y ** 2);
-    posterCard.style.transform =
-        "scale3d(1.05, 1.05, 1.05) rotate3d(" +
-        (center.y / 100) + ", " +
-        (-center.x / 100) + ", 0, " +
-        (Math.log(distance) * 2) + "deg)";
-    cardGlow.style.backgroundImage =
-        "radial-gradient(circle at " +
-        (center.x * 2 + cbound.width / 2) + "px " +
-        (center.y * 2 + cbound.height / 2) + "px, #ffffff55, #0000000f)";
-}
-function streamBtns(anime) {
-    var title = anime.title.english || anime.title.romaji;
-    for (var i = 0; i < streamingSites.length; i++) {
-        var site = streamingSites[i];
-        var btnEl = document.getElementById(site.elId);
-        var foundUrl = null;
-        if (anime.externalLinks) {
-            for (var j = 0; j < anime.externalLinks.length; j++) {
-                var link = anime.externalLinks[j];
-                if (link.type === "STREAMING" && link.site === site.label) {
-                    foundUrl = link.url;
-                }
-            }
-        }
-        if (foundUrl) {
-            btnEl.href = foundUrl;
-        } else {
-            btnEl.href = site.searchUrl + encodeURIComponent(title);
-        }
-    }
-}
+</html>

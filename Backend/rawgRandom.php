@@ -61,11 +61,27 @@ if(!$data || empty($data['results'])){
 $randomIndex = array_rand($data['results']);
 $game = $data['results'][$randomIndex];
 $gameId = $game['id'];
+// $detailUrl = "https://api.rawg.io/api/games/" . $gameId . "?key=" . RAWG_KEY;
+// $detailResponse = file_get_contents($detailUrl);
+// $detailData = json_decode($detailResponse, true);
+// if($detailData && isset($detailData['description_raw'])){
+//     $game['description_raw'] = $detailData['description_raw'];
+// }
 $detailUrl = "https://api.rawg.io/api/games/" . $gameId . "?key=" . RAWG_KEY;
 $detailResponse = file_get_contents($detailUrl);
 $detailData = json_decode($detailResponse, true);
 if($detailData && isset($detailData['description_raw'])){
     $game['description_raw'] = $detailData['description_raw'];
 }
-header('Content-Type: application/json');
-echo json_encode($game);
+$movieUrl = "https://api.rawg.io/api/games/" . $gameId . "/movies?key=" . RAWG_KEY;
+$movieResponse = file_get_contents($movieUrl);
+$movieData = json_decode($movieResponse, true);
+$game['trailer_url'] = null;
+if($movieData && !empty($movieData['results'])){
+    $firstMovie = $movieData['results'][0];
+    if(isset($firstMovie['data']['max'])){
+        $game['trailer_url']=$firstMovie['data']['max'];
+    } else if(isset($firstMovie['data']['480'])){
+        $game['trailer_url']=$firstMovie['data']['480'];
+    }
+}
