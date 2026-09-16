@@ -623,7 +623,8 @@ function showanime(anime) {
     //     trailerWrap.style.display = "none";
 
     // }
-    if (anime.trailer && anime.trailer.site === "youtube") {
+    if (anime.trailer && anime.trailer.site === "youtube"){
+        trailerBtn.dataset.trailertype = "youtube";
         trailerBtn.dataset.trailerid = anime.trailer.id;
         btnLabel.textContent = "Watch Trailer";
         trailerBtn.style.display = "inline-flex";

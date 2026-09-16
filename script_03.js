@@ -142,7 +142,15 @@ function showmovie(movie) {
     trailerFrame.style.display = "none";
     trailerFrame.src = "";
     posterImg.style.display = "block";
-    if (movie.trailer && movie.trailer.site === "youtube") {
+    // if (movie.trailer && movie.trailer.site === "youtube") {
+    //     trailerBtn.dataset.trailerid = movie.trailer.id;
+    //     btnLabel.textContent = "Watch Trailer";
+    //     trailerBtn.style.display = "inline-flex";
+    // } else {
+    //     trailerBtn.style.display = "none";
+    // }
+    if(movie.trailer && movie.trailer.site === "youtube"){
+        trailerBtn.dataset.trailertype = "youtube";
         trailerBtn.dataset.trailerid = movie.trailer.id;
         btnLabel.textContent = "Watch Trailer";
         trailerBtn.style.display = "inline-flex";
@@ -245,18 +253,27 @@ window.addEventListener("resize", function () {
 // }
 // trailerBtn.addEventListener("click",toggleTrailer);
 // trailerIconBtn.addEventListener("click",toggleTrailer);
-function toggleTrailer() {
-    if (trailerplay) {
+function toggleTrailer(){
+    if(trailerplay){
         trailerplay = false;
         trailerFrame.style.display = "none";
         trailerFrame.src = "";
+        trailerVideo.style.display = "none";
+        trailerVideo.pause();
+        trailerVideo.src = "";
         posterImg.style.display = "block";
         btnLabel.textContent = "Watch Trailer";
         cardresizer(posterRatio);
     } else {
         trailerplay = true;
-        trailerFrame.src = "https://www.youtube.com/embed/" + trailerBtn.dataset.trailerid + "?autoplay=1";
-        trailerFrame.style.display = "block";
+        if (trailerBtn.dataset.trailertype === "video"){
+            trailerVideo.src = trailerBtn.dataset.trailerurl;
+            trailerVideo.style.display = "block";
+            trailerVideo.play();
+        } else {
+            trailerFrame.src = "https://www.youtube.com/embed/" + trailerBtn.dataset.trailerid + "?autoplay=1";
+            trailerFrame.style.display = "block";
+        }
         posterImg.style.display = "none";
         btnLabel.textContent = "Close Trailer";
         cardresizer(defaultratio);
