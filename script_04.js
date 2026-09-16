@@ -15,9 +15,9 @@ async function hikariGames() {
     loadingClip.play();
     var game = null;
     try{
-        game = await tryF2G();
+        game = await tryRawg();
     } catch (e){
-        //console.log("freetogame down",e);
+        console.log("rawg down",e);
     }
     //giant bomb's api is down
     // if(!game){
@@ -29,12 +29,13 @@ async function hikariGames() {
     // }
     if (!game){
         try{
-            game = await tryRawg();
+            game = await tryF2G();
         } catch (e){
-            //console.log("rawg down too",e);
+            //console.log("freetogame down too",e);
         }
     }
     if (game) {
+        console.log("game source:", game.source);
         gameslist.push(game);
         ghistoryPos = gameslist.length - 1;
         showgame(game);
@@ -57,8 +58,6 @@ async function tryRawg() {
     }
     var res = await fetch("Backend/rawgRandom.php" + genreq);
     var d = await res.json();
-
-
     if (!d || d.success === false || !d.name) {
         throw new Error("no rawg data");
     }
@@ -77,8 +76,6 @@ async function tryRawg() {
         gmonth = gdate.getMonth() + 1;
         gday = gdate.getDate();
     }
-    // var gstatus = d.tba ? "TBA" : "Released";
-    // var gscore = null;
     var gstatus = d.tba ? "TBA" : "Released";
     var gtrailer = null;
     if (d.trailer_url) {
@@ -108,14 +105,10 @@ async function tryRawg() {
             month: gmonth,
             day: gday
         },
-        //         status: gstatus,
-        //         description: d.description_raw || "no description"
-        //     };
-        //     return ggame;
-        // }
         status: gstatus,
         description: d.description_raw || "no description",
-        trailer: gtrailer
+        trailer: gtrailer,
+        source: "RAWG"
     };
     return ggame;
 }
@@ -222,7 +215,8 @@ async function tryF2G() {
             day: gday
         },
         status: "Released",
-        description: d.description || d.short_description || "no description available"
+        description: d.description || d.short_description || "no description available",
+        source: "FreeToGame"
     };
     return ggame;
 }

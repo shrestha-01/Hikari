@@ -766,7 +766,7 @@ categorybtn.addEventListener("click", function () {
 });
 // open closing of the genres dabba
 document.getElementById("whichgenre").addEventListener("click", function(){
-    if(rnMode === "Movies"){
+    if(rnMode === "movie"){
         movgenresbox.classList.toggle("open");
     } else if (rnMode === "games"){
         gamegenresbox.classList.toggle("open");
