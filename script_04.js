@@ -1,6 +1,32 @@
 //game
 var gameslist = [];
 var ghistoryPos = -1;
+var gameSites = [
+    {
+        elId: "steambtn",
+        searchUrl: "https://store.steampowered.com/search/?term="
+    },
+    {
+        elId: "epicbtn",
+        searchUrl: "https://store.epicgames.com/en-US/browse?q="
+    },
+    {
+        elId: "gogbtn",
+        searchUrl: "https://www.gog.com/games?query="
+    },
+    {
+        elId: "xboxbtn",
+        searchUrl: "https://www.xbox.com/en-us/Search/Results?q="
+    }
+];
+function showGameLinks(game){
+    var title = game.title.english || game.title.romaji;
+    for (var i = 0; i < gameSites.length; i++){
+        var site = gameSites[i];
+        var btnEl = document.getElementById(site.elId);
+        btnEl.href = site.searchUrl + encodeURIComponent(title);
+    }
+}
 async function hikariGames() {
     if (loading) {
         return;
