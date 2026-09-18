@@ -285,6 +285,8 @@ function showgame(game) {
     statusrn.textContent = game.status;
     describe.innerHTML = game.description;
     genreList.innerHTML = "";
+    document.getElementById("gameBtns").style.display = "flex";
+    genreList.innerHTML = "";
     for (var i = 0; i < game.genres.length; i++) {
         var bubble = document.createElement("div");
         bubble.className = "theGenre";
