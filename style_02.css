@@ -143,3 +143,23 @@
     filter: drop-shadow(0 0 7px #fff);
     transition: filter 0.2s ease;
 }
+#steambtn:hover{
+    background: rgba(102, 192, 244, 0.35);
+    border-color: rgb(102, 192, 244);
+    box-shadow: 0 0 15px rgba(102, 192, 244, 0.5);
+}
+#epicbtn:hover{
+    background: rgba(255,255,255,0.2);
+    border-color: rgb(255,255,255);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+#gogbtn:hover{
+    background: rgba(160, 45, 230, 0.35);
+    border-color: rgb(160, 45, 230);
+    box-shadow: 0 0 15px rgba(160, 45, 230, 0.5);
+}
+#xboxbtn:hover{
+    background: rgba(16, 124, 16, 0.35);
+    border-color: rgb(16, 124, 16);
+    box-shadow: 0 0 15px rgba(16, 124, 16, 0.5);
+}
