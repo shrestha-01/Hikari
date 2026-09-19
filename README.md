@@ -71,7 +71,14 @@ Hikari is currently live!
 
 ##  Credits & Sources
 
-### Design
+### Clips
+
+
+### Background clip
+- **Anime BG:** https://moewalls.com/anime/the-shorekeeper-praying-wuthering-waves-live-wallpaper
+- **Manga BG:** https://motionbgs.com/hiyuki
+- **Movie BG:** https://motionbgs.com/miles-morales-in-multiverse
+- **Games BG:** https://motionbgs.com/lucy-wuthering-waves
 
 - **Glassmorphism:** https://hype4.academy/tools/glassmorphism-generator
 - **3d card:** https://freefrontend.com/javascript-cards/

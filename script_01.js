@@ -46,7 +46,10 @@ var gamegenresarr = [];
 var hmt = 0;
 var cbound;
 var modevideo = {
-    anime: "Background/animebg.webm"
+    anime: "Background/animebg.webm",
+    manga: "Background/mangabg.webm",
+    movie: "Background/moviebg.webm",
+    games: "Background/gamebg.mp4"
 };
 function switchbg(mode) {
     if (modevideo[mode]) {
