@@ -623,7 +623,7 @@ function showanime(anime) {
     //     trailerWrap.style.display = "none";
 
     // }
-    if (anime.trailer && anime.trailer.site === "youtube"){
+    if (anime.trailer && anime.trailer.site === "youtube") {
         trailerBtn.dataset.trailertype = "youtube";
         trailerBtn.dataset.trailerid = anime.trailer.id;
         btnLabel.textContent = "Watch Trailer";
@@ -766,10 +766,10 @@ categorybtn.addEventListener("click", function () {
     categories.classList.toggle("open");
 });
 // open closing of the genres dabba
-document.getElementById("whichgenre").addEventListener("click", function(){
-    if(rnMode === "movie"){
+document.getElementById("whichgenre").addEventListener("click", function () {
+    if (rnMode === "movie") {
         movgenresbox.classList.toggle("open");
-    } else if (rnMode === "games"){
+    } else if (rnMode === "games") {
         gamegenresbox.classList.toggle("open");
     } else {
         genresbox.classList.toggle("open");
@@ -792,16 +792,16 @@ for (var i = 0; i < allGenreBtns.length; i++) {
     allGenreBtns[i].addEventListener("click", function () {
         this.classList.toggle("selected");
         var parentBox = this.closest(".genresbox");
-        if (parentBox.id === "movgenresbox"){
+        if (parentBox.id === "movgenresbox") {
             movgenresarr = [];
             var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
-            for(var j=0; j<pickedOnes.length; j++){
+            for (var j = 0; j < pickedOnes.length; j++) {
                 movgenresarr.push(pickedOnes[j].dataset.genre);
             }
-        } else if(parentBox.id === "gamegenresbox"){
+        } else if (parentBox.id === "gamegenresbox") {
             gamegenresarr = [];
             var pickedOnes = parentBox.querySelectorAll(".genreBtn.selected");
-            for(var j=0; j<pickedOnes.length; j++){
+            for (var j = 0; j < pickedOnes.length; j++) {
                 gamegenresarr.push(pickedOnes[j].dataset.genre);
             }
         } else {
@@ -850,6 +850,7 @@ for (var i = 0; i < catBtns.length; i++) {
         document.getElementById("streamBtns").style.display = "none";
         document.getElementById("mangaBtns").style.display = "none";
         document.getElementById("movieBtns").style.display = "none";
+        document.getElementById("gameBtns").style.display = "none";
         posterImg.style.display = "block";
         genresbox.classList.remove("open");
         movgenresbox.classList.remove("open");
@@ -890,63 +891,100 @@ for (var i = 0; i < catBtns.length; i++) {
             }
             backBtn.disabled = mhistoryPos <= 0;
             nextBtn.disabled = mhistoryPos >= mangalist.length - 1;
-        } else {
-            backBtn.disabled = true;
-            nextBtn.disabled = true;
+        } else if (rnMode === "movie") {
+            if (movhisPos >= 0 && movielist.length) {
+                showmovie(movielist[movhisPos]);
+            } else {
+                posterImg.style.display = "none";
+                posterImg.src = "";
+                engName.textContent = "";
+                jpName.textContent = "";
+                avgscore.textContent = "";
+                startDate.textContent = "";
+                statusrn.textContent = "";
+                describe.innerHTML = "";
+                genreList.innerHTML = "";
+                cardresizer(defaultratio);
+            }
+            backBtn.disabled = movhisPos <= 0;
+            nextBtn.disabled = movhisPos >= movielist.length - 1;
+        } else if (rnMode === "games") {
+            if (ghistoryPos >= 0 && gameslist.length) {
+                showgame(gameslist[ghistoryPos]);
+            } else {
+                posterImg.style.display = "none";
+                posterImg.src = "";
+                engName.textContent = "";
+                jpName.textContent = "";
+                avgscore.textContent = "";
+                startDate.textContent = "";
+                statusrn.textContent = "";
+                describe.innerHTML = "";
+                genreList.innerHTML = "";
+                cardresizer(defaultratio);
+            }
+            backBtn.disabled = ghistoryPos <= 0;
+            nextBtn.disabled = ghistoryPos >= gameslist.length - 1;
         }
     });
 }
-// card 
-var cbound;
-posterCard.addEventListener("mouseenter", function () {
-    cbound = posterCard.getBoundingClientRect();
-    document.addEventListener("mousemove", tiltCard);
-});
-posterCard.addEventListener("mouseleave", function () {
-    document.removeEventListener("mousemove", tiltCard);
-    posterCard.style.transform = "";
-});
-function tiltCard(e) {
-    if (trailerplay) {
-        return;
-    }
-    var mouseX = e.clientX;
-    var mouseY = e.clientY;
-    var leftX = mouseX - cbound.x;
-    var topY = mouseY - cbound.y;
-    var center = {
-        x: leftX - cbound.width / 2,
-        y: topY - cbound.height / 2
-    };
-    var distance = Math.sqrt(center.x ** 2 + center.y ** 2);
-    posterCard.style.transform =
-        "scale3d(1.05, 1.05, 1.05) rotate3d(" +
-        (center.y / 100) + ", " +
-        (-center.x / 100) + ", 0, " +
-        (Math.log(distance) * 2) + "deg)";
-    cardGlow.style.backgroundImage =
-        "radial-gradient(circle at " +
-        (center.x * 2 + cbound.width / 2) + "px " +
-        (center.y * 2 + cbound.height / 2) + "px, #ffffff55, #0000000f)";
-}
-function streamBtns(anime) {
-    var title = anime.title.english || anime.title.romaji;
-    for (var i = 0; i < streamingSites.length; i++) {
-        var site = streamingSites[i];
-        var btnEl = document.getElementById(site.elId);
-        var foundUrl = null;
-        if (anime.externalLinks) {
-            for (var j = 0; j < anime.externalLinks.length; j++) {
-                var link = anime.externalLinks[j];
-                if (link.type === "STREAMING" && link.site === site.label) {
-                    foundUrl = link.url;
+        //         } else {
+        //             backBtn.disabled = true;
+        //             nextBtn.disabled = true;
+        //         }
+        //     });
+        // }
+        // card 
+        var cbound;
+        posterCard.addEventListener("mouseenter", function () {
+            cbound = posterCard.getBoundingClientRect();
+            document.addEventListener("mousemove", tiltCard);
+        });
+        posterCard.addEventListener("mouseleave", function () {
+            document.removeEventListener("mousemove", tiltCard);
+            posterCard.style.transform = "";
+        });
+        function tiltCard(e) {
+            if (trailerplay) {
+                return;
+            }
+            var mouseX = e.clientX;
+            var mouseY = e.clientY;
+            var leftX = mouseX - cbound.x;
+            var topY = mouseY - cbound.y;
+            var center = {
+                x: leftX - cbound.width / 2,
+                y: topY - cbound.height / 2
+            };
+            var distance = Math.sqrt(center.x ** 2 + center.y ** 2);
+            posterCard.style.transform =
+                "scale3d(1.05, 1.05, 1.05) rotate3d(" +
+                (center.y / 100) + ", " +
+                (-center.x / 100) + ", 0, " +
+                (Math.log(distance) * 2) + "deg)";
+            cardGlow.style.backgroundImage =
+                "radial-gradient(circle at " +
+                (center.x * 2 + cbound.width / 2) + "px " +
+                (center.y * 2 + cbound.height / 2) + "px, #ffffff55, #0000000f)";
+        }
+        function streamBtns(anime) {
+            var title = anime.title.english || anime.title.romaji;
+            for (var i = 0; i < streamingSites.length; i++) {
+                var site = streamingSites[i];
+                var btnEl = document.getElementById(site.elId);
+                var foundUrl = null;
+                if (anime.externalLinks) {
+                    for (var j = 0; j < anime.externalLinks.length; j++) {
+                        var link = anime.externalLinks[j];
+                        if (link.type === "STREAMING" && link.site === site.label) {
+                            foundUrl = link.url;
+                        }
+                    }
+                }
+                if (foundUrl) {
+                    btnEl.href = foundUrl;
+                } else {
+                    btnEl.href = site.searchUrl + encodeURIComponent(title);
                 }
             }
         }
-        if (foundUrl) {
-            btnEl.href = foundUrl;
-        } else {
-            btnEl.href = site.searchUrl + encodeURIComponent(title);
-        }
-    }
-}
