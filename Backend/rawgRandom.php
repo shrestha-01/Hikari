@@ -74,6 +74,29 @@ $detailData = json_decode($detailResponse, true);
 if($detailData && isset($detailData['description_raw'])){
     $game['description_raw'] = $detailData['description_raw'];
 }
+$storeUrl = "https://api.rawg.io/api/games/" . $gameId . "/stores?key=" . RAWG_KEY;
+$storeResponse = file_get_contents($storeUrl, false, $context);
+$storeData = json_decode($storeResponse, true);
+$game['storeLinks'] = array(
+    "steam" => null,
+    "epic" => null,
+    "gog" => null,
+    "xbox" => null
+);
+if ($storeData && !empty($storeData['results'])){
+    foreach($storeData['results'] as $s){
+        $surl = $s['url'];
+        if (strpos($surl, "steampowered.com") !== false){
+            $game['storeLinks']['steam'] = $surl;
+        } else if (strpos($surl, "epicgames.com") !== false){
+            $game['storeLinks']['epic'] = $surl;
+        } else if(strpos($surl, "gog.com") !== false){
+            $game['storeLinks']['gog'] = $surl;
+        } else if (strpos($surl, "xbox.com") !== false || strpos($surl, "microsoft.com") !== false){
+            $game['storeLinks']['xbox'] = $surl;
+        }
+    }
+}
 
 $movieUrl = "https://api.rawg.io/api/games/" . $gameId . "/movies?key=" . RAWG_KEY;
 $movieResponse = file_get_contents($movieUrl, false, $context);

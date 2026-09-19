@@ -284,7 +284,7 @@ function showgame(game) {
         game.startDate.month + "-" + game.startDate.day;
     statusrn.textContent = game.status;
     describe.innerHTML = game.description;
-    genreList.innerHTML = "";
+    showGameLinks(game);
     document.getElementById("gameBtns").style.display = "flex";
     genreList.innerHTML = "";
     for (var i = 0; i < game.genres.length; i++) {
