@@ -293,6 +293,8 @@ function showgame(game) {
     } else {
         trailerBtn.style.display = "none";
     }
+    bgVideo.pause();
+    bgVideo.style.display = "none";
     bgPoster.style.backgroundImage = "url('" + game.coverImage.large + "')";
     engName.textContent = game.title.english || game.title.romaji;
     jpName.textContent = game.title.native;

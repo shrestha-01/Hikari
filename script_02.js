@@ -106,6 +106,8 @@ function showmanga(manga) {
     } else {
         trailerBtn.style.display = "none";
     }
+    bgVideo.pause();
+    bgVideo.style.display = "none";
     bgPoster.style.backgroundImage = "url('" + (manga.coverImage.large || manga.coverImage.extraLarge) + "')";
     engName.textContent = manga.title.english || manga.title.romaji;
     jpName.textContent = manga.title.native;

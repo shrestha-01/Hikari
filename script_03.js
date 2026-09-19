@@ -157,6 +157,8 @@ function showmovie(movie) {
     } else {
         trailerBtn.style.display = "none";
     }
+    bgVideo.pause();
+    bgVideo.style.display = "none";
     bgPoster.style.backgroundImage = "url('" + movie.coverImage.large + "')";
 
     engName.textContent = movie.title.english || movie.title.romaji;
