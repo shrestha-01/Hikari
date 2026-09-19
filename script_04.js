@@ -4,27 +4,47 @@ var ghistoryPos = -1;
 var gameSites = [
     {
         elId: "steambtn",
+        storeKey: "steam",
         searchUrl: "https://store.steampowered.com/search/?term="
     },
     {
         elId: "epicbtn",
+        storeKey: "epic",
         searchUrl: "https://store.epicgames.com/en-US/browse?q="
     },
     {
         elId: "gogbtn",
+        storeKey: "gog",
         searchUrl: "https://www.gog.com/games?query="
     },
     {
         elId: "xboxbtn",
+        storeKey: "xbox",
         searchUrl: "https://www.xbox.com/en-us/Search/Results?q="
     }
 ];
-function showGameLinks(game){
+// function showGameLinks(game){
+//     var title = game.title.english || game.title.romaji;
+//     for (var i = 0; i < gameSites.length; i++){
+//         var site = gameSites[i];
+//         var btnEl = document.getElementById(site.elId);
+//         btnEl.href = site.searchUrl + encodeURIComponent(title);
+//     }
+// }
+function showGameLinks(game) {
     var title = game.title.english || game.title.romaji;
-    for (var i = 0; i < gameSites.length; i++){
+    for (var i = 0; i < gameSites.length; i++) {
         var site = gameSites[i];
         var btnEl = document.getElementById(site.elId);
-        btnEl.href = site.searchUrl + encodeURIComponent(title);
+        var realLink = null;
+        if (game.storeLinks) {
+            realLink = game.storeLinks[site.storeKey];
+        }
+        if (realLink) {
+            btnEl.href = realLink;
+        } else {
+            btnEl.href = site.searchUrl + encodeURIComponent(title);
+        }
     }
 }
 async function hikariGames() {
@@ -40,10 +60,10 @@ async function hikariGames() {
     loadingClip.currentTime = 0;
     loadingClip.play();
     var game = null;
-    try{
+    try {
         game = await tryRawg();
-    } catch (e){
-        console.log("rawg down",e);
+    } catch (e) {
+        console.log("rawg down", e);
     }
     //giant bomb's api is down
     // if(!game){
@@ -53,10 +73,10 @@ async function hikariGames() {
     //         console.log("giant bomb down too",e);
     //     }
     // }
-    if (!game){
-        try{
+    if (!game) {
+        try {
             game = await tryF2G();
-        } catch (e){
+        } catch (e) {
             //console.log("freetogame down too",e);
         }
     }
@@ -261,11 +281,11 @@ function showgame(game) {
     // trailerFrame.src = "";
     // trailerBtn.style.display = "none";
     trailerFrame.style.display = "none";
-    trailerFrame.src ="";
+    trailerFrame.src = "";
     trailerVideo.style.display = "none";
     trailerVideo.pause();
     trailerVideo.src = "";
-    if (game.trailer && game.trailer.url){
+    if (game.trailer && game.trailer.url) {
         trailerBtn.dataset.trailertype = "video";
         trailerBtn.dataset.trailerurl = game.trailer.url;
         btnLabel.textContent = "Watch Trailer";
