@@ -134,7 +134,8 @@ async function tryRawg() {
         status: gstatus,
         description: d.description_raw || "no description",
         trailer: gtrailer,
-        source: "RAWG"
+        source: "RAWG",
+        storeLinks: d.storeLinks || null
     };
     return ggame;
 }
