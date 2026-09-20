@@ -87,6 +87,7 @@ Hikari is currently live!
 
 - **Triangle Symbols:** https://www.i2symbol.com/symbols/triangle
 - **Star Symbols [Copy/Paste]:** https://www.namecheap.com/visual/font-generator/star-symbols/
+- **Hamburger Icon:** https://www.piliapp.com/symbol/menu/
 
 ### Anime APIs
 
