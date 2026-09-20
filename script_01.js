@@ -49,8 +49,9 @@ var modevideo = {
     anime: "Background/animebg.webm",
     manga: "Background/mangabg.webm",
     movie: "Background/moviebg.webm",
-    games: "Background/gamebg.mp4"
+    games: "Background/gamebg.webm"
 };
+var csound = true;
 function switchbg(mode) {
     if (modevideo[mode]) {
         bgVideo.src = modevideo[mode];
@@ -767,8 +768,12 @@ nextBtn.addEventListener("click", function () {
     }
 });
 whatsNextBtn.addEventListener("click", function () {
-    clickSound.currentTime = 0;
-    clickSound.play();
+    // clickSound.currentTime = 0;
+    // clickSound.play();
+    if (csound){
+        clickSound.currentTime = 0;
+        clickSound.play();
+    }
     if (rnMode === "anime") {
         hikariGets();
     } else if (rnMode === "manga") {
@@ -784,6 +789,20 @@ whatsNextBtn.addEventListener("click", function () {
 //the category choosing btn opens and closes
 categorybtn.addEventListener("click", function () {
     categories.classList.toggle("open");
+});
+const burgerbtn = document.getElementById("burgerbtn");
+const menus = document.getElementById("menus");
+burgerbtn.addEventListener("click", function(){
+    menus.classList.toggle("open");
+});
+const soundtoggle = document.getElementById("soundtoggle");
+soundtoggle.addEventListener("click", function(){
+    csound = !csound;
+    if (csound){
+        soundtoggle.textContent = "Click Sound: On";
+    } else {
+        soundtoggle.textContent = "Click Sound: Off";
+    }
 });
 // open closing of the genres dabba
 document.getElementById("whichgenre").addEventListener("click", function () {
