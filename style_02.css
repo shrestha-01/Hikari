@@ -20,28 +20,28 @@
     border-color 0.2s ease,
     box-shadow 0.2s ease;
 } */
- .streamBtn {
+.streamBtn {
     display: inline-flex;
     gap: 8px;
     padding: 8px 15px;
     align-items: center;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 25px;
     transition: background 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
     text-decoration: none;
- }
+}
 
 .streamIcon {
     width: 17px;
     height: 17px;
 }
 
-.streamLabel{
+.streamLabel {
     color: #fff;
     font-size: 14px;
     font-weight: bold;
@@ -56,23 +56,26 @@
 .netflixBtn:hover {
     background: rgba(229, 9, 20, 0.35);
     border-color: rgb(229, 9, 20);
-    box-shadow:0 0 15px rgba(229, 9, 20, 0.5);
+    box-shadow: 0 0 15px rgba(229, 9, 20, 0.5);
 }
+
 .netflixBtn {
     position: relative;
 }
-.lineWrap{
+
+.lineWrap {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    overflow:  hidden;
+    overflow: hidden;
     border-radius: 25px;
     pointer-events: none;
     z-index: -1;
 }
-.lineWrap span.netflixLine{
+
+.lineWrap span.netflixLine {
     position: absolute;
     top: 0;
     width: 2px;
@@ -83,83 +86,156 @@
     transform: scaleY(0);
     transform-origin: bottom;
 }
-.netflixBtn:hover .lineWrap span.netflixLine{
+
+.netflixBtn:hover .lineWrap span.netflixLine {
     transform: scaleY(1);
     transform-origin: top;
 }
-.netflixBtn span.netflixLine:nth-child(even){
+
+.netflixBtn span.netflixLine:nth-child(even) {
     transform-origin: top;
 }
-.netflixBtn:hover span.netflixLine:nth-child(even){
+
+.netflixBtn:hover span.netflixLine:nth-child(even) {
     transform-origin: bottom;
 }
+
 #streamAnimeSuge:hover {
     background: rgba(231, 238, 240, 0.35);
     border-color: rgb(210, 221, 228);
     box-shadow: 0 0 15px rgba(203, 226, 231, 0.5);
 }
-#streamMangadex:hover{
+
+#streamMangadex:hover {
     background: rgba(255, 103, 64, 0.35);
-    border-color: rgb(255,103,64);
+    border-color: rgb(255, 103, 64);
     box-shadow: 0 0 15px rgba(255, 103, 64, 0.5);
 }
-#streamMAL:hover{
+
+#streamMAL:hover {
     background: rgba(46, 81, 162, 0.35);
     border-color: rgb(46, 81, 162);
     box-shadow: 0 0 15px rgba(46, 81, 162, 0.5);
 }
-#streamAP:hover{
+
+#streamAP:hover {
     background: rgba(232, 163, 61, 0.35);
     border-color: rgb(232, 163, 61);
     box-shadow: 0 0 15px rgba(232, 193, 7, 0.5);
 }
-#streamMoviePrime:hover{
-    background: rgba(0,168,225,0.35);
-    border-color: rgb(0,168,225);
+
+#streamMoviePrime:hover {
+    background: rgba(0, 168, 225, 0.35);
+    border-color: rgb(0, 168, 225);
     box-shadow: 0 0 15px rgba(0, 168, 225, 0.5);
 }
-#streamMovieWMovies:hover{
+
+#streamMovieWMovies:hover {
     background: rgba(216, 240, 6, 0.15);
     border-color: rgb(240, 225, 14);
     box-shadow: 0 0 15px rgba(222, 238, 4, 0.4);
 }
-#streamMovieHydraHD:hover{
+
+#streamMovieHydraHD:hover {
     background: rgba(231, 4, 4, 0.35);
     border-color: rgb(236, 7, 7);
     box-shadow: 0 0 15px rgba(255, 79, 79, 0.5);
 }
-.btnRow{
+
+.btnRow {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 10px;
 }
+
 /* #streamNetflix:hover .streamIcon{
     filter: brightness(0) invert(1);
     transition: filter 0.2s ease;
 } */
-.netflixBtn:hover .streamIcon{
+.netflixBtn:hover .streamIcon {
     filter: drop-shadow(0 0 7px #fff);
     transition: filter 0.2s ease;
 }
-#steambtn:hover{
+
+#steambtn:hover {
     background: rgba(102, 192, 244, 0.35);
     border-color: rgb(102, 192, 244);
     box-shadow: 0 0 15px rgba(102, 192, 244, 0.5);
 }
-#epicbtn:hover{
-    background: rgba(255,255,255,0.2);
-    border-color: rgb(255,255,255);
+
+#epicbtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgb(255, 255, 255);
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
 }
-#gogbtn:hover{
+
+#gogbtn:hover {
     background: rgba(160, 45, 230, 0.35);
     border-color: rgb(160, 45, 230);
     box-shadow: 0 0 15px rgba(160, 45, 230, 0.5);
 }
-#xboxbtn:hover{
+
+#xboxbtn:hover {
     background: rgba(16, 124, 16, 0.35);
     border-color: rgb(56, 228, 56);
     box-shadow: 0 0 15px rgba(16, 124, 16, 0.5);
+}
+
+/* hamburger */
+.burgerbtn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    /* font-size: 18px; */
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    /* margin-left: -2px; */
+}
+/* .menus {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0px;
+    gap: 5px;
+    background: rgba(20, 20, 20, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 10px;
+    flex-direction: column;
+    gap: 5px;
+} */
+.menus{
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0px;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 10px;
+    flex-direction: column;
+    z-index: 5000;
+}
+.menus.open{
+    display: flex;
+}
+.menuitem{
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px 10px;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 8px;
+}
+.menuitem:hover{
+    background: rgba(255, 255, 255, 0.1);
 }
