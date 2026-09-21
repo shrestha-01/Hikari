@@ -54,8 +54,9 @@ if (isset($_GET['genres']) && $_GET['genres'] !== ""){
     }
 }
 
+$mediaType = $isCartoon ? "tv" : "movie";
 $randomPage = rand(1, 500);
-$url = "https://api.themoviedb.org/3/discover/movie?api_key=" . TMDB_KEY .
+$url = "https://api.themoviedb.org/3/discover/" . $mediaType . "?api_key=" . TMDB_KEY .
     "&sort_by=popularity.desc&page=" . $randomPage . $genreUrl;
 
 $response = file_get_contents($url);
@@ -70,11 +71,10 @@ if (!$data || empty($data['results'])) {
 $randomIndex = array_rand($data['results']);
 $movieId = $data['results'][$randomIndex]['id'];
 
-$detailUrl = "https://api.themoviedb.org/3/movie/" . $movieId . "?api_key=" . TMDB_KEY;
+$detailUrl = "https://api.themoviedb.org/3/" . $mediaType . "/" . $movieId . "?api_key=" . TMDB_KEY;
 $detailResponse = file_get_contents($detailUrl);
 $mdata = json_decode($detailResponse, true);
-
-$videoUrl = "https://api.themoviedb.org/3/movie/" . $movieId . "/videos?api_key=" . TMDB_KEY;
+$videoUrl = "https://api.themoviedb.org/3/" . $mediaType . "/" . $movieId . "/videos?api_key=" . TMDB_KEY;
 $videoResponse = file_get_contents($videoUrl);
 $videoData = json_decode($videoResponse, true);
 $mdata['trailer'] = null;
@@ -89,7 +89,8 @@ if($videoData && !empty($videoData['results'])){
         }
     }
 }
-$provUrl = "https://api.themoviedb.org/3/movie/" . $movieId . "/watch/providers?api_key=" . TMDB_KEY;
+// $provUrl = "https://api.themoviedb.org/3/movie/" . $movieId . "/watch/providers?api_key=" . TMDB_KEY;
+$provUrl = "https://api.themoviedb.org/3/" . $mediaType . "/" . $movieId . "/watch/providers?api_key=" . TMDB_KEY;
 $provResponse = file_get_contents($provUrl);
 $provData = json_decode($provResponse, true);
 $mdata['watchProviders'] = null;
