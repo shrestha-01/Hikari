@@ -20,13 +20,33 @@ $gmap = array(
     "War" => 10752,
     "Western" => 37
 );
+$tvgmap = array(
+    "Action & Adventure" => 10759,
+    "Animation" => 16,
+    "Comedy" => 35,
+    "Crime" => 80,
+    "Drama" => 18,
+    "Family" => 10751,
+    "Kids" => 10762,
+    "Mystery" => 9648,
+    "Sci-Fi & Fantasy" => 10765,
+    "War & Politics" => 10768,
+    "Western" => 37
+);
+$isCartoon = isset($_GET['type']) && $_GET['type'] === "cartoon";
+$genreMap = $isCartoon ? $tvgmap : $gmap;
 $genreUrl = "";
 if (isset($_GET['genres']) && $_GET['genres'] !== ""){
     $pickedGenres = explode(",", $_GET['genres']);
     $genreIds = array();
+    // foreach ($pickedGenres as $g){
+    //     if(isset($gmap[$g])){
+    //         $genreIds[] = $gmap[$g];
+    //     }
+    // }
     foreach ($pickedGenres as $g){
-        if(isset($gmap[$g])){
-            $genreIds[] = $gmap[$g];
+        if(isset($genreMap[$g])){
+            $genreIds[] = $genreMap[$g];
         }
     }
     if(count($genreIds)){
